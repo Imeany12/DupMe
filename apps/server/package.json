@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsnd --files --watch --respawn app.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"src/**/*.ts*\""
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "debug": "^2.6.9",
+    "typescript": "^5.5.4"
+  }
+}
