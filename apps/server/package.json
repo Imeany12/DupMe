@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsnd --files --watch --respawn app.js",
+    "dev": "tsnd --files --watch --respawn app.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts*\""
   },
