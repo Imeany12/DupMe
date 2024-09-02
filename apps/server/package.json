@@ -3,11 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "ts-node build.ts",
     "dev": "tsnd --files --watch --respawn app.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.ts*\""
+    "lint": "eslint \"src/**/*.ts*\"",
+    "clean": "rm -rf build"
   },
   "dependencies": {
+    "@repo/eslint-config": "workspace:^",
+    "@repo/typescript-config": "workspace:^",
     "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
     "http-errors": "~1.6.3"
@@ -16,6 +20,7 @@
     "@types/express": "^4.17.21",
     "debug": "^2.6.9",
     "typescript": "^5.5.4",
+    "eslint": "^8",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0"
   }

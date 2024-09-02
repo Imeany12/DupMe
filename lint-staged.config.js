@@ -12,7 +12,7 @@ const TYPESCRIPT_MODULES = [
 const TYPESCRIPT_LINTER = TYPESCRIPT_MODULES.reduce((acc, { name, path }) => {
   acc[`${path}/**/*.{js,jsx,ts,tsx}`] = [
     () => `pnpm typecheck --filter ${name}`,
-    // `pnpm lint --filter ${name} -- --fix`,
+    `pnpm lint --filter ${name} -- --fix`,
   ];
 
   return acc;
