@@ -7,6 +7,10 @@ const TYPESCRIPT_MODULES = [
     name: 'server',
     path: 'apps/server',
   },
+  {
+    name: '@repo/shared-types',
+    path: 'packages/shared-types',
+  }
 ];
 
 const TYPESCRIPT_LINTER = TYPESCRIPT_MODULES.reduce((acc, { name, path }) => {

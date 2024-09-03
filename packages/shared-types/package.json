@@ -1,0 +1,14 @@
+{
+  "name": "@repo/shared-types",
+  "private": true,
+  "main": "./dist/types.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/types.d.ts",
+  "scripts": {
+    "build": "tsc -d",
+    "postinstall": "pnpm build"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}

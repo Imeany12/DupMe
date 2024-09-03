@@ -16,17 +16,17 @@
     "postinstall": "husky install"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:^",
-    "@repo/typescript-config": "workspace:^",
     "@commitlint/cli": "^19.4.1",
     "@commitlint/config-conventional": "^19.4.1",
-    "eslint": "^9.9.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.2.9",
+    "@repo/eslint-config": "workspace:^",
+    "@repo/typescript-config": "workspace:^",
+    "eslint": "^9.9.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
-    "turbo": "^2.1.0",
-    "typescript": "^5.4.5"
+    "turbo": "^2.1.1",
+    "typescript": "^5.5.4"
   },
   "packageManager": "pnpm@8.15.6",
   "engines": {
