@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@repo/eslint-config": "workspace:^",
-    "@repo/typescript-config": "workspace:^",
     "@repo/shared-types": "workspace:^",
+    "@repo/typescript-config": "workspace:^",
     "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
