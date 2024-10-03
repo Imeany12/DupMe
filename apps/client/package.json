@@ -12,6 +12,7 @@
   "dependencies": {
     "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:^",
+    "dotenv": "^16.4.5",
     "next": "14.2.7",
     "react": "^18",
     "react-dom": "^18",

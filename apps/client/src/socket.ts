@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client';
 
-export const socket = io('http://localhost:5001');
+import { SOCKET_URL } from './env';
+
+export const socket = io(SOCKET_URL);
 
 socket.on('disconnect', () => {
   window.location.reload();
