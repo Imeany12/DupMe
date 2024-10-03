@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { socket } from '../../socket';
 
-export default function Home() {
+export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
 
