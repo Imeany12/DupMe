@@ -2,12 +2,13 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
+import { CORS_ORIGIN, PORT } from './env';
+
 const app = express();
 const server = createServer(app);
-const port = 5001;
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: CORS_ORIGIN,
   },
 });
 
@@ -27,6 +28,6 @@ io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
 });
 
-server.listen(port, () => {
-  console.log(`[🎉DupMe] server listening on port ${port}`);
+server.listen(PORT, () => {
+  console.log(`[🎉DupMe] server listening on port ${PORT}`);
 });
