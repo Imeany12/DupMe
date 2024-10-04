@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 
-import users from '../models/users';
+import User from '../models/users';
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const userDatas = await users.find();
+    const userList = await User.find();
 
-    res.status(200).json({ userDatas });
+    res.status(200).json({ userList });
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ message: error.message });
@@ -17,9 +17,8 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const user: { name: string; age: number } = req.body;
-  console.log(req);
-  const newUser = new users(user);
+  const user: { username: string; password: string } = req.body;
+  const newUser = new User(user);
 
   try {
     await newUser.save();

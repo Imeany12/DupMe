@@ -1,22 +1,26 @@
-import mongoose from 'mongoose';
+import { IUser } from '@repo/shared-types';
+import { model, Schema } from 'mongoose';
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
-  createdAt: {
-    type: Date,
-    default: Date.now,
+const userSchema = new Schema<IUser>(
+  {
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    games_won: {
+      type: Number,
+      default: 0,
+    },
+    games_lost: {
+      type: Number,
+      default: 0,
+    },
   },
-  games_won: {
-    type: Number,
-    default: 0,
-  },
-  games_lost: {
-    type: Number,
-    default: 0,
-  },
-});
+  { versionKey: false }
+);
 
-const users = mongoose.model('userData', userSchema);
+const User = model<IUser>('User', userSchema);
 
-export default users;
+export default User;

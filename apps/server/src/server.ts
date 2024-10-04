@@ -9,7 +9,6 @@ import userRoutes from './routes/user';
 const app = express();
 app.use(express.json());
 
-// Routes
 app.use('/user', userRoutes);
 
 const server = createServer(app);
@@ -19,7 +18,6 @@ const io = new Server(server, {
   },
 });
 
-// Mongodb
 mongoose
   .connect(MONGO_URL, { dbName: 'dbconnect' })
   .then(() => console.log('Database connection established'))
