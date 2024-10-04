@@ -3,6 +3,8 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GitHubProvider from 'next-auth/providers/github';
 
+// .env.local later be add(change secret key)
+
 export const options: NextAuthOptions = {
   providers: [
     GitHubProvider({
