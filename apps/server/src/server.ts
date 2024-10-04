@@ -20,10 +20,6 @@ app.get('/login', (req: Request, res: Response) => {
   res.json({ message: 'pedo time and saygex' });
 });
 
-app.listen(PORT, () => {
-  console.log(`[🎉DupMe] app listening on port ${PORT}`);
-});
-
 io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
 });
