@@ -40,12 +40,12 @@ export default function UserProfile({ user, pagetype }: Props) {
   ) : null;
 
   return (
-    <section className='flex flex-col gap-4'>
+    <section className='flex flex-col items-center gap-4 py-2'>
       {greeting}
       {/* {emailDisplay} */}
       {userImage}
       {/* <p className="text-2xl text-center">{pagetype} Page!</p> */}
-      <p>Pagetype : {pagetype}</p>
+      <p>Page Type : {pagetype}</p>
     </section>
   );
 }
