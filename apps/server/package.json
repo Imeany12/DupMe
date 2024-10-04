@@ -3,17 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "ts-node build.ts",
-    "dev": "tsnd --files --watch --respawn src/app.ts",
+    "dev": "tsnd --files --watch --respawn src/server.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf build"
   },
   "dependencies": {
     "@repo/eslint-config": "workspace:^",
-    "@repo/typescript-config": "workspace:^",
     "@repo/shared-types": "workspace:^",
+    "@repo/typescript-config": "workspace:^",
     "cookie-parser": "~1.4.4",
+    "dotenv": "^16.4.5",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "socket.io": "^4.7.5"
