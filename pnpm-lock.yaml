@@ -49,6 +49,9 @@ importers:
       '@repo/eslint-config':
         specifier: workspace:^
         version: link:../../packages/eslint-config
+      '@repo/shared-types':
+        specifier: workspace:^
+        version: link:../../packages/shared-types
       '@repo/typescript-config':
         specifier: workspace:^
         version: link:../../packages/typescript-config
@@ -69,6 +72,9 @@ importers:
         specifier: ^4.8.0
         version: 4.8.0
     devDependencies:
+      '@next/eslint-plugin-next':
+        specifier: ^14.2.14
+        version: 14.2.14
       '@types/node':
         specifier: ^20.16.3
         version: 20.16.3
@@ -359,6 +365,9 @@ packages:
 
   '@next/env@14.2.7':
     resolution: {integrity: sha512-OTx9y6I3xE/eih+qtthppwLytmpJVPM5PPoJxChFsbjIEFXIayG0h/xLzefHGJviAa3Q5+Fd+9uYojKkHDKxoQ==}
+
+  '@next/eslint-plugin-next@14.2.14':
+    resolution: {integrity: sha512-kV+OsZ56xhj0rnTn6HegyTGkoa16Mxjrpk7pjWumyB2P8JVQb8S9qtkjy/ye0GnTr4JWtWG4x/2qN40lKZ3iVQ==}
 
   '@next/eslint-plugin-next@14.2.7':
     resolution: {integrity: sha512-+7xh142AdhZGjY9/L0iFo7mqRBMJHe+q+uOL+hto1Lfo9DeWCGcR6no4StlFbVSVcA6fQLKEX6y6qhMsSKbgNQ==}
@@ -3109,6 +3118,10 @@ snapshots:
 
   '@next/env@14.2.7': {}
   '@next/env@14.2.7': {}
+
+  '@next/eslint-plugin-next@14.2.14':
+    dependencies:
+      glob: 10.3.10
 
   '@next/eslint-plugin-next@14.2.7':
   '@next/eslint-plugin-next@14.2.7':
