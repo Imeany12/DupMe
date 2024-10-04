@@ -8,7 +8,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/login', (req: Request, res: Response) => {
-  res.json({ message: 'pedo time' });
+  res.json({ message: 'pedo time and saygex' });
 });
 
 app.listen(port, () => {
