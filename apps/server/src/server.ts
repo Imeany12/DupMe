@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('send_msg', (data) => {
-    console.log(data, 'DATA');
+    // console.log(data, 'DATA');
 
     // This will send a message to a specific room ID
     socket.to(data.roomId).emit('receive_msg', data);

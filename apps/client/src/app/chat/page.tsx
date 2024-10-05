@@ -15,7 +15,6 @@ export default function Home() {
 
   const handleJoin = () => {
     if (userName !== '' && roomId !== '') {
-      console.log(userName, 'userName', roomId, 'roomId');
       socket.emit('join_room', roomId);
       setShowSpinner(true);
 
