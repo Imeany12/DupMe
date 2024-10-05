@@ -7,6 +7,12 @@ const nextConfig = {
                 hostname: 'avatars.githubusercontent.com',
                 port: "",
                 pathname:'/u/**',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.googleusercontent.com',
+                port: '',
+                pathname: '**',
             }
             //เดี๋ยวมาเพิ่มให้หลายๆ auth
         ]

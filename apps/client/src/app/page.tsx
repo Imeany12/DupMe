@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 
@@ -16,6 +18,11 @@ export default async function Home() {
           <Link href='/api/auth/signout' className='text-3xl text-violet-500'>
             Sign Out
           </Link>
+          {/* having error 
+          can be use only once reload web will 
+          cause callback error can not signout
+          it will automaticly redirect to sign in page
+          finding solutions*/}
         </div>
       ) : (
         <div className='flex flex-col items-center'>
@@ -30,6 +37,9 @@ export default async function Home() {
         alt='background'
         layout = 'fill'
         /> */}
+      <Link href='myAccount' className='text-2xl text-green-600'>
+        My Account
+      </Link>
       <div className='flex h-screen flex-row items-end'>
         <button className='my-64 rounded-lg border border-gray-500 bg-gray-200 px-8 py-2 text-4xl text-sky-600'>
           Play
