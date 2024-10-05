@@ -1,6 +1,7 @@
 'use client';
 // Remember you must use an AuthProvider for
 // client components to useSession
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -15,8 +16,11 @@ export default function ClientPage() {
   });
 
   return (
-    <section className='flex flex-col gap-4'>
-      <UserProfile user={session?.user} pagetype={'Client'} />
-    </section>
+    <div>
+      <Link href='/'>Back</Link>
+      <section className='flex flex-col gap-4'>
+        <UserProfile user={session?.user} pagetype={'Account/client'} />
+      </section>
+    </div>
   );
 }
