@@ -17,7 +17,9 @@ export default function ClientPage() {
 
   return (
     <div>
-      <Link href='/'>Back</Link>
+      <Link href={'/home'}>Back</Link>
+      {/* now having problem back button need a hard refresh 
+      can not navigate back to ref='/' . now using /home for temp fix*/}
       <section className='flex flex-col gap-4'>
         <UserProfile user={session?.user} pagetype={'Account/client'} />
       </section>
