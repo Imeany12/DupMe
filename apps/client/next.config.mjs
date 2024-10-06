@@ -13,6 +13,12 @@ const nextConfig = {
                 hostname: '*.googleusercontent.com',
                 port: '',
                 pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'pbs.twimg.com',
+                port: '',
+                pathname: '**',
             }
             //เดี๋ยวมาเพิ่มให้หลายๆ auth
         ]
