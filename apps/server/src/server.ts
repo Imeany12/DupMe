@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 
-import { CORS_ORIGIN, MONGO_URL, PORT } from './env';
+import { MONGO_URL, PORT } from './env';
 import mainRoutes from './routes/main';
 import userRoutes from './routes/user';
 
