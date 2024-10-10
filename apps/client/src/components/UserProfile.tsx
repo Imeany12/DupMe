@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 type User =
   | {
-      name?: string | null | undefined;
+      username?: string | null | undefined;
       email?: string | null | undefined;
       image?: string | null | undefined;
     }
@@ -10,23 +10,14 @@ type User =
 
 type Props = {
   user: User;
-  pagetype: string;
 };
 
-export default function UserProfile({ user, pagetype }: Props) {
-  //console.log(user)
-
-  const greeting = user?.name ? (
+export default function UserProfile({ user }: Props) {
+  const greeting = user?.username ? (
     <div className='flex flex-col items-center rounded-lg bg-white p-6 text-5xl font-bold text-black'>
-      Hello {user?.name}!
+      Hello {user?.username}!
     </div>
   ) : null;
-
-  // const emailDisplay = user?.email ? (
-  //     <div className="flex flex-col items-center p-6 bg-white rounded-lg font-bold text-5xl text-black">
-  //         {user?.email}
-  //     </div>
-  // ) : null
 
   const userImage = user?.image ? (
     <Image
@@ -34,7 +25,7 @@ export default function UserProfile({ user, pagetype }: Props) {
       src={user?.image}
       width={200}
       height={200}
-      alt={user?.name ?? 'Profile Pic'}
+      alt={user?.username ?? 'Profile Pic'}
       priority={true}
     />
   ) : null;
@@ -42,10 +33,7 @@ export default function UserProfile({ user, pagetype }: Props) {
   return (
     <section className='flex flex-col items-center gap-4 py-2'>
       {greeting}
-      {/* {emailDisplay} */}
       {userImage}
-      {/* <p className="text-2xl text-center">{pagetype} Page!</p> */}
-      <p>Page Type : {pagetype}</p>
     </section>
   );
 }

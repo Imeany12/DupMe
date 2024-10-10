@@ -11,7 +11,7 @@ export default async function Home() {
     <div className='mx-auto flex h-screen w-screen flex-col items-center'>
       {session ? (
         <div className='flex flex-col items-center'>
-          <UserProfile user={session?.user} pagetype={'Home'} />
+          <UserProfile user={session?.user} />
           <Link
             href='/api/auth/signout?callbackUrl=/'
             className='text-3xl text-violet-500'

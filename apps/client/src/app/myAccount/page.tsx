@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 
 import UserProfile from '@/components/UserProfile';
 
-export default function ClientPage() {
+export default function AccountPage() {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -16,12 +16,17 @@ export default function ClientPage() {
   });
 
   return (
-    <div>
-      <Link href={'/home'}>Back</Link>
+    <div className='px-3 py-4'>
+      <Link
+        href={'/'}
+        className='mt-12 rounded-lg border-2 border-gray-500 px-6'
+      >
+        Back
+      </Link>
       {/* now having problem back button need a hard refresh 
       can not navigate back to ref='/' . now using /home for temp fix*/}
       <section className='flex flex-col gap-4'>
-        <UserProfile user={session?.user} pagetype={'Account/client'} />
+        <UserProfile user={session?.user} />
       </section>
     </div>
   );

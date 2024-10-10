@@ -5,6 +5,15 @@ import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import TwitterProvider from 'next-auth/providers/twitter';
 
+import {
+  CLIENT_GITHUB_ID,
+  CLIENT_GITHUB_SECRET,
+  CLIENT_GOOGLE_ID,
+  CLIENT_GOOGLE_SECRET,
+  CLIENT_TWITTER_ID,
+  CLIENT_TWITTER_SECRET,
+} from '@/env';
+
 // .env.local later be add(change secret key)
 
 export const options: NextAuthOptions = {
@@ -39,28 +48,29 @@ export const options: NextAuthOptions = {
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID as string,
-      clientSecret: process.env.GOOGLE_SECRET as string,
+      clientId: CLIENT_GOOGLE_ID,
+      clientSecret: CLIENT_GOOGLE_SECRET,
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientId: CLIENT_GITHUB_ID,
+      clientSecret: CLIENT_GITHUB_SECRET,
     }),
     TwitterProvider({
-      clientId: process.env.TWITTER_ID as string,
-      clientSecret: process.env.TWITTER_SECRET as string,
+      clientId: CLIENT_TWITTER_ID,
+      clientSecret: CLIENT_TWITTER_SECRET,
       version: '2.0',
     }),
   ],
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    async session({ session, user, token }) {
+    async session({ session }) {
       return session;
     },
   },
-  // pages:{
-  //     signIn: "/signin"
-  // }
+  pages: {
+    signIn: '/auth/signIn',
+    newUser: '/auth/signUp',
+  },
 };
 
 export default NextAuth(options);
