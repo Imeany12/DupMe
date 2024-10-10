@@ -4,7 +4,11 @@ import { model, Schema } from 'mongoose';
 const userSchema = new Schema<IUser>(
   {
     username: { type: String, required: true },
-    password: { type: String, required: true },
+    password: {
+      type: String,
+      required: true,
+      minlength: [4, 'Password must be at least 4 characters long'],
+    },
     createdAt: {
       type: Date,
       default: Date.now,

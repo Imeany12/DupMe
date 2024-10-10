@@ -3,8 +3,7 @@ import { createServer } from 'http';
 import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 
-import { MONGO_URL, PORT } from './env';
-import loginRoutes from './routes/login';
+import { CORS_ORIGIN, MONGO_URL, PORT } from './env';
 import mainRoutes from './routes/main';
 import userRoutes from './routes/user';
 
@@ -13,7 +12,6 @@ app.use(express.json());
 
 app.use('/user', userRoutes);
 app.use('/', mainRoutes);
-app.use('/login', loginRoutes);
 
 const server = createServer(app);
 const io = new Server(server, {
