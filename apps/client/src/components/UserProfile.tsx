@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 type User =
   | {
-      username?: string | null | undefined;
+      name?: string | null | undefined;
       email?: string | null | undefined;
       image?: string | null | undefined;
     }
@@ -13,9 +13,10 @@ type Props = {
 };
 
 export default function UserProfile({ user }: Props) {
-  const greeting = user?.username ? (
+  console.log(user);
+  const greeting = user?.name ? (
     <div className='flex flex-col items-center rounded-lg bg-white p-6 text-5xl font-bold text-black'>
-      Hello {user?.username}!
+      Hello {user?.name}!
     </div>
   ) : null;
 
@@ -25,15 +26,15 @@ export default function UserProfile({ user }: Props) {
       src={user?.image}
       width={200}
       height={200}
-      alt={user?.username ?? 'Profile Pic'}
+      alt={user?.name ?? 'Profile Pic'}
       priority={true}
     />
   ) : null;
 
   return (
     <section className='flex flex-col items-center gap-4 py-2'>
-      {greeting}
       {userImage}
+      {greeting}
     </section>
   );
 }
