@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
         rooms[roomId] = [];
       }
       rooms[roomId].push(username);
-      io.in(roomId.toString()).emit('update_players', rooms[roomId]);
+      socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.join(roomId.toString());
       console.log(`user with id-${socket.id} joined room-${roomId}`);
     }
@@ -50,10 +50,14 @@ io.on('connection', (socket) => {
     'leave_lobby',
     ({ username, roomId }: { username: string; roomId: number }) => {
       rooms[roomId] = rooms[roomId].filter((player) => player !== username);
-      io.in(roomId.toString()).emit('update_players', rooms[roomId]);
+      socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
     }
   );
+
+  socket.on('start_game', (roomId: number) => {
+    socket.to(roomId.toString()).emit('star_game');
+  });
 
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
