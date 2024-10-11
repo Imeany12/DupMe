@@ -59,6 +59,10 @@ io.on('connection', (socket) => {
     socket.to(roomId.toString()).emit('star_game');
   });
 
+  socket.on('end_game', (roomId: number) => {
+    socket.to(roomId.toString()).emit('end_game');
+  });
+
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId).emit('receive_msg', data);
