@@ -11,11 +11,18 @@
 .background-image {
   background-image: url('/images/starBg.png');
   background-size: cover; /* Ensures the image covers the whole background */
+<<<<<<< HEAD
   background-position: top; /* Centers the background */
   background-repeat: no-repeat; /* Prevents tiling */
   height: 100vh; /* Ensures it takes the full viewport height */
   width: 100vw; /* Full viewport width */
   position: fixed; 
+=======
+  background-position: center; /* Centers the background */
+  background-repeat: no-repeat; /* Prevents tiling */
+  height: 100vh; /* Ensures it takes the full viewport height */
+  width: 100vw; /* Full viewport width */
+>>>>>>> 1b6c80e (feat: background images, Navbar)
 }
 
 @media (prefers-color-scheme: dark) {
