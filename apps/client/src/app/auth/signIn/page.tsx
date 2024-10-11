@@ -7,35 +7,6 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 
-// export default function signin() {
-//   return (
-//     <div className='flex items-center h-screen'>
-//       <div className='flex flex-col w-screen items-center'>
-
-//       <div className='flex flex-col items-center min-w-96 border border-spacing-y-10 border-red-300 rounded-lg
-//        gap-4 text-4xl py-20 px-10 bg-slate-100'>
-//           <button className='border border-gray-400 rounded-lg mx-5 mt-8 px-8 py-2 bg-neutral-400'
-//           onClick={()=>{
-//             signIn("github",{callbackUrl:"/"})
-//           }}>signin with github</button>
-//           <button className='border border-gray-400 rounded-lg mx-5 mt-2 px-8 py-2 bg-blue-400'
-//            onClick={()=>{
-//             signIn("twitter",{callbackUrl:"/"})
-//           }}>signin with twitter</button>
-//           <button className='border border-gray-400 rounded-lg mx-5 mt-2 px-8 py-2 bg-neutral-50'
-//           onClick={()=>{
-//             signIn("google",{callbackUrl:"/"})
-//           }}>signin with google</button>
-//           <Link href="/auth/signUp"
-//           className='border border-gray-400 rounded-lg mx-5 mt-8 px-8 py-2 bg-neutral-50'>
-//             register
-//           </Link>
-//           </div>
-//         </div>
-//     </div>
-//   )
-// }
-
 export default function SignInPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -133,7 +104,7 @@ export default function SignInPage() {
                       '--provider-color': '#000',
                       '--provider-dark-color': '#000',
                       '--provider-bg-hover': 'rgba(255, 255, 255, 0.8)',
-                      '--provider-dark-bg-hover': 'rgba(255, 255, 255, 0.2)',
+                      '--provider-dark-bg-hover': 'rgba(255, 255, 255, 0.8)',
                     } as React.CSSProperties
                   }
                   className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-4 py-1'
@@ -184,7 +155,7 @@ export default function SignInPage() {
                   onClick={() => signIn('twitter', { callbackUrl: '/' })}
                   style={
                     {
-                      '--provider-bg': 'rgba(29, 161, 242, 0.4)',
+                      '--provider-bg': 'rgba(29, 161, 242, 0.8)',
                       '--provider-dark-bg': 'rgba(29, 161, 242, 0.8)',
                       '--provider-color': '#fff',
                       '--provider-dark-color': '#fff',
