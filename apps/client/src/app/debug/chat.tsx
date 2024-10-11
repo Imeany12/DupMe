@@ -10,7 +10,15 @@ interface IMsgDataTypes {
   time: string;
 }
 
-const ChatPage = ({ socket, username, roomId }: any) => {
+const ChatPage = ({
+  socket,
+  username,
+  roomId,
+}: {
+  socket: any;
+  username: string;
+  roomId: number;
+}) => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
 
