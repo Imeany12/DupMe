@@ -31,7 +31,7 @@ mongoose
 
 io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
-  socket.on('join_room', (roomId) => {
+  socket.on('join_lobby', (roomId) => {
     socket.join(roomId);
     console.log(`user with id-${socket.id} joined room-${roomId}`);
   });
