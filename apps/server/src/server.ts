@@ -39,10 +39,16 @@ io.on('connection', (socket) => {
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId).emit('receive_msg', data);
+
+    const connectedUsersCount = io.engine.clientsCount;
+    io.emit('connectedUsersCount', connectedUsersCount);
   });
 
   socket.on('disconnect', () => {
     console.log('a user disconnected:', socket.id);
+
+    const connectedUsersCount = io.engine.clientsCount;
+    io.emit('connectedUsersCount', connectedUsersCount);
   });
 });
 
