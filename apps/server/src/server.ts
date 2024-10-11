@@ -42,14 +42,14 @@ io.on('connection', (socket) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId).emit('receive_msg', data);
 
-    const connectedUsersCount = Object.keys(io.sockets.sockets).length;
+    const connectedUsersCount = io.engine.clientsCount;
     io.emit('connectedUsersCount', connectedUsersCount);
   });
 
   socket.on('disconnect', () => {
     console.log('a user disconnected:', socket.id);
 
-    const connectedUsersCount = Object.keys(io.sockets.sockets).length;
+    const connectedUsersCount = io.engine.clientsCount;
     io.emit('connectedUsersCount', connectedUsersCount);
   });
 });
