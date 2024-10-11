@@ -29,12 +29,31 @@ mongoose
 
   .catch((error) => console.error('Error connecting to database:', error));
 
+const rooms: { [key: number]: string[] } = {};
+
 io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
-  socket.on('join_lobby', (roomId) => {
-    socket.join(roomId);
-    console.log(`user with id-${socket.id} joined room-${roomId}`);
-  });
+  socket.on(
+    'join_lobby',
+    ({ username, roomId }: { username: string; roomId: number }) => {
+      if (!rooms[roomId]) {
+        rooms[roomId] = [];
+      }
+      rooms[roomId].push(username);
+      io.in(roomId.toString()).emit('update_players', rooms[roomId]);
+      socket.join(roomId.toString());
+      console.log(`user with id-${socket.id} joined room-${roomId}`);
+    }
+  );
+
+  socket.on(
+    'leave_lobby',
+    ({ username, roomId }: { username: string; roomId: number }) => {
+      rooms[roomId] = rooms[roomId].filter((player) => player !== username);
+      io.in(roomId.toString()).emit('update_players', rooms[roomId]);
+      socket.leave(roomId.toString());
+    }
+  );
 
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
