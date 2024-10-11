@@ -7,6 +7,10 @@ import { socket } from '../../socket';
 export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
+  const [showChat, setShowChat] = useState(false);
+  const [userName, setUserName] = useState('');
+  const [showSpinner, setShowSpinner] = useState(false);
+  const [roomId, setRoomId] = useState('');
 
   useEffect(() => {
     if (socket.connected) {
