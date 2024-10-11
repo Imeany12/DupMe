@@ -1,6 +1,11 @@
 import Link from 'next/link';
+<<<<<<< HEAD
 import React from 'react';
 import { FiHome } from 'react-icons/fi';
+=======
+import { useSession } from 'next-auth/react';
+import React from 'react';
+>>>>>>> 1b6c80e (feat: background images, Navbar)
 
 type User =
   | {
@@ -10,6 +15,7 @@ type User =
     }
   | undefined;
 
+<<<<<<< HEAD
 export default function NavBar({ session }: { session: any }) {
   const user: User = session?.user;
 
@@ -42,6 +48,29 @@ export default function NavBar({ session }: { session: any }) {
               href={'/api/auth/signout'}
               className='rounded-lg border bg-neutral-300 px-2 text-xl font-semibold text-neutral-700'
             >
+=======
+export default function NavBar() {
+  const { data: session } = useSession({
+    required: false,
+  });
+  const user = session?.user;
+
+  return (
+    <nav>
+      <ul>
+        <li className='flex flex-grow'>
+          <Link color='inherit' href='/'>
+            Home
+          </Link>
+        </li>
+        <li>
+          {!user ? (
+            <Link href='/api/auth/signin' className='text-3xl text-red-500'>
+              Sign In
+            </Link>
+          ) : (
+            <Link color='inherit' href={'/api/auth/signout'}>
+>>>>>>> 1b6c80e (feat: background images, Navbar)
               Sign Out
             </Link>
           )}
