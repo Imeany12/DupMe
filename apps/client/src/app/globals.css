@@ -15,7 +15,7 @@
   background-repeat: no-repeat; /* Prevents tiling */
   height: 100vh; /* Ensures it takes the full viewport height */
   width: 100vw; /* Full viewport width */
-  position: fixed; 
+  position: fixed;
 }
 
 @media (prefers-color-scheme: dark) {
