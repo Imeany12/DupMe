@@ -30,7 +30,16 @@ mongoose
   .catch((error) => console.error('Error connecting to database:', error));
 
 io.on('connection', (socket) => {
-  console.log('a user connected:', socket.id);
+  console.log(
+    'a user connected:',
+    socket.id,
+    'ip address:',
+    socket.handshake.headers['x-forwarded-for'],
+    'total connected:',
+    io.engine.clientsCount
+  );
+  io.emit('total connected:', io.engine.clientsCount);
+
   socket.on('join_room', (roomId) => {
     socket.join(roomId);
     console.log(`user with id-${socket.id} joined room-${roomId}`);
@@ -39,16 +48,12 @@ io.on('connection', (socket) => {
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId).emit('receive_msg', data);
-
-    const connectedUsersCount = io.engine.clientsCount;
-    io.emit('connectedUsersCount', connectedUsersCount);
   });
 
   socket.on('disconnect', () => {
     console.log('a user disconnected:', socket.id);
 
-    const connectedUsersCount = io.engine.clientsCount;
-    io.emit('connectedUsersCount', connectedUsersCount);
+    io.emit('total connected:', io.engine.clientsCount);
   });
 });
 
