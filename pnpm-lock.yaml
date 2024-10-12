@@ -853,11 +853,8 @@ packages:
         optional: true
 
   '@typescript-eslint/scope-manager@5.62.0':
-    resolution:
-      {
-        integrity: sha512-VXuvVvZeQCQb5Zgf4HAxc04q5j+WrNAtNh9OwCsCgpKqESMTu3tF/jhZ3xG6T4NZwWl65Bg8KuS2uEvhSfLl0w==,
-      }
-    engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
+    resolution: {integrity: sha512-VXuvVvZeQCQb5Zgf4HAxc04q5j+WrNAtNh9OwCsCgpKqESMTu3tF/jhZ3xG6T4NZwWl65Bg8KuS2uEvhSfLl0w==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   '@typescript-eslint/type-utils@5.62.0':
     resolution:
@@ -873,18 +870,12 @@ packages:
         optional: true
 
   '@typescript-eslint/types@5.62.0':
-    resolution:
-      {
-        integrity: sha512-87NVngcbVXUahrRTqIK27gD2t5Cu1yuCXxbLcFtCzZGlfyVWWh8mLHkoxzjsB6DDNnvdL+fW8MiwPEJyGJQDgQ==,
-      }
-    engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
+    resolution: {integrity: sha512-87NVngcbVXUahrRTqIK27gD2t5Cu1yuCXxbLcFtCzZGlfyVWWh8mLHkoxzjsB6DDNnvdL+fW8MiwPEJyGJQDgQ==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   '@typescript-eslint/typescript-estree@5.62.0':
-    resolution:
-      {
-        integrity: sha512-CmcQ6uY7b9y694lKdRB8FEel7JbU/40iSAPomu++SjLMntB+2Leay2LO6i8VnJk58MtE9/nQSFIH6jpyRWyYzA==,
-      }
-    engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
+    resolution: {integrity: sha512-CmcQ6uY7b9y694lKdRB8FEel7JbU/40iSAPomu++SjLMntB+2Leay2LO6i8VnJk58MtE9/nQSFIH6jpyRWyYzA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       typescript: '*'
     peerDependenciesMeta:
@@ -901,11 +892,8 @@ packages:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
 
   '@typescript-eslint/visitor-keys@5.62.0':
-    resolution:
-      {
-        integrity: sha512-07ny+LHRzQXepkGg6w0mFY41fVUNBrL2Roj/++7V1txKugfjm/Ci/qSND03r2RhlJhJYMcTn9AhhSSqQp0Ysyw==,
-      }
-    engines: { node: ^12.22.0 || ^14.17.0 || >=16.0.0 }
+    resolution: {integrity: sha512-07ny+LHRzQXepkGg6w0mFY41fVUNBrL2Roj/++7V1txKugfjm/Ci/qSND03r2RhlJhJYMcTn9AhhSSqQp0Ysyw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   '@ungap/structured-clone@1.2.0':
     resolution:
@@ -3236,10 +3224,7 @@ packages:
     engines: { node: '>=18' }
 
   minimatch@3.1.2:
-    resolution:
-      {
-        integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==,
-      }
+    resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
 
   minimatch@9.0.5:
     resolution:
@@ -5108,15 +5093,7 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
-  '@mongodb-js/saslprep@1.1.9':
-    dependencies:
-      sparse-bitfield: 3.0.3
-
   '@next/env@14.2.7': {}
-
-  '@next/eslint-plugin-next@14.2.14':
-    dependencies:
-      glob: 10.3.10
 
   '@next/eslint-plugin-next@14.2.14':
     dependencies:
@@ -5576,23 +5553,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  body-parser@1.20.3:
-    dependencies:
-      bytes: 3.1.2
-      content-type: 1.0.5
-      debug: 2.6.9
-      depd: 2.0.0
-      destroy: 1.2.0
-      http-errors: 2.0.0
-      iconv-lite: 0.4.24
-      on-finished: 2.4.1
-      qs: 6.13.0
-      raw-body: 2.5.2
-      type-is: 1.6.18
-      unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
-
   brace-expansion@1.1.11:
     dependencies:
       balanced-match: 1.0.2
@@ -5617,8 +5577,6 @@ snapshots:
       streamsearch: 1.1.0
 
   bytes@3.0.0: {}
-
-  bytes@3.1.2: {}
 
   bytes@3.1.2: {}
 
@@ -5841,11 +5799,7 @@ snapshots:
 
   depd@2.0.0: {}
 
-  depd@2.0.0: {}
-
   destroy@1.0.4: {}
-
-  destroy@1.2.0: {}
 
   destroy@1.2.0: {}
 
@@ -5875,8 +5829,6 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  dotenv@16.4.5: {}
-
   dynamic-dedupe@0.3.0:
     dependencies:
       xtend: 4.0.2
@@ -5896,18 +5848,6 @@ snapshots:
   emoji-regex@9.2.2: {}
 
   encodeurl@1.0.2: {}
-
-  engine.io-client@6.6.1:
-    dependencies:
-      '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.6
-      engine.io-parser: 5.2.3
-      ws: 8.17.1
-      xmlhttprequest-ssl: 2.1.1
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
   engine.io-client@6.6.1:
     dependencies:
@@ -6674,10 +6614,6 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  iconv-lite@0.4.24:
-    dependencies:
-      safer-buffer: 2.1.2
-
   ignore@5.3.2: {}
 
   import-fresh@3.3.0:
@@ -7021,8 +6957,6 @@ snapshots:
 
   memory-pager@1.5.0: {}
 
-  memory-pager@1.5.0: {}
-
   meow@12.1.1: {}
 
   merge-descriptors@1.0.1: {}
@@ -7227,10 +7161,6 @@ snapshots:
     dependencies:
       ee-first: 1.1.1
 
-  on-finished@2.4.1:
-    dependencies:
-      ee-first: 1.1.1
-
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
@@ -7407,10 +7337,6 @@ snapshots:
     dependencies:
       side-channel: 1.0.6
 
-  qs@6.13.0:
-    dependencies:
-      side-channel: 1.0.6
-
   qs@6.5.2: {}
 
   queue-microtask@1.2.3: {}
@@ -7422,13 +7348,6 @@ snapshots:
       bytes: 3.0.0
       http-errors: 1.6.3
       iconv-lite: 0.4.23
-      unpipe: 1.0.0
-
-  raw-body@2.5.2:
-    dependencies:
-      bytes: 3.1.2
-      http-errors: 2.0.0
-      iconv-lite: 0.4.24
       unpipe: 1.0.0
 
   raw-body@2.5.2:
@@ -7596,8 +7515,6 @@ snapshots:
 
   setprototypeof@1.2.0: {}
 
-  setprototypeof@1.2.0: {}
-
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -7610,8 +7527,6 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
       object-inspect: 1.13.2
-
-  sift@17.1.3: {}
 
   sift@17.1.3: {}
 
@@ -7638,7 +7553,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.0:
   socket.io-client@4.8.0:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
@@ -7681,10 +7595,6 @@ snapshots:
       source-map: 0.6.1
 
   source-map@0.6.1: {}
-
-  sparse-bitfield@3.0.3:
-    dependencies:
-      memory-pager: 1.5.0
 
   sparse-bitfield@3.0.3:
     dependencies:
@@ -8053,13 +7963,6 @@ snapshots:
       tr46: 4.1.1
       webidl-conversions: 7.0.0
 
-  webidl-conversions@7.0.0: {}
-
-  whatwg-url@13.0.0:
-    dependencies:
-      tr46: 4.1.1
-      webidl-conversions: 7.0.0
-
   which-boxed-primitive@1.0.2:
     dependencies:
       is-bigint: 1.0.4
@@ -8125,8 +8028,6 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@8.17.1: {}
-
-  xmlhttprequest-ssl@2.1.1: {}
 
   xmlhttprequest-ssl@2.1.1: {}
 
