@@ -29,7 +29,7 @@ mongoose
 
   .catch((error) => console.error('Error connecting to database:', error));
 
-const rooms: { [key: number]: string[][] } = {};
+const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room
 
 io.on('connection', (socket) => {
   console.log(
