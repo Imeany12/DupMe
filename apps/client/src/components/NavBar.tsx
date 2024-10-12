@@ -21,7 +21,7 @@ export default function NavBar({ session }: { session: any }) {
             <FiHome />
           </Link>
         </li>
-        <li className='mr-6 flex w-full flex-col items-end'>
+        <li className='mr-10 flex w-full flex-col items-end'>
           {!user ? (
             <div className='flex items-center gap-4'>
               <Link
