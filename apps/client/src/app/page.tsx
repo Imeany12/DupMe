@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div>
       <NavBar session={session} />
-      <div className='mx-auto flex h-screen w-screen flex-col items-center'>
+      <div className='mx-auto flex w-screen flex-col items-center'>
         {session ? (
           <div className='flex flex-col items-center'>
             <UserProfile user={session?.user} />
@@ -29,7 +29,7 @@ export default function Home() {
         <Link href='myAccount' className='text-2xl text-green-600'>
           My Account
         </Link>
-        <div className='flex h-4/6 flex-row items-center pt-10'>
+        <div className='mt-12 flex min-h-72 flex-grow items-end'>
           {!mode ? (
             <div>
               <button
