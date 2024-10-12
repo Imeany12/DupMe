@@ -8,6 +8,16 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+.background-image {
+  background-image: url('/images/starBg.png');
+  background-size: cover; /* Ensures the image covers the whole background */
+  background-position: top; /* Centers the background */
+  background-repeat: no-repeat; /* Prevents tiling */
+  height: 100vh; /* Ensures it takes the full viewport height */
+  width: 100vw; /* Full viewport width */
+  position: responsive; /* Ensures the image scales with the viewport */
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
