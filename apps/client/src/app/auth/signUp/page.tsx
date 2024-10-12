@@ -3,8 +3,8 @@ import React from 'react';
 export default function SignUpPage() {
   return (
     <div>
-      <h1 className='my-4 py-2 pb-10 text-center text-3xl'>Register</h1>
-      <form className='mx-auto w-5/6 max-w-xl'>
+      <h1 className='py-2 pb-10 text-center text-3xl'>Register</h1>
+      <form className='mx-auto w-5/6 max-w-xl rounded-xl bg-white px-8 py-2'>
         <fieldset className='flex flex-col gap-2 border px-4 py-2'>
           <legend className='mb-2 text-2xl font-semibold text-gray-500'>
             About YOU!

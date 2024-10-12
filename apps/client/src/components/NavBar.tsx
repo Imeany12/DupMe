@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import React from 'react';
+import { FiHome } from 'react-icons/fi';
 
 type User =
   | {
@@ -10,27 +10,38 @@ type User =
     }
   | undefined;
 
-export default function NavBar() {
-  const { data: session } = useSession({
-    required: false,
-  });
-  const user = session?.user;
+export default function NavBar({ session }: { session: any }) {
+  const user: User = session?.user;
 
   return (
     <nav>
-      <ul>
-        <li className='flex flex-grow'>
-          <Link color='inherit' href='/'>
-            Home
+      <ul className='flex flex-grow py-4'>
+        <li className='ml-4'>
+          <Link href='/' className='items-start text-3xl text-white'>
+            <FiHome />
           </Link>
         </li>
-        <li>
+        <li className='mr-6 flex w-full flex-col items-end'>
           {!user ? (
-            <Link href='/api/auth/signin' className='text-3xl text-red-500'>
-              Sign In
-            </Link>
+            <div className='flex items-center gap-4'>
+              <Link
+                href='/api/auth/signin'
+                className='rounded-lg border bg-neutral-300 px-2 text-xl font-semibold text-neutral-700'
+              >
+                Sign In
+              </Link>
+              <Link
+                href='/auth/signUp'
+                className='rounded-lg border bg-neutral-800 px-2 text-xl font-semibold text-white'
+              >
+                register
+              </Link>
+            </div>
           ) : (
-            <Link color='inherit' href={'/api/auth/signout'}>
+            <Link
+              href={'/api/auth/signout'}
+              className='rounded-lg border bg-neutral-300 px-2 text-xl font-semibold text-neutral-700'
+            >
               Sign Out
             </Link>
           )}
