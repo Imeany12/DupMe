@@ -30,11 +30,11 @@ export default function SignInPage() {
   };
 
   return (
-    <div className='__next-auth-theme-auto'>
+    <div>
       <div className='card'>
         <div className='page'>
           <div className='signin'>
-            <div className='flex flex-col items-center rounded-lg border px-5 py-2 pb-4 pt-4'>
+            <div className='flex flex-col items-center rounded-lg border bg-white px-10 py-2 pb-12 pt-4'>
               <div className='provider'>
                 {error && <p className='text-red-500'>{error}</p>}
                 <form
@@ -78,14 +78,14 @@ export default function SignInPage() {
                     />
                   </div>
                   <button
-                    className='my-3 mt-6 w-full rounded-lg px-4 text-xl'
+                    className='my-3 mt-6 w-full rounded-lg border border-gray-500 px-4 py-1 text-xl'
                     type='submit'
                   >
                     Sign in
                   </button>
                   <Link
                     href={'/auth/signUp'}
-                    className='mb-4 flex w-full flex-col items-center rounded-lg border bg-cyan-600 px-4 text-xl text-gray-100'
+                    className='mb-4 flex w-full flex-col items-center rounded-lg border bg-cyan-600 px-4 py-1 text-xl text-gray-100'
                   >
                     Register
                   </Link>
@@ -107,7 +107,7 @@ export default function SignInPage() {
                       '--provider-dark-bg-hover': 'rgba(255, 255, 255, 0.8)',
                     } as React.CSSProperties
                   }
-                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-4 py-1'
+                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-14 py-1'
                 >
                   <Image
                     loading='lazy'
@@ -135,7 +135,7 @@ export default function SignInPage() {
                       '--provider-dark-bg-hover': 'rgba(36, 41, 47, 0.5)',
                     } as React.CSSProperties
                   }
-                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-4 py-1'
+                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-14 py-1'
                 >
                   <Image
                     loading='lazy'
@@ -163,7 +163,7 @@ export default function SignInPage() {
                       '--provider-dark-bg-hover': 'rgba(29, 161, 242, 0.5)',
                     } as React.CSSProperties
                   }
-                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-4 py-1'
+                  className='flex items-center gap-4 rounded-xl border-4 border-neutral-100 px-14 py-1'
                 >
                   <Image
                     loading='lazy'
