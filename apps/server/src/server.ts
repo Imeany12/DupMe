@@ -32,7 +32,16 @@ mongoose
 const rooms: { [key: number]: string[][] } = {};
 
 io.on('connection', (socket) => {
-  console.log('a user connected:', socket.id);
+  console.log(
+    'a user connected:',
+    socket.id,
+    'ip address:',
+    socket.handshake.headers['x-forwarded-for'],
+    'total connected:',
+    io.engine.clientsCount
+  );
+  io.emit('total connected:', io.engine.clientsCount);
+
   socket.on(
     'join_lobby',
     ({ username, roomId }: { username: string; roomId: number }) => {
