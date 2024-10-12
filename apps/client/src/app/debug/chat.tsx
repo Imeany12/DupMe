@@ -21,6 +21,7 @@ const ChatPage = ({
 }) => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
+  const [onlinePlayers, setOnlinePlayers] = useState(-999);
 
   const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,7 +46,14 @@ const ChatPage = ({
       setChat((pre) => [...pre, data]);
     });
 
-    return () => socket.off('receive_msg'); // Don't forget to clean up!
+    socket.on('connectedUsersCount', (usersCount: number) => {
+      setOnlinePlayers(usersCount);
+    });
+
+    return () => {
+      socket.off('receive_msg'); // Don't forget to clean up!
+      socket.off('connectedUsersCount');
+    };
   }, [socket]);
 
   return (
@@ -54,6 +62,9 @@ const ChatPage = ({
         <div style={{ marginBottom: '1rem' }}>
           <p>
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
+          </p>
+          <p>
+            Online Players: <b>{onlinePlayers}</b>
           </p>
         </div>
         <div>

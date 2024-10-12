@@ -29,7 +29,7 @@ mongoose
 
   .catch((error) => console.error('Error connecting to database:', error));
 
-const rooms: { [key: number]: string[] } = {};
+const rooms: { [key: number]: string[][] } = {};
 
 io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
@@ -39,17 +39,23 @@ io.on('connection', (socket) => {
       if (!rooms[roomId]) {
         rooms[roomId] = [];
       }
-      rooms[roomId].push(username);
+      rooms[roomId].push([username, socket.id]);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.join(roomId.toString());
       console.log(`user with id-${socket.id} joined room-${roomId}`);
+
+      const connectedUsersCount = Object.values(rooms).reduce(
+        (total, roomArray) => total + roomArray.length,
+        0
+      );
+      io.emit('connectedUsersCount', connectedUsersCount);
     }
   );
 
   socket.on(
     'leave_lobby',
     ({ username, roomId }: { username: string; roomId: number }) => {
-      rooms[roomId] = rooms[roomId].filter((player) => player !== username);
+      rooms[roomId] = rooms[roomId].filter((player) => player[0] !== username);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
     }
@@ -66,15 +72,21 @@ io.on('connection', (socket) => {
   socket.on('send_msg', (data) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId.toString()).emit('receive_msg', data);
-
-    const connectedUsersCount = io.engine.clientsCount;
-    io.emit('connectedUsersCount', connectedUsersCount);
   });
 
   socket.on('disconnect', () => {
     console.log('a user disconnected:', socket.id);
 
-    const connectedUsersCount = io.engine.clientsCount;
+    for (const roomId in rooms) {
+      rooms[roomId] = rooms[roomId].filter((player) => player[1] !== socket.id);
+      socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
+      socket.leave(roomId.toString());
+    }
+
+    const connectedUsersCount = Object.values(rooms).reduce(
+      (total, roomArray) => total + roomArray.length,
+      0
+    );
     io.emit('connectedUsersCount', connectedUsersCount);
   });
 });
