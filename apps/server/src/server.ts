@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
   );
 
   socket.on('start_game', (roomId: number) => {
-    socket.to(roomId.toString()).emit('star_game');
+    socket.to(roomId.toString()).emit('start_game'); // TODO: send random first player along with start event
   });
 
   socket.on('end_game', (roomId: number) => {
