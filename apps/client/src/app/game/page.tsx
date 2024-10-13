@@ -1,4 +1,7 @@
+'use client';
 import React, { useEffect, useState } from 'react';
+
+import Piano from '@/components/Piano';
 const initialNotes = [
   'C',
   'C#',
@@ -63,12 +66,14 @@ export default function GamePage() {
   }, [pressedNotes]);
 
   return (
-    <div>
-      {initialNotes.map((note) => (
-        <button key={note} onClick={() => handleNoteClick(note)}>
-          {note}
-        </button>
-      ))}
-    </div>
+    <Piano />
+    // <div className="h-screen pb-12 flex items-end justify-end">
+    //   {initialNotes.map((note) => (
+    //     <button key={note} //onClick={() => handleNoteClick(note)}
+    //     className='w-20 h-52 flex-shrink-0 bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7] border rounded-b-lg'>
+    //       {note}
+    //     </button>
+    //   ))}
+    // </div>
   );
 }
