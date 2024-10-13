@@ -14,7 +14,7 @@ export default function DebugPage() {
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setRoomId] = useState(-999);
 
-  const handleJoin = () => {
+  function handleJoin() {
     if (userName !== '' && roomId !== -999) {
       socket.emit('join_lobby', { userName, roomId });
       setShowSpinner(true);
@@ -26,7 +26,7 @@ export default function DebugPage() {
     } else {
       alert('Please fill in Username and Room ID');
     }
-  };
+  }
 
   useEffect(() => {
     if (socket.connected) {
