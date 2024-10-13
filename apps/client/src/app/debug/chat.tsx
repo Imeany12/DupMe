@@ -41,6 +41,11 @@ const ChatPage = ({
     }
   };
 
+  const sendStart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    await socket.emit('start_game', roomId);
+  };
+
   useEffect(() => {
     socket.on('receive_msg', (data: IMsgDataTypes) => {
       setChat((pre) => [...pre, data]);
@@ -50,9 +55,15 @@ const ChatPage = ({
       setOnlinePlayers(usersCount);
     });
 
+    socket.on('start_game', (player: string[]) => {
+      // listening to start_game with first player
+      console.log('starting player: ' + player);
+    });
+
     return () => {
       socket.off('receive_msg'); // Don't forget to clean up!
       socket.off('connectedUsersCount');
+      socket.off('start_game');
     };
   }, [socket]);
 
@@ -100,6 +111,9 @@ const ChatPage = ({
             />
             <button className={style.chat_button}>Send</button>
           </form>
+          <button className={style.chat_button} onClick={(e) => sendStart(e)}>
+            Start
+          </button>
         </div>
       </div>
     </div>
