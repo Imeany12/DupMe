@@ -3,6 +3,11 @@ import React, { useEffect, useState } from 'react';
 
 import Piano from '@/components/Piano';
 
+type Note = {
+  note: string;
+  timePressed: number;
+};
+
 export default function GamePage() {
   const [notes, setNotes] = useState<string[]>([]);
   const [keyMappings, setKeyMappings] = useState<{ [key: string]: string }>({
