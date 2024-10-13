@@ -7,4 +7,5 @@ type IUser = {
     createdAt?: Date | null | undefined;
     games_won?: number | null | undefined;
     games_lost?: number| null | undefined;
+    keybindings?: KeyMapping | null | undefined;
 } | undefined
