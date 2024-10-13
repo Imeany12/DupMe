@@ -20,6 +20,11 @@ type Note = {
   timePressed: number;
 };
 
+type Note = {
+  note: string;
+  timePressed: number;
+};
+
 export default function GamePage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
