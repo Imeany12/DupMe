@@ -1,11 +1,11 @@
 export interface IUser {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   email?: string;
   image?: string;
-  createdAt: Date;
-  games_won: number;
-  games_lost: number;
+  createdAt?: Date;
+  games_won?: number;
+  games_lost?: number;
   games_draw: number;
   total_score: number;
   matchHistory: IMatch[]; 
@@ -25,4 +25,15 @@ export interface IMsgDataTypes {
   user: string;
   msg: string;
   time: string;
-}
+}export interface IUser {
+    username?: string ;
+    email?: string ;
+    image?: string ;
+    password?: string; 
+    createdAt?: Date ;
+    dob?: Date ;
+    gender?: string;
+    bio?: string;
+    games_won?: number; 
+    games_lost?: number;
+} 
