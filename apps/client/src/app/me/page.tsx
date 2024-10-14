@@ -3,7 +3,7 @@
 
 // Remember you must use an AuthProvider for
 // client components to useSession
-import Link from 'next/link';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
@@ -19,6 +19,7 @@ export default function AccountPage(): React.JSX.Element {
       redirect('/api/auth/signin?callbackUrl=/me');
     },
   });
+  const user = session?.user;
 
   return (
     <div className='px-3 py-4'>
