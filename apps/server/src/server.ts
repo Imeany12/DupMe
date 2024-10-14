@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 
 import { MONGO_URL, PORT } from './env';
 import mainRoutes from './routes/main';
+import scoreRoutes from './routes/score';
 import userRoutes from './routes/user';
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use('/user', userRoutes);
 app.use('/', mainRoutes);
+app.use('/score', scoreRoutes);
 
 const server = createServer(app);
 const io = new Server(server, {
