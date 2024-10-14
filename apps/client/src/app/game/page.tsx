@@ -9,7 +9,7 @@ type Note = {
 };
 
 export default function GamePage() {
-  const [notes, setNotes] = useState<string[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [keyMappings, setKeyMappings] = useState<{ [key: string]: string }>({
     C: 's',
     'C#': 'e',
@@ -27,6 +27,7 @@ export default function GamePage() {
   //need to get keybindings from the server
 
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
+  const [pressStartTime, setPressStartTime] = useState<number | null>(null);
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const pressedKey = event.key.toLowerCase();
@@ -36,8 +37,30 @@ export default function GamePage() {
       (note) => keyMappings[note] === pressedKey
     );
 
-    if (note) {
+    if (note && pressedNotes[pressedNotes.length - 1] !== note) {
       setPressedNotes((prev) => [...prev, note]);
+      const startTime = Date.now();
+      setPressStartTime(startTime);
+    }
+  };
+
+  const handleKeyRelease = (event: KeyboardEvent) => {
+    const releasedKey = event.key.toLowerCase();
+    const note = Object.keys(keyMappings).find(
+      (note) => keyMappings[note] === releasedKey
+    );
+    if (pressStartTime !== null && note && pressedNotes.includes(note)) {
+      const endTime = Date.now();
+      const timePressed = endTime - pressStartTime;
+
+      const newNote: Note = {
+        note: pressedNotes[pressedNotes.length - 1],
+        timePressed: timePressed,
+      };
+      setNotes((prev) => [...prev, newNote]);
+      console.log(notes);
+      //idk why this console.log dealyed by 1 note
+      setPressStartTime(null);
     }
   };
 
@@ -48,15 +71,34 @@ export default function GamePage() {
       }
     }, 5000);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyRelease);
 
     // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [keyMappings]);
+  }, [keyMappings, pressedNotes, pressStartTime]);
 
   const handleNoteClick = (note: string) => {
     setPressedNotes((prev) => [...prev, note]);
+    const startTime = Date.now();
+    setPressStartTime(startTime);
+  };
+
+  const handleNoteRelease = (note: string) => {
+    if (pressStartTime !== null) {
+      const endTime = Date.now();
+      const timePressed = endTime - pressStartTime;
+
+      const newNote: Note = {
+        note: note,
+        timePressed: timePressed,
+      };
+      setNotes((prev) => [...prev, newNote]);
+      console.log(notes);
+      setPressStartTime(null);
+    }
   };
 
   // const sendNotesToServer = async () => {
@@ -73,16 +115,6 @@ export default function GamePage() {
   //     console.error('Error sending notes to server:', error);
   //   }
   // };
-
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     if (pressedNotes.length > 0) {
-  //       sendNotesToServer();
-  //     }
-  //   }, 5000);
-
-  //   return () => clearTimeout(timer);
-  // }, [pressedNotes]);
 
   return (
     //still need to change background? or make a white box?
@@ -101,7 +133,10 @@ export default function GamePage() {
         </div>
         {/* {show pressednotes here} */}
         <div className='flex h-full flex-col justify-end pt-16'>
-          <Piano onNoteClick={handleNoteClick} />
+          <Piano
+            onNoteClick={handleNoteClick}
+            onNoteReleased={handleNoteRelease}
+          />
         </div>
       </div>
     </div>
