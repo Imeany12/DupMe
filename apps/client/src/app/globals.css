@@ -13,10 +13,9 @@
   background-size: cover; /* Ensures the image covers the whole background */
   background-position: top; /* Centers the background */
   background-repeat: repeat; /* Prevents tiling */
-  height: 100vh; /* Ensures it takes the full viewport height */
-  width: 100vw; /* Full viewport width */
-  position: responsive; 
-  position: responsive; /* Ensures the image scales with the viewport */
+  height: 100vh;
+  width: 100vw; 
+  position: fixed; 
 }
 
 @media (prefers-color-scheme: dark) {
