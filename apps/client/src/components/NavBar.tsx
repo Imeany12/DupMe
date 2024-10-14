@@ -15,7 +15,7 @@ export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;
 
   return (
-    <nav>
+    <nav className='w-screen'>
       <ul className='flex flex-grow py-4'>
         {/* <li className='ml-4'>
           <Link href='/' className='items-start text-3xl text-white'>
