@@ -23,7 +23,7 @@ const ChatPage = ({
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [onlinePlayers, setOnlinePlayers] = useState(-999);
 
-  const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== '') {
       const msgData: IMsgDataTypes = {
@@ -35,7 +35,7 @@ const ChatPage = ({
           ':' +
           new Date(Date.now()).getMinutes(),
       };
-      await socket.emit('send_msg', msgData);
+      socket.emit('send_msg', msgData);
       setChat((pre) => [...pre, msgData]);
       setCurrentMsg('');
     }
