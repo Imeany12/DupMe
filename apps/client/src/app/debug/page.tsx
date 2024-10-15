@@ -10,13 +10,13 @@ export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
   const [showChat, setShowChat] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [username, setUsername] = useState('');
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setRoomId] = useState(-999);
 
-  const handleJoin = () => {
-    if (userName !== '' && roomId !== -999) {
-      socket.emit('join_lobby', { userName, roomId });
+  function handleJoin() {
+    if (username !== '' && roomId !== -999) {
+      socket.emit('join_lobby', { username, roomId });
       setShowSpinner(true);
 
       setTimeout(() => {
@@ -24,9 +24,9 @@ export default function DebugPage() {
         setShowSpinner(false);
       }, 4000);
     } else {
-      alert('Please fill in Username and Room ID');
+      alert('Please fill in username and Room ID');
     }
-  };
+  }
 
   useEffect(() => {
     if (socket.connected) {
@@ -69,8 +69,8 @@ export default function DebugPage() {
           <input
             className={styles.main_input}
             type='text'
-            placeholder='Username'
-            onChange={(e) => setUserName(e.target.value)}
+            placeholder='username'
+            onChange={(e) => setUsername(e.target.value)}
             disabled={showSpinner}
           />
           <input
@@ -89,7 +89,7 @@ export default function DebugPage() {
           </button>
         </div>
         <div style={{ display: !showChat ? 'none' : '' }}>
-          <ChatPage socket={socket} roomId={roomId} username={userName} />
+          <ChatPage socket={socket} roomId={roomId} username={username} />
         </div>
       </div>
     </div>

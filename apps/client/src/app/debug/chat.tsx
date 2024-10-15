@@ -23,7 +23,7 @@ const ChatPage = ({
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [onlinePlayers, setOnlinePlayers] = useState(-999);
 
-  const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMsg !== '') {
       const msgData: IMsgDataTypes = {
@@ -35,10 +35,15 @@ const ChatPage = ({
           ':' +
           new Date(Date.now()).getMinutes(),
       };
-      await socket.emit('send_msg', msgData);
+      socket.emit('send_msg', msgData);
       setChat((pre) => [...pre, msgData]);
       setCurrentMsg('');
     }
+  };
+
+  const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    socket.emit('start_game', roomId);
   };
 
   useEffect(() => {
@@ -50,9 +55,16 @@ const ChatPage = ({
       setOnlinePlayers(usersCount);
     });
 
+    socket.on('start_game', (player: string[]) => {
+      // listening to start_game with first player
+      console.log('starting player: ' + player);
+    });
+
     return () => {
-      socket.off('receive_msg'); // Don't forget to clean up!
+      // Don't forget to clean up!
+      socket.off('receive_msg');
       socket.off('connectedUsersCount');
+      socket.off('start_game');
     };
   }, [socket]);
 
@@ -100,6 +112,9 @@ const ChatPage = ({
             />
             <button className={style.chat_button}>Send</button>
           </form>
+          <button className={style.chat_button} onClick={(e) => sendStart(e)}>
+            Start
+          </button>
         </div>
       </div>
     </div>

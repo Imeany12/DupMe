@@ -22,14 +22,21 @@ const io = new Server(server, {
     credentials: true,
   },
 });
+const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room
+
+function handleFirstPlayer(
+  rooms: { [key: number]: string[][] },
+  roomId: number
+) {
+  const randomPlayer = Math.floor(Math.random() * rooms[roomId].length);
+  return rooms[roomId][randomPlayer];
+}
 
 mongoose
   .connect(MONGO_URL, { dbName: 'dbconnect' })
   .then(() => console.log('Database connection established'))
 
   .catch((error) => console.error('Error connecting to database:', error));
-
-const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room
 
 io.on('connection', (socket) => {
   console.log(
@@ -48,6 +55,7 @@ io.on('connection', (socket) => {
       if (!rooms[roomId]) {
         rooms[roomId] = [];
       }
+      console.log('received: ' + username);
       rooms[roomId].push([username, socket.id]);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.join(roomId.toString());
@@ -71,7 +79,11 @@ io.on('connection', (socket) => {
   );
 
   socket.on('start_game', (roomId: number) => {
-    socket.to(roomId.toString()).emit('start_game'); // TODO: send random first player along with start event
+    const firstPlayer = handleFirstPlayer(rooms, roomId);
+    socket
+      .to(roomId.toString())
+      .emit('start_game', handleFirstPlayer(rooms, roomId));
+    console.log('received start, starting player: ' + firstPlayer[0]);
   });
 
   socket.on('end_game', (roomId: number) => {
