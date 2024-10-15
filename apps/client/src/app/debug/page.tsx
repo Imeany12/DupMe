@@ -10,7 +10,7 @@ export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
   const [showChat, setShowChat] = useState(false);
-  const [username, setusername] = useState('');
+  const [username, setUsername] = useState('');
   const [showSpinner, setShowSpinner] = useState(false);
   const [roomId, setRoomId] = useState(-999);
 
@@ -70,7 +70,7 @@ export default function DebugPage() {
             className={styles.main_input}
             type='text'
             placeholder='username'
-            onChange={(e) => setusername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
             disabled={showSpinner}
           />
           <input
