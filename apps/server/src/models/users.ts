@@ -20,6 +20,8 @@ const userSchema = new Schema<IUser>(
       required: true,
       minlength: [4, 'Password must be at least 4 characters long'],
     },
+    email: { type: String },
+    image: { type: String },
     createdAt: {
       type: Date,
       default: Date.now,

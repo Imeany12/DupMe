@@ -2,6 +2,7 @@ import { IMsgDataTypes } from '@repo/shared-types/src/types';
 import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
+import path from 'path';
 import { Server } from 'socket.io';
 
 import { MONGO_URL, PORT } from './env';
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/user', userRoutes);
 app.use('/', mainRoutes);
 app.use('/score', scoreRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const server = createServer(app);
 const io = new Server(server, {

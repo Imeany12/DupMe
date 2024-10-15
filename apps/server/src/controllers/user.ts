@@ -83,7 +83,7 @@ export const loginUser = async (req: Request, res: Response) => {
 export const removeUser = async (req: Request, res: Response) => {
   try {
     const username = await User.findOneAndDelete({
-      username: req.body.username,
+      username: req.params.username,
     });
 
     if (!username) {
@@ -95,5 +95,37 @@ export const removeUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Error deleting user' });
+  }
+};
+
+export const uploadImage = async (req: Request, res: Response) => {
+  const { username } = req.params;
+  const image = req.file?.filename;
+
+  if (!image) {
+    return res.status(400).json({ message: 'Image is required' });
+  }
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  if (!allowedTypes.includes(req.file?.mimetype || '')) {
+    return res.status(400).json({
+      message: 'Invalid file type. Only JPG, PNG, and GIF are allowed.',
+    });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.image = image;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: 'Image uploaded successfully', user: username });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating image', error });
   }
 };
