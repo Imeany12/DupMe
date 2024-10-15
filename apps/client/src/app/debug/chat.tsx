@@ -61,7 +61,8 @@ const ChatPage = ({
     });
 
     return () => {
-      socket.off('receive_msg'); // Don't forget to clean up!
+      // Don't forget to clean up!
+      socket.off('receive_msg');
       socket.off('connectedUsersCount');
       socket.off('start_game');
     };
