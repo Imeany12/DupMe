@@ -6,10 +6,20 @@ import Piano from '@/components/Piano';
 type Note = {
   note: string;
   timePressed: number;
+  //startTime: number;
+  //endTime: number;
+};
+type pressNote = {
+  pressing: boolean;
+  note: string;
 };
 
 export default function GamePage() {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [presNote, setPresNote] = useState<pressNote>({
+    pressing: false,
+    note: '',
+  });
   const [keyMappings, setKeyMappings] = useState<{ [key: string]: string }>({
     C: 's',
     'C#': 'e',
@@ -37,10 +47,14 @@ export default function GamePage() {
       (note) => keyMappings[note] === pressedKey
     );
 
-    if (note && pressedNotes[pressedNotes.length - 1] !== note) {
+    if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
       setPressedNotes((prev) => [...prev, note]);
       const startTime = Date.now();
       setPressStartTime(startTime);
+      setPresNote({
+        pressing: true,
+        note: pressedKey,
+      });
     }
   };
 
@@ -62,6 +76,10 @@ export default function GamePage() {
       //idk why this console.log dealyed by 1 note
       setPressStartTime(null);
     }
+    setPresNote({
+      pressing: false,
+      note: '',
+    });
   };
 
   useEffect(() => {
@@ -140,14 +158,5 @@ export default function GamePage() {
         </div>
       </div>
     </div>
-
-    // <div className="h-screen pb-12 flex items-end justify-end">
-    //   {initialNotes.map((note) => (
-    //     <button key={note} //onClick={() => handleNoteClick(note)}
-    //     className='w-20 h-52 flex-shrink-0 bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7] border rounded-b-lg'>
-    //       {note}
-    //     </button>
-    //   ))}
-    // </div>
   );
 }
