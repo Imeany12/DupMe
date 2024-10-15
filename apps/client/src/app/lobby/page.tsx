@@ -1,15 +1,52 @@
 'use client';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function LobbyPage() {
+import { socket } from '@/socket';
+//need to change User to IUser and retrive the data from the server
+
+type User =
+  | {
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;
+
+export default function LobbyPage({ roomId }: any) {
   const { data: session } = useSession({
     required: false,
   });
-  const [ready, setReady] = useState(false);
-
   const user = session?.user;
+  const [ready, setReady] = useState(false);
+  //test map
+  const [players, setPlayers] = useState<User[]>([user, user]);
+  const [isGameStarting, setIsGameStarting] = useState(false);
+
+  // Emit player join event when component mounts
+  useEffect(() => {
+    socket.emit('join_lobby', { roomId });
+    socket.on('update_players', (playerList: User[]) => {
+      setPlayers(playerList);
+    });
+
+    socket.on('start_game', () => {
+      setIsGameStarting(true);
+    });
+
+    return () => {
+      socket.emit('leave_lobby', { roomId });
+      socket.off('update_players');
+      socket.off('start_game');
+    };
+  }, [socket, roomId]);
+
+  const startGame = () => {
+    if (players.length >= 2) {
+      socket.emit('start_game', roomId);
+    }
+  };
   return (
     <div className='min-h-screen bg-gray-800 text-white'>
       {/* Header: Player Info */}
@@ -55,33 +92,32 @@ export default function LobbyPage() {
           </h2>
           <ul className='space-y-2'>
             {/* All player in the room */}
-            {['Suntoh', 'Shinon', 'ambitous', 'Asuna Yuuki'].map(
-              (player, index) => (
-                <li key={index} className='flex items-center justify-between'>
-                  <div className='flex items-center'>
-                    <span className='font-semibold text-pink-500'>
-                      {player}
-                    </span>
-                    <span className='ml-2 text-gray-400'>
-                      {index === 0 ? '[host]' : '[player]'}
-                    </span>
-                  </div>
-                  <div>
-                    {index % 2 === 0 && (
-                      <Image
-                        src='/lock-icon.png'
-                        alt='Lock'
-                        width={20}
-                        height={20}
-                      />
-                    )}
-                  </div>
-                </li>
-              )
-            )}
+            {players.map((user: User, index: number) => (
+              <li key={index} className='flex items-center justify-between'>
+                <div className='flex items-center gap-4'>
+                  <Image
+                    className='mx-auto mb-2 mt-2 flex rounded-full border-2 border-black shadow-black drop-shadow-xl dark:border-slate-500'
+                    src={session?.user?.image ?? '/images/default-profile.png'}
+                    width={50}
+                    height={50}
+                    alt={session?.user?.name ?? 'Profile Pic'}
+                    priority={true}
+                  />
+                  <span className='font-semibold text-pink-500'>
+                    {user?.name ?? 'Guest'}
+                  </span>
+                </div>
+                <div>
+                  {/* for some indicator player playing ex. locked icon */}
+                </div>
+              </li>
+            ))}
           </ul>
           <div className='flex w-full items-center justify-between gap-20 px-12 pt-2'>
-            <button className='w-full rounded bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-500'>
+            <button
+              className='w-full rounded bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-500'
+              onClick={() => console.log(players)}
+            >
               Leave Match
             </button>
             {ready ? (
