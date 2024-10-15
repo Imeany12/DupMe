@@ -8,3 +8,10 @@ type IUser = {
     games_won?: number | null | undefined;
     games_lost?: number| null | undefined;
 } | undefined
+
+export interface IMsgDataTypes {
+    roomId: string | number;
+    user: string;
+    msg: string;
+    time: string;
+  }

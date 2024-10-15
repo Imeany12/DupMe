@@ -1,14 +1,8 @@
 'use client';
+import { IMsgDataTypes } from '@repo/shared-types/src/types';
 import React, { useEffect, useState } from 'react';
 
 import style from './chat.module.css';
-
-interface IMsgDataTypes {
-  roomId: string | number;
-  user: string;
-  msg: string;
-  time: string;
-}
 
 const ChatPage = ({
   socket,
