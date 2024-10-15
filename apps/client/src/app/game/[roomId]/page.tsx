@@ -1,8 +1,13 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { redirect, useParams } from 'next/navigation';
 
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
+import { socket } from '@/socket';
+import { FaFontAwesomeFlag } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+
 
 type Note = {
   note: string;
@@ -16,8 +21,9 @@ type pressNote = {
 };
 
 
-
 export default function GamePage() {
+  const { roomId } = useParams();
+  const [play,setPlay] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
@@ -38,11 +44,29 @@ export default function GamePage() {
     B: 'k',
   });
   //need to get keybindings from the server
-
+  const router = useRouter();
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
+  
+  const sendNoteToPlayer = (notes: Note[]) => {
+    socket.emit('sendNote',roomId, notes);
+  };
+
+  useEffect(() => {
+    const handleReceiveNote = (notes: Note[]) => {
+      notes.forEach(({ note, timePressed }) => {
+        console.log(`Received note: ${note} for ${timePressed}ms`);
+      });
+    };
+    
+    socket.on('receiveNote', handleReceiveNote);
+  
+    return () => {
+      socket.off('receiveNote', handleReceiveNote);
+    };
+  }, []);
 
   const startSound = (frequency: number, key: string) => {
     if (!audioContext || activeOscillators[key]) return;
@@ -52,7 +76,7 @@ export default function GamePage() {
     // make the sound clear, smooth and not too loud
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-
+    
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
     oscillator.type = 'sine';
 
@@ -163,9 +187,12 @@ export default function GamePage() {
     }
     const timer = setTimeout(() => {
       if (pressedNotes.length > 0) {
-        //sendNotesToPlayer();
+        console.log('sending notes');
+        sendNoteToPlayer(notes);
+        setPlay(true); //change player
       }
-    }, 5000);
+    }, 30000);
+    //sendNote after 1 minute
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
@@ -201,6 +228,15 @@ export default function GamePage() {
 
   return (
     <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
+        <div className='flex items-start justify-start w-full'>
+          <button className='text-white size-20 px-8 pt-6'
+          onClick={()=>{socket.emit("game_end"); 
+            console.log("player resign");
+            router.push('/lobby/'+roomId);
+           }}>
+            <FaFontAwesomeFlag size={30} className='shadow-white shadow-inner'/>
+          </button>
+        </div>
       <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
         <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
         <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
