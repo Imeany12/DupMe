@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import JoinRoomPage from '@/pages/joinRoom/page';
+
 import { socket } from '../../socket';
 
 export default function DebugPage() {
@@ -40,6 +42,8 @@ export default function DebugPage() {
     <div>
       <p>Status: {isConnected ? 'connected' : 'disconnected'}</p>
       <p>Transport: {transport}</p>
+
+      <JoinRoomPage socket={socket} />
     </div>
   );
 }
