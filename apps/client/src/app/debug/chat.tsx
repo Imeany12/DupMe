@@ -41,9 +41,9 @@ const ChatPage = ({
     }
   };
 
-  const sendStart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    await socket.emit('start_game', roomId);
+    socket.emit('start_game', roomId);
   };
 
   useEffect(() => {
