@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import ChatPage from '../../pages/chat/chat';
+import ChatPage from '../../pages/chat/page';
 import { socket } from '../../socket';
 import styles from './page.module.css';
 

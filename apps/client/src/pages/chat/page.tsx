@@ -2,7 +2,7 @@
 import { IMsgDataTypes } from '@repo/shared-types/src/types';
 import React, { useEffect, useState } from 'react';
 
-import style from './chat.module.css';
+import style from './page.module.css';
 
 const ChatPage = ({
   socket,
