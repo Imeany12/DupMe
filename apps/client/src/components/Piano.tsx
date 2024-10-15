@@ -8,7 +8,7 @@ export default function Piano({
   onNoteReleased: (note: string) => void;
 }) {
   return (
-    <div className='flex rounded-3xl border-2 bg-white p-2'>
+    <div className='relative flex rounded-3xl border-2 bg-white p-2'>
       <div className='relative'>
         {/* White Keys */}
         <div className='flex text-gray-700'>
@@ -66,35 +66,35 @@ export default function Piano({
         {/* Black Keys */}
         <div className='absolute left-5 top-0 flex text-white'>
           <button
-            className='absolute ml-[4px] h-44 w-12 translate-x-8 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='z-10 ml-[74%] h-44 w-12 flex-shrink-0 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('C#')}
             onMouseUp={() => onNoteReleased('C#')}
           >
             C#
           </button>
           <button
-            className='absolute h-44 w-12 translate-x-28 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[242%] h-44 w-12 flex-shrink-0 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('D#')}
             onMouseUp={() => onNoteReleased('D#')}
           >
             D#
           </button>
           <button
-            className='absolute h-44 w-12 translate-x-[274px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[574%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('F#')}
             onMouseUp={() => onNoteReleased('F#')}
           >
             F#
           </button>
           <button
-            className='absolute h-44 w-12 translate-x-[358px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[742%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('G#')}
             onMouseUp={() => onNoteReleased('G#')}
           >
             G#
           </button>
           <button
-            className='absolute h-44 w-12 translate-x-[436px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[906%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('A#')}
             onMouseUp={() => onNoteReleased('A#')}
           >
