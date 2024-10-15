@@ -62,7 +62,9 @@ export default function LobbyPage({ username, roomId }: any) {
               <p>{session?.user?.name}</p>
             </div>
           ) : (
-            <p>guest</p>
+            <div className='mx-32 mb-4 flex items-center justify-center gap-3 rounded-lg border-2 border-slate-400 px-64 py-2'>
+              <p>guest</p>
+            </div>
           )}
           <p className='mb-8'>Waiting for players...</p>
           <ul>
@@ -70,7 +72,7 @@ export default function LobbyPage({ username, roomId }: any) {
               <li key={index}>{player}</li>
             ))}
           </ul>
-          <div className='flex w-full items-center justify-between gap-4 px-6'>
+          <div className='flex w-full items-center justify-between gap-4 px-12'>
             <button className='w-full rounded-md border-2 px-2'>
               Leave Game
             </button>
