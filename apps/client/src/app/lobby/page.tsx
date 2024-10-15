@@ -11,78 +11,41 @@ export default function LobbyPage() {
 
   const user = session?.user;
   return (
-    <div className='min-h-screen bg-gray-800 text-white'>
-      {/* Header: Player Info */}
-      <header className='flex items-center justify-between bg-gray-900 p-4'>
-        {session ? (
-          <div className='flex items-center'>
-            <Image
-              src={user?.image ?? '/images/default-profile.png'}
-              alt='Player Avatar'
-              width={100}
-              height={100}
-              className='rounded-full'
-            />
-            <div className='ml-4'>
-              <h1 className='text-xl font-bold'>Suntoh</h1>
-              <p className='text-sm'>Performance: 3,161pp</p>
-              <p className='text-sm'>Accuracy: 97.17%</p>
-              <p className='text-sm'>Lv98</p>
+    <div className='flex justify-center'>
+      <div className='mx-12 mt-6 flex max-w-[990px] flex-col items-center rounded-lg border-2 border-gray-600 bg-white pb-80'>
+        <div className='mt-2 flex w-full flex-col items-center gap-2 py-2 text-2xl'>
+          <div className='flex w-full items-center justify-between gap-20 px-20 pb-10 pt-4 text-3xl font-bold'>
+            <h1 className='w-full'>Lobby </h1>
+            <p className='w-full'>
+              Room ID: <b>{roomId}</b>
+            </p>
+          </div>
+          {session ? (
+            <div className='mx-6 flex items-center justify-center gap-3 rounded-lg border-2 border-slate-400 px-64'>
+              <Image
+                className='mx-auto mb-2 mt-2 flex rounded-full border-2 border-black shadow-black drop-shadow-xl dark:border-slate-500'
+                src={session?.user?.image ?? '/images/default-profile.png'}
+                width={50}
+                height={50}
+                alt={session?.user?.name ?? 'Profile Pic'}
+                priority={true}
+              />
+              <p>{session?.user?.name}</p>
             </div>
-          </div>
-        ) : (
-          <div className='flex items-center'>
-            <h1 className='text-xl font-bold'>Guest</h1>
-          </div>
-        )}
-        <div className='flex items-center'>
-          <div className='relative h-2 w-40 rounded-full bg-gray-700'>
-            <div
-              className='absolute left-0 top-0 h-2 rounded-full bg-pink-500'
-              style={{ width: '75%' }}
-            ></div>
-          </div>
-          <p className='ml-2 text-sm'>#248705</p>
-        </div>
-      </header>
-
-      {/* Main Lobby Content */}
-      <div className='grid grid-cols-3 gap-4 p-6'>
-        {/* Player List */}
-        <div className='col-span-2 rounded-lg bg-gray-900 p-4'>
-          <h2 className='mb-4 text-lg font-semibold'>
-            Current Players (14/16)
-          </h2>
-          <ul className='space-y-2'>
-            {/* All player in the room */}
-            {['Suntoh', 'Shinon', 'ambitous', 'Asuna Yuuki'].map(
-              (player, index) => (
-                <li key={index} className='flex items-center justify-between'>
-                  <div className='flex items-center'>
-                    <span className='font-semibold text-pink-500'>
-                      {player}
-                    </span>
-                    <span className='ml-2 text-gray-400'>
-                      {index === 0 ? '[host]' : '[player]'}
-                    </span>
-                  </div>
-                  <div>
-                    {index % 2 === 0 && (
-                      <Image
-                        src='/lock-icon.png'
-                        alt='Lock'
-                        width={20}
-                        height={20}
-                      />
-                    )}
-                  </div>
-                </li>
-              )
-            )}
+          ) : (
+            <div className='mx-32 mb-4 flex items-center justify-center gap-3 rounded-lg border-2 border-slate-400 px-64 py-2'>
+              <p>guest</p>
+            </div>
+          )}
+          <p className='mb-8'>Waiting for players...</p>
+          <ul>
+            {players.map((player, index) => (
+              <li key={index}>{player}</li>
+            ))}
           </ul>
-          <div className='flex w-full items-center justify-between gap-20 px-12 pt-2'>
-            <button className='w-full rounded bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-500'>
-              Leave Match
+          <div className='flex w-full items-center justify-between gap-4 px-12'>
+            <button className='w-full rounded-md border-2 px-2'>
+              Leave Game
             </button>
             {ready ? (
               <button className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
