@@ -1,15 +1,11 @@
 'use client';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
 export default function LobbyPage() {
   const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/myAccount');
-    },
+    required: false,
   });
   const [ready, setReady] = useState(false);
 
@@ -18,21 +14,27 @@ export default function LobbyPage() {
     <div className='min-h-screen bg-gray-800 text-white'>
       {/* Header: Player Info */}
       <header className='flex items-center justify-between bg-gray-900 p-4'>
-        <div className='flex items-center'>
-          <Image
-            src={user?.image ?? '/images/default-profile.png'}
-            alt='Player Avatar'
-            width={100}
-            height={100}
-            className='rounded-full'
-          />
-          <div className='ml-4'>
-            <h1 className='text-xl font-bold'>Suntoh</h1>
-            <p className='text-sm'>Performance: 3,161pp</p>
-            <p className='text-sm'>Accuracy: 97.17%</p>
-            <p className='text-sm'>Lv98</p>
+        {session ? (
+          <div className='flex items-center'>
+            <Image
+              src={user?.image ?? '/images/default-profile.png'}
+              alt='Player Avatar'
+              width={100}
+              height={100}
+              className='rounded-full'
+            />
+            <div className='ml-4'>
+              <h1 className='text-xl font-bold'>Suntoh</h1>
+              <p className='text-sm'>Performance: 3,161pp</p>
+              <p className='text-sm'>Accuracy: 97.17%</p>
+              <p className='text-sm'>Lv98</p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className='flex items-center'>
+            <h1 className='text-xl font-bold'>Guest</h1>
+          </div>
+        )}
         <div className='flex items-center'>
           <div className='relative h-2 w-40 rounded-full bg-gray-700'>
             <div
