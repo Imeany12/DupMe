@@ -19,8 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body className={`background-image ${inter.className}`}>
         <AuthProvider>
+          {/* <NavBar /> */}
           <main>{children}</main>
         </AuthProvider>
       </body>
