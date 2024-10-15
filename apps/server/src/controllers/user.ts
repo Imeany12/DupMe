@@ -22,7 +22,7 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(409).json({ error: 'Username already exists' });
     }
 
     const { password } = req.body;
@@ -47,9 +47,9 @@ export const createUser = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof Error) {
-      res.status(409).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     } else {
-      res.status(409).json({ message: 'An unknown error occurred' });
+      res.status(500).json({ message: 'An unknown error occurred' });
     }
   }
 };
@@ -58,7 +58,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(401).json({ error: 'Username not found' });
+      return res.status(200).json({ error: 'Username not found' });
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -66,7 +66,7 @@ export const loginUser = async (req: Request, res: Response) => {
       user.password
     );
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     const token = jwt.sign(
@@ -77,5 +77,55 @@ export const loginUser = async (req: Request, res: Response) => {
     return res.status(200).json({ message: 'Login successful', token });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const removeUser = async (req: Request, res: Response) => {
+  try {
+    const username = await User.findOneAndDelete({
+      username: req.params.username,
+    });
+
+    if (!username) {
+      return res.status(200).json({ message: 'Username not found' });
+    }
+    return res
+      .status(200)
+      .json({ message: 'User deleted successfully', user: username });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error deleting user' });
+  }
+};
+
+export const uploadImage = async (req: Request, res: Response) => {
+  const { username } = req.params;
+  const image = req.file?.filename;
+
+  if (!image) {
+    return res.status(400).json({ message: 'Image is required' });
+  }
+
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  if (!allowedTypes.includes(req.file?.mimetype || '')) {
+    return res.status(400).json({
+      message: 'Invalid file type. Only JPG, PNG, and GIF are allowed.',
+    });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(200).json({ message: 'User not found' });
+    }
+
+    user.image = image;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: 'Image uploaded successfully', user: username });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error updating image', error });
   }
 };
