@@ -28,7 +28,7 @@ export const createUser = async (req: Request, res: Response) => {
     const { password } = req.body;
     if (!password || password.length < 4) {
       return res
-        .status(409)
+        .status(400)
         .json({ error: 'Password must be at least 4 characters long' });
     }
 
@@ -58,7 +58,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(409).json({ error: 'Username not found' });
+      return res.status(200).json({ error: 'Username not found' });
     }
 
     const passwordMatch = await bcrypt.compare(
@@ -66,7 +66,7 @@ export const loginUser = async (req: Request, res: Response) => {
       user.password
     );
     if (!passwordMatch) {
-      return res.status(409).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     const token = jwt.sign(
@@ -87,7 +87,7 @@ export const removeUser = async (req: Request, res: Response) => {
     });
 
     if (!username) {
-      return res.status(409).json({ message: 'Username not found' });
+      return res.status(200).json({ message: 'Username not found' });
     }
     return res
       .status(200)
@@ -103,12 +103,12 @@ export const uploadImage = async (req: Request, res: Response) => {
   const image = req.file?.filename;
 
   if (!image) {
-    return res.status(409).json({ message: 'Image is required' });
+    return res.status(400).json({ message: 'Image is required' });
   }
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
   if (!allowedTypes.includes(req.file?.mimetype || '')) {
-    return res.status(409).json({
+    return res.status(400).json({
       message: 'Invalid file type. Only JPG, PNG, and GIF are allowed.',
     });
   }
@@ -116,7 +116,7 @@ export const uploadImage = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(409).json({ message: 'User not found' });
+      return res.status(200).json({ message: 'User not found' });
     }
 
     user.image = image;

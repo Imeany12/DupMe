@@ -30,7 +30,7 @@ export const addScoreAndMatch = async (req: Request, res: Response) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(200).json({ message: 'User not found.' });
     }
 
     return res.status(201).json({
@@ -62,7 +62,7 @@ export const addMatch = async (req: Request, res: Response) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(200).json({ message: 'User not found.' });
     }
 
     return res.status(201).json({
@@ -96,7 +96,7 @@ export const addScore = async (req: Request, res: Response) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(200).json({ message: 'User not found.' });
     }
 
     return res.status(201).json({
@@ -134,7 +134,7 @@ export const setScore = async (req: Request, res: Response) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(200).json({ message: 'User not found.' });
     }
 
     return res.status(201).json({
@@ -172,7 +172,7 @@ export const resetScore = async (req: Request, res: Response) => {
     );
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
+      return res.status(200).json({ message: 'User not found.' });
     }
 
     return res.status(201).json({
