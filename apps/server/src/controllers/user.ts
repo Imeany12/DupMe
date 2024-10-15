@@ -22,13 +22,13 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     const existingUser = await User.findOne({ username: req.body.username });
     if (existingUser) {
-      return res.status(400).json({ error: 'Username already exists' });
+      return res.status(409).json({ error: 'Username already exists' });
     }
 
     const { password } = req.body;
     if (!password || password.length < 4) {
       return res
-        .status(400)
+        .status(409)
         .json({ error: 'Password must be at least 4 characters long' });
     }
 
@@ -103,12 +103,12 @@ export const uploadImage = async (req: Request, res: Response) => {
   const image = req.file?.filename;
 
   if (!image) {
-    return res.status(400).json({ message: 'Image is required' });
+    return res.status(409).json({ message: 'Image is required' });
   }
 
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
   if (!allowedTypes.includes(req.file?.mimetype || '')) {
-    return res.status(400).json({
+    return res.status(409).json({
       message: 'Invalid file type. Only JPG, PNG, and GIF are allowed.',
     });
   }
@@ -116,7 +116,7 @@ export const uploadImage = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(409).json({ message: 'User not found' });
     }
 
     user.image = image;
