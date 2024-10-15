@@ -73,28 +73,28 @@ export default function Piano({
             C#
           </button>
           <button
-            className='absolute ml-[48px] h-44 w-12 translate-x-20 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute h-44 w-12 translate-x-28 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('D#')}
             onMouseUp={() => onNoteReleased('D#')}
           >
             D#
           </button>
           <button
-            className='absolute ml-[104px] h-44 w-12 translate-x-48 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute h-44 w-12 translate-x-[274px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('F#')}
             onMouseUp={() => onNoteReleased('F#')}
           >
             F#
           </button>
           <button
-            className='absolute ml-[144px] h-44 w-12 translate-x-60 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute h-44 w-12 translate-x-[358px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('G#')}
             onMouseUp={() => onNoteReleased('G#')}
           >
             G#
           </button>
           <button
-            className='absolute ml-[186px] h-44 w-12 translate-x-72 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute h-44 w-12 translate-x-[436px] transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('A#')}
             onMouseUp={() => onNoteReleased('A#')}
           >
