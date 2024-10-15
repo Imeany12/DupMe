@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+import ChatPage from '../../pages/chat/chat';
 import { socket } from '../../socket';
-import ChatPage from './chat';
 import styles from './page.module.css';
 
 export default function DebugPage() {
