@@ -1,3 +1,4 @@
+import { IMsgDataTypes } from '@repo/shared-types/src/types';
 import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
@@ -89,7 +90,7 @@ io.on('connection', (socket) => {
     socket.to(roomId.toString()).emit('end_game');
   });
 
-  socket.on('send_msg', (data) => {
+  socket.on('send_msg', (data: IMsgDataTypes) => {
     // This will send a message to a specific room ID
     socket.to(data.roomId.toString()).emit('receive_msg', data);
   });
