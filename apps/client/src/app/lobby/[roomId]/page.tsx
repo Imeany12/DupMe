@@ -166,6 +166,8 @@ export default function LobbyPage() {
         >
           chatroom
         </button>
+        {/* <ChatPage socket={socket} username={user?.name ?? 'Guest'
+        } roomId= {parseInt(roomId as string)} /> */}
       </footer>
     </div>
   );

@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
 
   socket.on('send_msg', (data: IMsgDataTypes) => {
     // This will send a message to a specific room ID
-    socket.to(data.roomId.toString()).emit('receive_msg', data);
+    io.to(data.roomId.toString()).emit('receive_msg', data);
   });
 
   socket.on('disconnect', () => {
