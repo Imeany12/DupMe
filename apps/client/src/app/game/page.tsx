@@ -72,7 +72,7 @@ export default function GamePage() {
         timePressed: timePressed,
       };
       setNotes((prev) => [...prev, newNote]);
-      console.log(notes);
+      // console.log(notes);
       //idk why this console.log dealyed by 1 note
       setPressStartTime(null);
     }
@@ -97,6 +97,10 @@ export default function GamePage() {
       window.removeEventListener('keyup', handleKeyRelease);
     };
   }, [keyMappings, pressedNotes, pressStartTime]);
+
+  useEffect(() => {
+    console.log(notes);
+  }, [notes]);
 
   const handleNoteClick = (note: string) => {
     setPressedNotes((prev) => [...prev, note]);
