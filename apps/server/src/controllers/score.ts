@@ -34,8 +34,7 @@ export const addScoreAndMatch = async (req: Request, res: Response) => {
     }
 
     return res.status(201).json({
-      message:
-        'Score of "${score}" and match "${match.outcome}" against "${match.opponent}" have been added to "${username}" successfully',
+      message: `Score of "${score}" and match "${match.outcome}" against "${match.opponent}" have been added to "${username}" successfully`,
       user: updatedUser,
     });
   } catch (error) {
@@ -66,8 +65,7 @@ export const addMatch = async (req: Request, res: Response) => {
     }
 
     return res.status(201).json({
-      message:
-        'Match "${match.outcome}" against "${match.opponent}" have been added to "${username}"',
+      message: `Match "${match.outcome}" against "${match.opponent}" have been added to "${username}"`,
       user: updatedUser,
     });
   } catch (error) {
@@ -78,7 +76,7 @@ export const addMatch = async (req: Request, res: Response) => {
 
 export const addScore = async (req: Request, res: Response) => {
   try {
-    const username = req.params;
+    const { username } = req.params;
     const score = req.body.score;
 
     if (typeof score !== 'number' || score <= 0) {
@@ -100,7 +98,7 @@ export const addScore = async (req: Request, res: Response) => {
     }
 
     return res.status(201).json({
-      message: 'Score of "${score}" has been added to "${username}"',
+      message: `Score of "${score}" has been added to "${username}"`,
       user: updatedUser,
     });
   } catch (error) {
@@ -116,7 +114,7 @@ export const addScore = async (req: Request, res: Response) => {
 
 export const setScore = async (req: Request, res: Response) => {
   try {
-    const username = req.params;
+    const { username } = req.params;
     const score = req.body.score;
 
     if (typeof score !== 'number' || score <= 0) {
@@ -138,7 +136,7 @@ export const setScore = async (req: Request, res: Response) => {
     }
 
     return res.status(201).json({
-      message: 'Score of "${score}" has been set to "${username}"',
+      message: `Score of "${score}" has been set to "${username}"`,
       user: updatedUser,
     });
   } catch (error) {
@@ -154,12 +152,7 @@ export const setScore = async (req: Request, res: Response) => {
 
 export const resetScore = async (req: Request, res: Response) => {
   try {
-    const username = req.params;
-    const score = req.body.score;
-
-    if (typeof score !== 'number' || score <= 0) {
-      return res.status(400).json({ message: 'Invalid Score' });
-    }
+    const { username } = req.params;
 
     const updatedUser = await User.findOneAndUpdate(
       { username: username },
@@ -176,7 +169,7 @@ export const resetScore = async (req: Request, res: Response) => {
     }
 
     return res.status(201).json({
-      message: 'Score of "${username}" has been reset to 0',
+      message: `Score of "${username}" has been reset to 0`,
       user: updatedUser,
     });
   } catch (error) {
