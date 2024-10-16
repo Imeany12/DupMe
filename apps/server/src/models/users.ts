@@ -1,4 +1,4 @@
-import { IMatch, IUser } from '@repo/shared-types';
+import { IMatch, IUser } from '@repo/shared-types/src/types';
 import { model, Schema } from 'mongoose';
 
 const matchSchema = new Schema<IMatch>(
