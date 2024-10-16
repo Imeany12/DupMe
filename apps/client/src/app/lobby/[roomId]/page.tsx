@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
@@ -25,17 +25,20 @@ export default function LobbyPage() {
   //test map
   const [players, setPlayers] = useState<string[]>([]);
   const [isGameStarting, setIsGameStarting] = useState(false);
+  const hasJoined = useRef(false);
 
-  // Emit player join event when component mounts
   useEffect(() => {
+    if (!user || !socket || !roomId) return;
+
+    if (!hasJoined.current) {
+      socket.emit('join_lobby', { username: user.name, roomId });
+      console.log(`user ${user?.name} joined room-${roomId}`);
+      hasJoined.current = true; // Mark as joined
+    }
+
     socket.on('update_players', (playerList: string[]) => {
       setPlayers(playerList);
-      console.log(playerList);
     });
-
-    socket.emit('join_lobby', { username: user?.name, roomId });
-    console.log(`user ${user?.name} joined room-${roomId}`);
-
     socket.on('start_game', () => {
       setIsGameStarting(true);
     });
@@ -45,7 +48,7 @@ export default function LobbyPage() {
       socket.off('update_players');
       socket.off('start_game');
     };
-  }, [socket, roomId, user]);
+  }, [socket, user, roomId]);
 
   const startGame = () => {
     if (players.length >= 2) {
@@ -108,7 +111,7 @@ export default function LobbyPage() {
                     alt={session?.user?.name ?? 'Profile Pic'}
                     priority={true}
                   />
-                  <span className='font-semibold text-pink-500'>{user}</span>
+                  <span className='font-semibold text-pink-500'>{user[0]}</span>
                 </div>
                 <div>
                   {/* for some indicator player playing ex. locked icon */}
