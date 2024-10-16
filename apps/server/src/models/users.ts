@@ -3,10 +3,11 @@ import { model, Schema } from 'mongoose';
 
 const matchSchema = new Schema<IMatch>(
   {
+    score: { type: String, required: true },
     opponent: { type: String, required: true },
     outcome: { type: String, enum: ['win', 'lose', 'draw'], required: true },
-    roundsWon: { type: Number, default: 0 },
-    roundsLost: { type: Number, default: 0 },
+    roundsWon: { type: Number, required: true },
+    roundsLost: { type: Number, required: true },
     dateTime: { type: Date, default: Date.now },
   },
   { versionKey: false }
@@ -26,6 +27,10 @@ const userSchema = new Schema<IUser>(
       type: Date,
       default: Date.now,
     },
+    total_score: {
+      type: Number,
+      default: 0,
+    },
     games_won: {
       type: Number,
       default: 0,
@@ -34,7 +39,7 @@ const userSchema = new Schema<IUser>(
       type: Number,
       default: 0,
     },
-    total_score: {
+    games_draw: {
       type: Number,
       default: 0,
     },

@@ -11,9 +11,9 @@ import {
 const router: Router = Router();
 
 router.post('/:username/add-score-and-match', addScoreAndMatch);
-router.post('/:username/addScore', addScore);
-router.post('/:username/addMatch', addMatch);
-router.post('/:username/updateScore', setScore);
-router.post('/:username/resetScore', resetScore);
+router.post('/:username/add-score', addScore);
+router.post('/:username/add-match', addMatch);
+router.post('/:username/set-score', setScore);
+router.post('/:username/reset', resetScore);
 
 export default router;
