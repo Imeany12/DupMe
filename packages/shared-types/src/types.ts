@@ -12,7 +12,7 @@ export interface IUser {
 }
 
 export interface IMatch {
-    score: string;
+    score: number;
     opponent: string;
     outcome: 'win' | 'lose' | 'draw';
     roundsWon: number; 

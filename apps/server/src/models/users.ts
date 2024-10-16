@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose';
 
 const matchSchema = new Schema<IMatch>(
   {
-    score: { type: String, required: true },
+    score: { type: Number, required: true },
     opponent: { type: String, required: true },
     outcome: { type: String, enum: ['win', 'lose', 'draw'], required: true },
     roundsWon: { type: Number, required: true },
