@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 
@@ -14,33 +15,37 @@ type User =
     }
   | undefined;
 
-export default function LobbyPage({ roomId }: any) {
+export default function LobbyPage() {
+  const { roomId } = useParams();
   const { data: session } = useSession({
     required: false,
   });
   const user = session?.user;
   const [ready, setReady] = useState(false);
   //test map
-  const [players, setPlayers] = useState<User[]>([user, user]);
+  const [players, setPlayers] = useState<User[]>([]);
   const [isGameStarting, setIsGameStarting] = useState(false);
 
   // Emit player join event when component mounts
   useEffect(() => {
-    socket.emit('join_lobby', { roomId });
-    socket.on('update_players', (playerList: User[]) => {
-      setPlayers(playerList);
-    });
+    if (user) {
+      setPlayers([user]);
+      socket.emit('join_lobby', { roomId });
+      socket.on('update_players', (playerList: User[]) => {
+        setPlayers(playerList);
+      });
 
-    socket.on('start_game', () => {
-      setIsGameStarting(true);
-    });
+      socket.on('start_game', () => {
+        setIsGameStarting(true);
+      });
 
-    return () => {
-      socket.emit('leave_lobby', { roomId });
-      socket.off('update_players');
-      socket.off('start_game');
-    };
-  }, [socket, roomId]);
+      return () => {
+        socket.emit('leave_lobby', { roomId });
+        socket.off('update_players');
+        socket.off('start_game');
+      };
+    }
+  }, [socket, roomId, user]);
 
   const startGame = () => {
     if (players.length >= 2) {
@@ -151,7 +156,13 @@ export default function LobbyPage({ roomId }: any) {
 
       {/* chat room*/}
       <footer className='flex justify-center space-x-4 bg-gray-700 p-4'>
-        <button className='rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-500'>
+        <button
+          className='rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-500'
+          onClick={() => {
+            console.log({ roomId });
+            console.log(user);
+          }}
+        >
           chatroom
         </button>
       </footer>
