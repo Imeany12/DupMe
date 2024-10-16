@@ -23,28 +23,28 @@ export default function LobbyPage() {
   const user = session?.user;
   const [ready, setReady] = useState(false);
   //test map
-  const [players, setPlayers] = useState<User[]>([]);
+  const [players, setPlayers] = useState<string[]>([]);
   const [isGameStarting, setIsGameStarting] = useState(false);
 
   // Emit player join event when component mounts
   useEffect(() => {
-    if (user) {
-      setPlayers([user]);
-      socket.emit('join_lobby', { roomId });
-      socket.on('update_players', (playerList: User[]) => {
-        setPlayers(playerList);
-      });
+    socket.on('update_players', (playerList: string[]) => {
+      setPlayers(playerList);
+      console.log(playerList);
+    });
 
-      socket.on('start_game', () => {
-        setIsGameStarting(true);
-      });
+    socket.emit('join_lobby', { username: user?.name, roomId });
+    console.log(`user ${user?.name} joined room-${roomId}`);
 
-      return () => {
-        socket.emit('leave_lobby', { roomId });
-        socket.off('update_players');
-        socket.off('start_game');
-      };
-    }
+    socket.on('start_game', () => {
+      setIsGameStarting(true);
+    });
+
+    return () => {
+      socket.emit('leave_lobby', { roomId });
+      socket.off('update_players');
+      socket.off('start_game');
+    };
   }, [socket, roomId, user]);
 
   const startGame = () => {
@@ -93,11 +93,11 @@ export default function LobbyPage() {
         {/* Player List */}
         <div className='col-span-2 rounded-lg bg-gray-900 p-4'>
           <h2 className='mb-4 text-lg font-semibold'>
-            Current Players (14/16)
+            Current Players : ({players.length})
           </h2>
           <ul className='space-y-2'>
             {/* All player in the room */}
-            {players.map((user: User, index: number) => (
+            {players.map((user: string, index: number) => (
               <li key={index} className='flex items-center justify-between'>
                 <div className='flex items-center gap-4'>
                   <Image
@@ -108,9 +108,7 @@ export default function LobbyPage() {
                     alt={session?.user?.name ?? 'Profile Pic'}
                     priority={true}
                   />
-                  <span className='font-semibold text-pink-500'>
-                    {user?.name ?? 'Guest'}
-                  </span>
+                  <span className='font-semibold text-pink-500'>{user}</span>
                 </div>
                 <div>
                   {/* for some indicator player playing ex. locked icon */}
@@ -160,7 +158,7 @@ export default function LobbyPage() {
           className='rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-500'
           onClick={() => {
             console.log({ roomId });
-            console.log(user);
+            console.log(players);
           }}
         >
           chatroom
