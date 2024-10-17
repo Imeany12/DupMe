@@ -1,8 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import Link from 'next/link';
 
 import NavBar from '@/components/NavBar';
 
@@ -25,22 +25,21 @@ export default function Home() {
         <div className='text-center text-[180px] font-semibold text-white'>
           DupMe
         </div>
-        
 
         <div className='mt-12 flex min-h-72 flex-grow items-end'>
           {!mode ? (
-            <div>
+            <div className='my-auto flex flex-row items-center'>
               <button
-                className='mt-32 rounded-lg border border-gray-500 bg-gray-200 px-8 py-2 text-4xl text-sky-600'
-                onClick={setUpGame}
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px rounded-full border border-solid border-black bg-[#5B687C] px-32 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                onClick={() => setUpGame()}
               >
                 Play
               </button>
             </div>
           ) : (
-            <div>
+            <div className='my-auto flex flex-row items-center'>
               <Link
-                className='mt-32 rounded-lg border border-gray-500 bg-gray-200 px-8 py-2 text-4xl text-sky-600'
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px rounded-full border border-solid border-black bg-[#5B687C] px-32 py-2 text-4xl text-[#FFFFFF] shadow-lg'
                 href={`/lobby/${roomId}`}
               >
                 2 Player
