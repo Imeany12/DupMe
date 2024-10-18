@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { redirect, useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -20,7 +21,7 @@ export default function LobbyPage() {
   const { data: session } = useSession({
     required: false,
   });
-  const user = session?.user;
+  const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   //test map
   const [players, setPlayers] = useState<string[]>([]);
