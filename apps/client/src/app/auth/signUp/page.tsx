@@ -1,6 +1,6 @@
 'use client';
 import { IUser } from '@repo/shared-types';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState } from 'react';
 
@@ -49,9 +49,10 @@ export default function SignUpPage() {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-    } finally {
-      router.push('/auth/signIn');
     }
+    router.push(
+      'signIn?username=' + userInfo.username + '&password=' + userInfo.password
+    );
   };
 
   //need div for iput images still no idea
