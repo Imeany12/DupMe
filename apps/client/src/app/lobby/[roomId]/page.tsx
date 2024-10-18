@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { redirect, useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -35,12 +35,16 @@ export default function LobbyPage() {
       console.log(`user ${user?.name} joined room-${roomId}`);
       hasJoined.current = true; // Mark as joined
     }
+    if (players.length >= 2) {
+      setReady(true);
+    }
 
     socket.on('update_players', (playerList: string[]) => {
       setPlayers(playerList);
     });
     socket.on('start_game', () => {
       setIsGameStarting(true);
+      redirect(`/game/${roomId}`);
     });
 
     return () => {
