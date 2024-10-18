@@ -5,10 +5,14 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
+import Snowfall from '@/components/Snowfall';
 import NavBar from '@/components/NavBar';
+import Konami from '@/lib/Konami';
+import UserProfile from '@/components/UserProfile';
 
 export default function Home() {
   const [roomId, setRoomId] = useState(0);
+  const [snowing, setSnowing] = useState(false);
   const [mode, setMode] = useState(false);
   const { data: session } = useSession({
     required: false,
@@ -22,7 +26,9 @@ export default function Home() {
   return (
     <div>
       <NavBar session={session} />
-      <div className='mx-auto flex w-screen flex-col items-center'>
+      <div className='mx-auto flex h-screen w-screen flex-col items-center'>
+      <Konami triggerSnow={() => setSnowing(true)} />
+      {snowing && <Snowfall />}
         <div className='text-center text-[180px] font-semibold text-white'>
           DupMe
         </div>
@@ -31,9 +37,9 @@ export default function Home() {
           {!mode ? (
             <div className='my-auto flex flex-row items-center'>
               <button
-                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C]  py-2 w-full px-32 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
-                onClick={() => setUpGame()}
-                >
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C] px-32 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                onClick={() => {setUpGame();setSnowing(false)}}
+              >
                 Play
               </button>
             </div>
