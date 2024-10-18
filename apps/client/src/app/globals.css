@@ -26,9 +26,10 @@
   }
 }
 
+
 body {
   color: rgb(var(--foreground-rgb));
-  background: url(/images/starBg.jpg);
+  background: url('/images/starBg.png');
   background-size: cover;
 }
 
