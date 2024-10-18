@@ -61,8 +61,9 @@ io.on('connection', (socket) => {
         rooms[roomId] = [];
       }
       rooms[roomId].push([username, socket.id]);
-      socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
+      console.log(rooms[roomId]);
       socket.join(roomId.toString());
+      io.to(roomId.toString()).emit('update_players', rooms[roomId]);
       console.log(`user with id-${socket.id} joined room-${roomId}`);
 
       const connectedUsersCount = Object.values(rooms).reduce(
@@ -96,7 +97,7 @@ io.on('connection', (socket) => {
 
   socket.on('send_msg', (data: IMsgDataTypes) => {
     // This will send a message to a specific room ID
-    socket.to(data.roomId.toString()).emit('receive_msg', data);
+    io.to(data.roomId.toString()).emit('receive_msg', data);
   });
 
   socket.on('disconnect', () => {
