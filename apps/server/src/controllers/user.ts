@@ -61,6 +61,10 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(200).json({ error: 'Username not found' });
     }
 
+    if (!user.password) {
+      return res.status(500).json({ error: 'User password is not set' });
+    }
+
     const passwordMatch = await bcrypt.compare(
       req.body.password,
       user.password

@@ -1,15 +1,16 @@
 'use client';
 import { IUser } from '@repo/shared-types';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useState } from 'react';
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState<IUser>({
     username: '',
-    email: '',
-    image: '',
     password: '',
+    image: '',
+    email: '',
     createdAt: new Date(),
     dob: new Date(),
     bio: '',
@@ -32,7 +33,10 @@ export default function SignUpPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userInfo),
+        body: JSON.stringify({
+          username: userInfo.username,
+          password: userInfo.password,
+        }),
       });
 
       const result = await res.json();
@@ -43,9 +47,10 @@ export default function SignUpPage() {
       } else {
         alert('Error creating user');
       }
-      redirect('/login');
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      router.push('/auth/signIn');
     }
   };
 
