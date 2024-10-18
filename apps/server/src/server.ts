@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
@@ -9,6 +10,17 @@ import userRoutes from './routes/user';
 
 const app = express();
 app.use(express.json());
+app.get('/', (req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 app.use('/user', userRoutes);
 app.use('/', mainRoutes);
