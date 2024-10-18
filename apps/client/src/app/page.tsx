@@ -4,9 +4,12 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
+import Snowfall from '@/components/Snowfall';
 import UserProfile from '@/components/UserProfile';
+import Konami from '@/lib/Konami';
 
 export default function Home() {
+  const [snowing, setSnowing] = useState(false);
   const [mode, setMode] = useState(false);
   const { data: session } = useSession({
     required: false,
@@ -14,6 +17,8 @@ export default function Home() {
 
   return (
     <div className='mx-auto flex h-screen w-screen flex-col items-center'>
+      <Konami triggerSnow={() => setSnowing(true)} />
+      {snowing && <Snowfall />}
       {session ? (
         <div className='flex flex-col items-center'>
           <UserProfile user={session?.user} />
@@ -32,11 +37,6 @@ export default function Home() {
           </Link>
         </div>
       )}
-      {/* <Image 
-        src= "/images/starBg.jpg"
-        alt='background'
-        layout = 'fill'
-        /> */}
       <Link href='myAccount' className='text-2xl text-green-600'>
         My Account
       </Link>
