@@ -89,7 +89,7 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note0: #82C5FFD9;
+  --note: #82C5FFD9;
   --note1: #5F89FF;
   --note2: #0D1D2CD9;
 }
@@ -100,7 +100,7 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --primary: #BDBDBDD9;
+  --note: #BDBDBDD9;
   --note1: #EFEBF0;
   --note2: #333322D9;
 }
@@ -111,7 +111,7 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note0: #EFACCD;
+  --note: #EFACCD;
   --note1: #C175D4;
   --note2: #36083F;
 }
@@ -121,7 +121,7 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note0: #5FDAFF;
+  --note: #5FFFEF;
   --note1: #8AFF82;
   --note2: #03200F;
   
@@ -132,7 +132,7 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note0: #F2AD8C;
+  --note: #F2AD8C;
   --note1: #F24545;
   --note2: #2F1515;
 }
