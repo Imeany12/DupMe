@@ -3,14 +3,12 @@
 
 // Remember you must use an AuthProvider for
 // client components to useSession
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
+import NavBar from '@/components/NavBar';
 import UserProfile from '@/components/UserProfile';
-
-// import UserProfile from '@/components/UserProfile';
 
 export default function AccountPage(): React.JSX.Element {
   const { data: session } = useSession({
@@ -22,18 +20,14 @@ export default function AccountPage(): React.JSX.Element {
   const user = session?.user;
 
   return (
-    <div className='px-3 py-4'>
-      <Link
-        href={'/'}
-        className='mt-12 rounded-lg border-2 border-gray-500 px-6'
-      >
-        Back
-      </Link>
-      {/* now having problem back button need a hard refresh
-      can not navigate back to ref='/' . now using /home for temp fix*/}
-      <section className='flex flex-col gap-4'>
-        <UserProfile user={session?.user} />
-      </section>
+    <div className='h-screen bg-zinc-900 font-sans text-white'>
+      {/* Header */}
+      <header className='flex items-center justify-between bg-slate-600 p-4'>
+        <NavBar session={session} />
+      </header>
+
+      {/* Profile Section */}
+      <UserProfile username={user?.name ?? 'Guest'} />
     </div>
   );
 }
