@@ -26,3 +26,20 @@ export interface IMsgDataTypes {
   msg: string;
   time: string;
 }
+
+export interface INote {
+  fallDuration: number,
+  longNoteDuration: number,
+  isLongNute: boolean,
+  delay: number,
+}
+
+export interface INotes {
+  color: string,
+  nextNoteInd: number,
+  notes: INote[]
+}
+
+export interface ISong {
+  sheet: INotes[]
+}
