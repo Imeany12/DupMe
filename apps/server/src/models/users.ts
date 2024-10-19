@@ -23,9 +23,15 @@ const userSchema = new Schema<IUser>(
     },
     email: { type: String },
     image: { type: String },
+    bio: { type: String },
+    country: { type: String },
+    dob: { type: Date },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: () => {
+        const now = new Date();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      },
     },
     total_score: {
       type: Number,

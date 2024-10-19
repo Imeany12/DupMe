@@ -3,7 +3,10 @@ import multer from 'multer';
 import path from 'path';
 
 import {
+  changePassword,
   createUser,
+  editUserProfile,
+  getUserProfile,
   getUsers,
   loginUser,
   removeUser,
@@ -28,5 +31,8 @@ router.post('/signup', createUser);
 router.post('/login', loginUser);
 router.post('/:username/deleteAccount', removeUser);
 router.post('/:username/upload', upload.single('image'), uploadImage);
+router.get('/:username/profile', getUserProfile);
+router.post('/:username/profile/edit', editUserProfile);
+router.post('/:username/profile/changePassword', changePassword);
 
 export default router;

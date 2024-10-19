@@ -1,5 +1,5 @@
-import cors from 'cors';
 import { IMsgDataTypes } from '@repo/shared-types/src/types';
+import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';

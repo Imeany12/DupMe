@@ -21,8 +21,12 @@ export const getUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
   try {
     const existingUser = await User.findOne({ username: req.body.username });
+    const existingEmail = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(409).json({ error: 'Username already exists' });
+    }
+    if (existingEmail) {
+      return res.status(409).json({ error: 'Email already exists' });
     }
 
     const { password } = req.body;
@@ -131,5 +135,109 @@ export const uploadImage = async (req: Request, res: Response) => {
       .json({ message: 'Image uploaded successfully', user: username });
   } catch (error) {
     return res.status(500).json({ message: 'Error updating image', error });
+  }
+};
+
+export const getUserProfile = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(200).json({ error: 'User not found' });
+    }
+
+    return res.status(200).json({
+      username: user.username,
+      email: user.email,
+      image: user.image,
+      bio: user.bio,
+      dob: user.dob,
+      gender: user.gender,
+      country: user.country,
+      createdAt: user.createdAt,
+      total_score: user.total_score,
+      games_won: user.games_won,
+      games_lost: user.games_lost,
+      games_draw: user.games_draw,
+      matchHistory: user.matchHistory,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error fetching user profile' });
+  }
+};
+
+export const editUserProfile = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.params;
+    const { email, image, bio, gender, country, dob } = req.body;
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(200).json({ error: 'User not found' });
+    }
+
+    if (email) user.email = email;
+    if (image) user.image = image;
+    if (bio) user.bio = bio;
+    if (dob) user.dob = dob;
+    if (gender) user.gender = gender;
+    if (country) user.country = country;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: 'Profile updated successfully',
+      user: {
+        username: user.username,
+        email: user.email,
+        image: user.image,
+        bio: user.bio,
+        dob: user.dob,
+        gender: user.gender,
+        country: user.country,
+        createdAt: user.createdAt,
+        total_score: user.total_score,
+        games_won: user.games_won,
+        games_lost: user.games_lost,
+        games_draw: user.games_draw,
+        matchHistory: user.matchHistory,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    } else {
+      return res.status(500).json({ message: 'An unknown error occurred' });
+    }
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  const { username } = req.params;
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (!user.password) {
+      return res.status(500).json({ message: 'User password is not set' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password changed successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error changing password' });
   }
 };
