@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-import Snowfall from '@/components/Snowfall';
 import NavBar from '@/components/NavBar';
-import Konami from '@/lib/Konami';
-import UserProfile from '@/components/UserProfile';
+import Snowfall from '@/components/Snowfall';
 import Konami from '@/lib/Konami';
 
 export default function Home() {
@@ -27,8 +25,8 @@ export default function Home() {
     <div>
       <NavBar session={session} />
       <div className='mx-auto flex h-screen w-screen flex-col items-center'>
-      <Konami triggerSnow={() => setSnowing(true)} />
-      {snowing && <Snowfall />}
+        <Konami triggerSnow={() => setSnowing(true)} />
+        {snowing && <Snowfall />}
         <div className='text-center text-[180px] font-semibold text-white'>
           DupMe
         </div>
@@ -38,7 +36,10 @@ export default function Home() {
             <div className='my-auto flex flex-row items-center'>
               <button
                 className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C] px-32 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
-                onClick={() => {setUpGame();setSnowing(false)}}
+                onClick={() => {
+                  setUpGame();
+                  setSnowing(false);
+                }}
               >
                 Play
               </button>
