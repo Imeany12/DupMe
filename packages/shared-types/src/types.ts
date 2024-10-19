@@ -1,11 +1,14 @@
 export interface IUser {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   email?: string;
   image?: string;
-  createdAt: Date;
-  games_won: number;
-  games_lost: number;
+  createdAt?: Date;
+  dob?: Date;
+  bio?: string;
+  gender?: string;
+  games_won?: number;
+  games_lost?: number;
   games_draw: number;
   total_score: number;
   matchHistory: IMatch[]; 
