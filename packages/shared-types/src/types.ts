@@ -4,6 +4,9 @@ export interface IUser {
   email?: string;
   image?: string;
   createdAt?: Date;
+  dob?: Date;
+  bio?: string;
+  gender?: string;
   games_won?: number;
   games_lost?: number;
   games_draw: number;

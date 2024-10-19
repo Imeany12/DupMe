@@ -15,6 +15,11 @@ export default function SignUpPage() {
     dob: new Date(),
     bio: '',
     gender: '',
+    games_won: 0,
+    games_lost: 0,
+    games_draw: 0,
+    total_score: 0,
+    matchHistory: [],
   });
   const handleInput = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
