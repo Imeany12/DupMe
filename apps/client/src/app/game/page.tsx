@@ -1,8 +1,9 @@
 'use client';
-import { INote } from '@repo/shared-types/src/types';
+import { INote, INotes, ISong } from '@repo/shared-types/src/types';
 import React, { useEffect, useState } from 'react';
 
 import Piano from '@/components/Piano';
+import { socket } from '@/socket';
 
 type pressNote = {
   pressing: boolean;
@@ -10,7 +11,82 @@ type pressNote = {
 };
 
 export default function GamePage() {
-  const [notes, setNotes] = useState<INote[]>([]);
+  const [notes, setNotes] = useState<{ [key: string]: INotes }>({
+    C: {
+      color: '#3A2618',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    'C#': {
+      color: '#754043',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    D: {
+      color: '#9A8873',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    'D#': {
+      color: '#37423D',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    E: {
+      color: '#D6F8D6',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    F: {
+      color: '#5D737E',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    'F#': {
+      color: '#55505C',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    G: {
+      color: '#FAF33E',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    'G#': {
+      color: '#7FC6A4',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    A: {
+      color: '#82A0BC',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    'A#': {
+      color: '#304D6D',
+      nextNoteInd: 0,
+      notes: [],
+    },
+    B: {
+      color: '#A7CCED',
+      nextNoteInd: 0,
+      notes: [],
+    },
+  });
+
+  const updateNotesForKey = (key: string, newNote: INote) => {
+    setNotes((prevNotes) => ({
+      ...prevNotes,
+      [key]: {
+        ...prevNotes[key], // Keep other properties like color, nextNoteInd
+        notes: [...prevNotes[key].notes, newNote], // Update the notes array
+      },
+    }));
+  };
+
+  const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
+  const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
+
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -27,7 +103,7 @@ export default function GamePage() {
     'G#': 'u',
     A: 'j',
     'A#': 'i',
-    ' B': 'k',
+    B: 'k',
   });
   //need to get keybindings from the server
 
@@ -63,17 +139,22 @@ export default function GamePage() {
       const timePressed = endTime - pressStartTime;
 
       const newNote: INote = {
-        note: pressedNotes[pressedNotes.length - 1],
         isLongNote: timePressed > 150,
         longNoteDuration: Math.max(timePressed, 150),
         fallDuration: 3,
         // Find a way to keep track game start time and get the delay from start.
-        delay: 0,
+        delay: isFirstNote ? 0 : endTime - initialStartTime,
       };
-      setNotes((prev) => [...prev, newNote]);
+      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
       // console.log(notes);
       //idk why this console.log dealyed by 1 note
       setPressStartTime(null);
+
+      if (isFirstNote) {
+        console.log(true);
+        setInitialStartTime(endTime);
+        setIsFirstNote(false);
+      }
     }
     setPresNote({
       pressing: false,
@@ -112,15 +193,19 @@ export default function GamePage() {
       const endTime = Date.now();
       const timePressed = endTime - pressStartTime;
 
+      if (isFirstNote) {
+        setInitialStartTime(endTime);
+        setIsFirstNote(false);
+      }
+
       const newNote: INote = {
-        note: pressedNotes[pressedNotes.length - 1],
         isLongNote: timePressed > 150,
         longNoteDuration: Math.max(timePressed, 150),
         fallDuration: 3,
         // Find a way to keep track game start time and get the delay from start.
-        delay: 0,
+        delay: endTime - initialStartTime,
       };
-      setNotes((prev) => [...prev, newNote]);
+      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
       console.log(notes);
       setPressStartTime(null);
     }
@@ -163,6 +248,19 @@ export default function GamePage() {
             onNoteReleased={handleNoteRelease}
           />
         </div>
+        <button
+          onClick={() => {
+            socket.emit('join_lobby', { username: 'test', roomId: 1 });
+            const song: ISong = {
+              roomID: 1,
+              user: 'test',
+              sheet: notes,
+            };
+            socket.emit('send_song', song);
+          }}
+        >
+          Click here
+        </button>
       </div>
     </div>
   );

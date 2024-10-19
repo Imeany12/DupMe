@@ -28,7 +28,6 @@ export interface IMsgDataTypes {
 }
 
 export interface INote {
-  note: string;
   fallDuration: number;
   longNoteDuration: number;
   isLongNote: boolean;
@@ -44,5 +43,5 @@ export interface INotes {
 export interface ISong {
   roomID: string | number;
   user: string;
-  sheet: INotes[];
+  sheet: { [key:string]: INotes };
 }
