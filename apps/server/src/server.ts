@@ -1,4 +1,4 @@
-import { IMsgDataTypes } from '@repo/shared-types/src/types';
+import { IMsgDataTypes, ISong } from '@repo/shared-types/src/types';
 import express from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
@@ -114,6 +114,11 @@ io.on('connection', (socket) => {
       0
     );
     io.emit('connectedUsersCount', connectedUsersCount);
+  });
+
+  socket.on('send_song', (data: ISong) => {
+    // This will send a song to a specific room ID
+    io.to(data.roomID.toString()).emit('receive_song', data);
   });
 });
 

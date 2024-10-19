@@ -28,19 +28,21 @@ export interface IMsgDataTypes {
 }
 
 export interface INote {
-  note: string,
-  fallDuration: number,
-  longNoteDuration: number,
-  isLongNote: boolean,
-  delay: number,
+  note: string;
+  fallDuration: number;
+  longNoteDuration: number;
+  isLongNote: boolean;
+  delay: number;
 }
 
 export interface INotes {
-  color: string,
-  nextNoteInd: number,
-  notes: INote[]
+  color: string;
+  nextNoteInd: number;
+  notes: INote[];
 }
 
 export interface ISong {
-  sheet: INotes[]
+  roomID: string | number;
+  user: string;
+  sheet: INotes[];
 }
