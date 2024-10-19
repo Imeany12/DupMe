@@ -28,9 +28,10 @@ export interface IMsgDataTypes {
 }
 
 export interface INote {
+  note: string,
   fallDuration: number,
   longNoteDuration: number,
-  isLongNute: boolean,
+  isLongNote: boolean,
   delay: number,
 }
 

@@ -1,21 +1,16 @@
 'use client';
+import { INote } from '@repo/shared-types/src/types';
 import React, { useEffect, useState } from 'react';
 
 import Piano from '@/components/Piano';
 
-type Note = {
-  note: string;
-  timePressed: number;
-  //startTime: number;
-  //endTime: number;
-};
 type pressNote = {
   pressing: boolean;
   note: string;
 };
 
 export default function GamePage() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<INote[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -67,9 +62,13 @@ export default function GamePage() {
       const endTime = Date.now();
       const timePressed = endTime - pressStartTime;
 
-      const newNote: Note = {
+      const newNote: INote = {
         note: pressedNotes[pressedNotes.length - 1],
-        timePressed: timePressed,
+        isLongNote: timePressed > 150,
+        longNoteDuration: Math.max(timePressed, 150),
+        fallDuration: 3,
+        // Find a way to keep track game start time and get the delay from start.
+        delay: 0,
       };
       setNotes((prev) => [...prev, newNote]);
       // console.log(notes);
@@ -113,9 +112,13 @@ export default function GamePage() {
       const endTime = Date.now();
       const timePressed = endTime - pressStartTime;
 
-      const newNote: Note = {
-        note: note,
-        timePressed: timePressed,
+      const newNote: INote = {
+        note: pressedNotes[pressedNotes.length - 1],
+        isLongNote: timePressed > 150,
+        longNoteDuration: Math.max(timePressed, 150),
+        fallDuration: 3,
+        // Find a way to keep track game start time and get the delay from start.
+        delay: 0,
       };
       setNotes((prev) => [...prev, newNote]);
       console.log(notes);
