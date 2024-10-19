@@ -7,7 +7,6 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 import NavBar from '@/components/NavBar';
-import UserProfile from '@/components/UserProfile';
 
 export default function Home() {
   const [mode, setMode] = useState(false);
@@ -21,7 +20,6 @@ export default function Home() {
       <div className='mx-auto flex h-screen w-screen flex-col items-center'>
         {session ? (
           <div className='flex flex-col items-center'>
-            <UserProfile user={session?.user} />
             <Link
               href='/api/auth/signout?callbackUrl=/'
               className='text-3xl text-violet-500'
