@@ -8,8 +8,6 @@ import { Button } from '@/components/ui/button';
 import Snowfall from '@/components/Snowfall';
 import NavBar from '@/components/NavBar';
 import Konami from '@/lib/Konami';
-import UserProfile from '@/components/UserProfile';
-import Konami from '@/lib/Konami';
 
 export default function Home() {
   const [roomId, setRoomId] = useState(0);
