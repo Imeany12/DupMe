@@ -26,7 +26,7 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        primary: 'var(--primary)',
+        note: 'var(--note)',
         note1: 'var(--note1)',
         note2: 'var(--note2)',
        },
