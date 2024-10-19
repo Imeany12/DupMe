@@ -123,6 +123,9 @@ importers:
       cookie-parser:
         specifier: ~1.4.4
         version: 1.4.7
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -144,6 +147,9 @@ importers:
       multer:
         specifier: 1.4.5-lts.1
         version: 1.4.5-lts.1
+      nextjs-cors:
+        specifier: ^2.2.0
+        version: 2.2.0(next@14.2.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       socket.io:
         specifier: ^4.7.5
         version: 4.7.5

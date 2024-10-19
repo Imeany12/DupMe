@@ -4,24 +4,25 @@ export interface IUser {
   email?: string;
   image?: string;
   createdAt?: Date;
-  dob?: Date;
+  country?: string;
   bio?: string;
+  dob?: Date;
   gender?: string;
   games_won?: number;
   games_lost?: number;
   games_draw: number;
   total_score: number;
-  matchHistory: IMatch[]; 
+  matchHistory: IMatch[];
 }
 
 export interface IMatch {
-    score: number;
-    opponent: string;
-    outcome: 'win' | 'lose' | 'draw';
-    roundsWon: number; 
-    roundsLost: number;
-    dateTime: Date;
-  }
+  score: number;
+  opponent: string;
+  outcome: 'win' | 'lose' | 'draw';
+  roundsWon: number;
+  roundsLost: number;
+  dateTime: Date;
+}
 
 export interface IMsgDataTypes {
   roomId: string | number;
