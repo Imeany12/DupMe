@@ -7,6 +7,29 @@ import { useSession } from 'next-auth/react';
 
 import NavBar from '@/components/NavBar';
 
+// export default function AccountPage() {
+//   const { data: session } = useSession({
+//     required: true,
+//     onUnauthenticated() {
+//       redirect('/api/auth/signin?callbackUrl=/myAccount');
+//     },
+//   });
+
+//   return (
+//     <div className='px-3 py-4'>
+//       <Link
+//         href={'/'}
+//         className='mt-12 rounded-lg border-2 border-gray-500 px-6'
+//       >
+//         Back
+//       </Link>
+//       <section className='flex flex-col gap-4'>
+//         <UserProfile user={session?.user} />
+//       </section>
+//     </div>
+//   );
+// }
+
 export default function AccountPage() {
   const { data: session } = useSession({
     required: true,
@@ -18,6 +41,7 @@ export default function AccountPage() {
 
   return (
     <div className='h-screen bg-zinc-900 font-sans text-white'>
+      {/* Header */}
       <header className='flex items-center justify-between bg-slate-600 p-4'>
         <NavBar session={session} />
       </header>
