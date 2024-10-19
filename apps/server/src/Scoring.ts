@@ -1,11 +1,12 @@
-let correctSequence = ['A', 'A', 'B', 'C', 'D'];
+let correctSequence: string[] = [];
 let noteIndex = 0;
 let combo = 0;
 
-function setNoteSequence(seq: string[]) {
+function setNoteSequence(seq: string[]): void {
   correctSequence = seq;
   noteIndex = 0;
   UpdateCombo(false);
+  return;
 }
 
 function UpdateCombo(isCorrectNote: boolean): void {
@@ -14,10 +15,12 @@ function UpdateCombo(isCorrectNote: boolean): void {
   } else {
     combo++; // Increment combo if the answer is correct
   }
+  return;
 }
 
-function MoveNoteIndex() {
+function MoveNoteIndex(): void {
   noteIndex++;
+  return;
 }
 
 function checkNoteSequence(input: string): {
@@ -52,9 +55,3 @@ function calculateScore(isCorrectNote: boolean): number {
   }
   return 400 + 100 * combo;
 }
-
-console.log('check');
-console.log(checkNoteSequence('A'));
-console.log(checkNoteSequence('A'));
-console.log(checkNoteSequence('B'));
-console.log(checkNoteSequence('C'));
