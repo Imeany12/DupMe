@@ -118,8 +118,6 @@ export default function GamePage() {
     //prevent adding the same note multiple times
     if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
       setPressedNotes((prev) => [...prev, note]);
-
-      // Track the time when the key was pressed
       const startTime = Date.now();
       setPressStartTime(startTime);
       setPresNote({
