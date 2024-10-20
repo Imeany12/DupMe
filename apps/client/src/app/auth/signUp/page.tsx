@@ -21,7 +21,7 @@ export default function SignUpPage() {
     total_score: 0,
     matchHistory: [],
   });
-  const handleInput = (e: { target: { name: any; value: any } }) => {
+  const handleInput = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target;
     setUserInfo({
       ...userInfo,
