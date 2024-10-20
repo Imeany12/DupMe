@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
+import { socket } from '@/socket';
 
 type Note = {
   note: string;
@@ -15,7 +16,18 @@ type pressNote = {
   note: string;
 };
 
+const sendNoteToPlayer = (notes: Note[]) => {
+  socket.emit('sendNote', notes);
+};
+
+socket.on('receiveNote', (notes: Note[]) => {
+  notes.forEach(({ note, timePressed }) => {
+    console.log(`Received note: ${note} for ${timePressed}ms`);
+  });
+});
+
 export default function GamePage() {
+  const [play,setPlay] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
@@ -161,9 +173,12 @@ export default function GamePage() {
     }
     const timer = setTimeout(() => {
       if (pressedNotes.length > 0) {
-        //sendNotesToPlayer();
+        console.log('sending notes');
+        sendNoteToPlayer(notes);
+        setPlay(true); //change player
       }
-    }, 5000);
+    }, 30000);
+    //sendNote after 1 minute
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
