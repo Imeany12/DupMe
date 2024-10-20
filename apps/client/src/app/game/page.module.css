@@ -1,0 +1,354 @@
+  .game {
+    position: relative;
+    display: flex;
+    flex: 0 0 calc(100% / 2);
+    flex-direction: column;
+    max-width: 35rem;
+    background: black;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .hit {
+    position: absolute;
+    width: 50%;
+    height: 20%;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+  
+  .hit__combo {
+    width: 100%;
+    height: 50%;
+    font-size: 7rem;
+    color: rgba(255, 199, 126, .8);
+  }
+  
+  .hit__accuracy {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    font-size: 4rem;
+  }
+  
+  .hit__accuracy--perfect {
+    color: var(--perfect-color);
+    opacity: 0;
+    animation: fade 1s;
+  }
+  
+  .hit__accuracy--good {
+    color: var(--good-color);
+    opacity: 0;
+    animation: fade 1s;
+  }
+  
+  .hit__accuracy--bad {
+    color: var(--bad-color);
+    opacity: 0;
+    animation: fade 1s;
+  }
+  
+  .hit__accuracy--miss {
+    color: var(--miss-color);
+    opacity: 0;
+    animation: fade 1s;
+  }
+  
+  .track-container {
+    display: flex;
+    flex: 1 0 auto;
+  }
+  
+  .track {
+    position: relative;
+    flex: 0 0 calc(100% / 7);
+  }
+  
+  .track:not(:last-child) {
+    border-right: 1px solid grey;
+  }
+  
+  .key-container {
+    display: flex;
+    flex: 0 0 15%;
+  }
+  
+  .key {
+    flex: 0 0 calc(100% / 7);
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+    text-align: center;
+    position: relative;
+    font-size: 1.6rem;
+  }
+  
+  .key--red {
+    background: var(--key-red);
+  }
+  
+  .key--blue {
+    background: var(--key-blue);
+  }
+  
+  .key--orange {
+    background: var(--key-orange);
+  }
+  
+  .key span {
+    font-weight: bold;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    padding-top: .5rem;
+  }
+  
+  .note {
+    position: absolute;
+    width: 100%;
+    height: 1.5rem;
+    top: -3.5rem;
+  }
+  
+  .keypress {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: -100%;
+    display: none;
+  }
+  
+  .key__hit {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: 0 0;
+    background: var(--hit-color);
+    opacity: 0;
+    border-radius: 50%;
+    animation: scaleFade 1s;
+  }
+  
+  .key__hit:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--hit-color);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: scaleBorder 1s;
+  }
+  
+  .keypress--red {
+    background-image: var(--keypress-red);
+  }
+  
+  .keypress--blue {
+    background-image: var(--keypress-blue);
+  }
+  
+  .keypress--orange {
+    background-image: var(--keypress-orange);
+  }
+  
+  .menu {
+    opacity: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 calc(100% / 2);
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    justify-content: space-around;
+    transition: all 1s;
+  }
+  
+  .menu__config {
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .heart {
+    color: rgb(255, 59, 59);
+  }
+  
+  .author {
+    text-decoration: underline;
+    color: white;
+  }
+  
+  .btn:link,
+  .btn:visited {
+    display: inline-block;
+    border: 1px solid white;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all .2s;
+    color: white;
+    margin: 0 auto;
+    transition: all .2s;
+  }
+  
+  .btn:hover,
+  .btn:active {
+    background: white;
+    color: black;
+  }
+  
+  .btn--small {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    line-height: 7rem;
+    vertical-align: center;
+  }
+  
+  .btn--primary {
+    border-radius: 1rem;
+    padding: 2rem 4rem;
+  }
+  
+  .config__speed .btn--selected {
+    background: white;
+    color: black;
+  }
+  
+  .config__challenge .btn--selected {
+    background: white;
+    color: black;
+  }
+  
+  .summary {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    left: 50%;
+    color: white;
+    text-align: center;
+    z-index: -100;
+  }
+  
+  .summary__timer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    font-size: 6rem;
+    opacity: 0;
+    transition: all 1s;
+  }
+  
+  .summary__result {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    width: 80%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    opacity: 0;
+    transition: all 2s;
+  }
+  
+  .result__heading {
+    font-size: 5rem;
+    padding: 2rem;
+  }
+  
+  .result__accuracy {
+    display: flex;
+    font-size: 3rem;
+    padding: 1rem;
+  }
+  
+  .accuracy__heading {
+    flex: 0 0 45%;
+    text-align: left;
+  }
+  
+  .accuracy__count {
+    flex: 0 0 45%;
+    text-align: right;
+  }
+  
+  .perfect {
+    color: var(--perfect-color);
+  }
+  
+  .good {
+    color: var(--good-color);
+  }
+  
+  .bad {
+    color: var(--bad-color);
+  }
+  
+  .miss {
+    color: var(--miss-color);
+  }
+  
+  .combo {
+    color: var(--maxcombo-color);
+  }
+  
+  .score {
+    color: var(--score-color);
+  }
+
+  .moveDown {
+    animation-name: moveDown; /* Reference the keyframes */
+    animation-timing-function: linear;
+    animation-duration: var(--duration); /* Set duration dynamically if needed */
+    animation-delay: var(--delay); /* Set delay dynamically if needed */
+    animation-play-state: running; /* When running */
+  }
+  
+  @keyframes moveDown {
+    0% { top: -1.5rem; }
+    98% { top: 100%; opacity: 1; }
+    100% { top: 105%; opacity: 0; }
+  }
+  
+  @keyframes moveDownFade {
+    0% { top: -1.5rem; }
+    60% { opacity: 1; }
+    80% { opacity: 0; }
+    98% { top: 100%; opacity: 0; }
+    100% { top: 105%; opacity: 0; }
+  }
+  
+  @keyframes fade {
+    10% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @keyframes scaleFade {
+    0% {
+      opacity: 1;
+    }
+  
+    100% {
+      opacity: 0;
+      width: 4rem;
+      height: 4rem;
+    }
+  }
+  
+  @keyframes scaleBorder {
+    100% {
+      width: 10rem;
+      height: 10rem;
+      border: 2px solid transparent;
+    }
+  }
+  

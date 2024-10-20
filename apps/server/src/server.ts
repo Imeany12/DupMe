@@ -119,7 +119,7 @@ io.on('connection', (socket) => {
   socket.on('send_song', (data: ISong) => {
     // This will send a song to a specific room ID
     console.log(data);
-    io.to(data.roomID.toString()).emit('receive_song', data);
+    socket.to(data.roomID.toString()).emit('receive_song', data);
   });
 });
 
