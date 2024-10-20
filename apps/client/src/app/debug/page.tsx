@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
+import Countdown from '@/components/CountDown';
 import JoinRoomPage from '@/pages/joinRoom/page';
 
 import { socket } from '../../socket';
-
 export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
@@ -44,6 +44,7 @@ export default function DebugPage() {
       <p>Transport: {transport}</p>
 
       <JoinRoomPage socket={socket} />
+      <Countdown />
     </div>
   );
 }
