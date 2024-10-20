@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 import Piano from '@/components/Piano';
+import getNoteFrequency from '@/lib/getNoteFrequency';
 
 type Note = {
   note: string;
@@ -32,9 +33,70 @@ export default function GamePage() {
     'G#': 'u',
     A: 'j',
     'A#': 'i',
-    ' B': 'k',
+    B: 'k',
   });
   //need to get keybindings from the server
+
+  const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
+  const [activeOscillators, setActiveOscillators] = useState<{
+    [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
+  }>({});
+
+  const startSound = (frequency: number, key: string) => {
+    if (!audioContext || activeOscillators[key]) return;
+    if (audioContext.state === 'suspended') {
+      audioContext.resume();
+    }
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+    oscillator.type = 'sine'; // Use 'sine', 'triangle', or experiment with other waveforms
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.001,
+      audioContext.currentTime + 1
+    );
+
+    oscillator.start();
+    console.log('start');
+
+    setActiveOscillators((prev) => ({
+      ...prev,
+      [key]: { oscillator, gainNode },
+    }));
+  };
+
+  const stopSound = (key: string) => {
+    if (activeOscillators[key]) {
+      const { oscillator, gainNode } = activeOscillators[key];
+
+      // Apply a smooth release for the sound
+      gainNode.gain.cancelScheduledValues(audioContext!.currentTime);
+      gainNode.gain.setValueAtTime(
+        gainNode.gain.value,
+        audioContext!.currentTime
+      );
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext!.currentTime + 0.1
+      ); // Quick release
+
+      oscillator.stop(audioContext!.currentTime + 0.3); // Stop after release
+      setTimeout(() => {
+        setActiveOscillators((prev) => {
+          const newOscillators = { ...prev };
+          delete newOscillators[key];
+          return newOscillators;
+        });
+      }, 0.00001);
+    }
+  };
 
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
@@ -47,8 +109,16 @@ export default function GamePage() {
       (note) => keyMappings[note] === pressedKey
     );
 
-    if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
+    // If the note is found and it's not already being pressed
+    if (note && !activeOscillators[note]) {
+      // Get the frequency and start the sound
+      const frequency = getNoteFrequency(note);
+      startSound(frequency, note);
+
+      // Add the note to the pressedNotes list (but don't rely on state immediately)
       setPressedNotes((prev) => [...prev, note]);
+
+      // Track the time when the key was pressed
       const startTime = Date.now();
       setPressStartTime(startTime);
       setPresNote({
@@ -60,29 +130,43 @@ export default function GamePage() {
 
   const handleKeyRelease = (event: KeyboardEvent) => {
     const releasedKey = event.key.toLowerCase();
+
+    // Find the corresponding note for the released key
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === releasedKey
     );
-    if (pressStartTime !== null && note && pressedNotes.includes(note)) {
-      const endTime = Date.now();
-      const timePressed = endTime - pressStartTime;
 
-      const newNote: Note = {
-        note: pressedNotes[pressedNotes.length - 1],
-        timePressed: timePressed,
-      };
-      setNotes((prev) => [...prev, newNote]);
-      console.log(notes);
-      //idk why this console.log dealyed by 1 note
-      setPressStartTime(null);
+    // Stop the sound only if the note was actually being played
+    if (note && activeOscillators[note]) {
+      stopSound(note);
+
+      // Calculate the time the note was pressed
+      if (pressStartTime !== null) {
+        const endTime = Date.now();
+        const timePressed = endTime - pressStartTime;
+
+        const newNote: Note = {
+          note: note,
+          timePressed: timePressed,
+        };
+
+        // Add the note to the notes array (this is for recording purposes)
+        setNotes((prev) => [...prev, newNote]);
+        setPressStartTime(null);
+      }
+
+      // Clear the current pressed note
+      setPresNote({
+        pressing: false,
+        note: '',
+      });
     }
-    setPresNote({
-      pressing: false,
-      note: '',
-    });
   };
 
   useEffect(() => {
+    if (!audioContext) {
+      setAudioContext(new AudioContext());
+    }
     const timer = setTimeout(() => {
       if (pressedNotes.length > 0) {
         //sendNotesToPlayer();
@@ -96,15 +180,18 @@ export default function GamePage() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [keyMappings, pressedNotes, pressStartTime]);
+  }, [pressedNotes, pressStartTime, audioContext]);
 
   const handleNoteClick = (note: string) => {
+    const frequency = getNoteFrequency(note);
+    startSound(frequency, note);
     setPressedNotes((prev) => [...prev, note]);
     const startTime = Date.now();
     setPressStartTime(startTime);
   };
 
   const handleNoteRelease = (note: string) => {
+    stopSound(note);
     if (pressStartTime !== null) {
       const endTime = Date.now();
       const timePressed = endTime - pressStartTime;
@@ -119,23 +206,7 @@ export default function GamePage() {
     }
   };
 
-  // const sendNotesToServer = async () => {
-  //   try {
-  //     await fetch('/api/notes', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ notes: pressedNotes }),
-  //     });
-  //     setPressedNotes([]);
-  //   } catch (error) {
-  //     console.error('Error sending notes to server:', error);
-  //   }
-  // };
-
   return (
-    //still need to change background? or make a white box?
     <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
       <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
         <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
