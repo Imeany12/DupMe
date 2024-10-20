@@ -58,6 +58,7 @@ export default function LobbyPage() {
   const startGame = () => {
     if (players.length >= 2) {
       socket.emit('start_game', roomId);
+      redirect(`/game/${roomId}`);
     }
   };
   return (
@@ -132,7 +133,8 @@ export default function LobbyPage() {
               Leave Match
             </button>
             {ready ? (
-              <button className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
+              <button className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
+              onClick={startGame}>
                 Start Match
               </button>
             ) : (
