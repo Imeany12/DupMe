@@ -1,11 +1,12 @@
 'use clinent';
 
 import { useState } from 'react';
+import { Socket } from 'socket.io-client';
 
 import ChatPage from '../chat/page';
 import styles from './page.module.css';
 
-const JoinRoomPage = ({ socket }: { socket: any }) => {
+const JoinRoomPage = ({ socket }: { socket: Socket }) => {
   const [showChat, setShowChat] = useState(false);
   const [username, setUsername] = useState('');
   const [showSpinner, setShowSpinner] = useState(false);

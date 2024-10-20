@@ -2,7 +2,7 @@ let correctSequence: string[] = [];
 let noteIndex = 0;
 let combo = 0;
 
-function setNoteSequence(seq: string[]): void {
+export function setNoteSequence(seq: string[]): void {
   correctSequence = seq;
   noteIndex = 0;
   UpdateCombo(false);
@@ -23,7 +23,7 @@ function MoveNoteIndex(): void {
   return;
 }
 
-function checkNoteSequence(input: string): {
+export function checkNoteSequence(input: string): {
   result: boolean;
   score: number;
   message: string;

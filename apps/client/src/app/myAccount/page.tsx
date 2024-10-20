@@ -1,4 +1,5 @@
 'use client';
+
 // Remember you must use an AuthProvider for
 // client components to useSession
 import Link from 'next/link';

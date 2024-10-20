@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Session } from 'next-auth';
 import React from 'react';
 import { FiHome } from 'react-icons/fi';
 
@@ -10,7 +11,7 @@ type User =
     }
   | undefined;
 
-export default function NavBar({ session }: { session: any }) {
+export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;
 
   return (

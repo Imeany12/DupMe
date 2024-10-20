@@ -50,11 +50,14 @@ export default function SignUpPage() {
         alert('User created successfully');
         console.log('User creation result:', result);
         router.push(
-          'signIn?username=' + userInfo.username + '&password=' + userInfo.password
+          'signIn?username=' +
+            userInfo.username +
+            '&password=' +
+            userInfo.password
         );
       } else {
         alert('Error creating user');
-        console.log(result)
+        console.log(result);
       }
     } catch (error) {
       console.error('Error submitting form:', error);

@@ -1,16 +1,14 @@
-import { ToggleTheme } from '@/components/ui/toggle-theme'
-import React from 'react'
+import React from 'react';
 
-export default function 
-() {
+import { ToggleTheme } from '@/components/ui/toggle-theme';
+
+export default function ThemePage() {
   return (
-    <div className='flex items-center flex-col py-4 gap-4 text-3xl'>
-        <p className='text-white'>This is theme testing page</p>
-        <div className='text-note bg-note2 rounded-lg max-w-fit'>
-
+    <div className='flex flex-col items-center gap-4 py-4 text-3xl'>
+      <p className='text-white'>This is theme testing page</p>
+      <div className='text-note bg-note2 max-w-fit rounded-lg'>
         <ToggleTheme />
-        </div>
-
+      </div>
     </div>
-  )
+  );
 }
