@@ -13,6 +13,7 @@ export interface IUser {
   games_draw: number;
   total_score: number;
   matchHistory: IMatch[];
+  keybindings?: KeyMapping;
 }
 
 export interface IMatch {
@@ -29,4 +30,8 @@ export interface IMsgDataTypes {
   user: string;
   msg: string;
   time: string;
+}
+
+export interface KeyMapping {
+  [key: string]: string;
 }

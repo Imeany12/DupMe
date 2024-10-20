@@ -1,4 +1,4 @@
-import { IMatch, IUser } from '@repo/shared-types';
+import { IMatch, IUser, KeyMapping } from '@repo/shared-types';
 import { model, Schema } from 'mongoose';
 
 const matchSchema = new Schema<IMatch>(
@@ -11,6 +11,11 @@ const matchSchema = new Schema<IMatch>(
     dateTime: { type: Date, default: Date.now },
   },
   { versionKey: false }
+);
+
+const keybindSchema = new Schema<KeyMapping>(
+  {},
+  { strict: false, versionKey: false }
 );
 
 const userSchema = new Schema<IUser>(
@@ -50,6 +55,7 @@ const userSchema = new Schema<IUser>(
       default: 0,
     },
     matchHistory: [matchSchema],
+    keybindings: keybindSchema,
   },
   { versionKey: false }
 );
