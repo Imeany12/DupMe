@@ -58,6 +58,7 @@ export default function LobbyPage() {
   const startGame = () => {
     if (players.length >= 2) {
       socket.emit('start_game', roomId);
+      redirect(`/game/${roomId}`);
     }
   };
   return (
