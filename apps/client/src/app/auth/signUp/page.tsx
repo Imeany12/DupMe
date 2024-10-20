@@ -49,15 +49,16 @@ export default function SignUpPage() {
       if (res.ok) {
         alert('User created successfully');
         console.log('User creation result:', result);
+        router.push(
+          'signIn?username=' + userInfo.username + '&password=' + userInfo.password
+        );
       } else {
         alert('Error creating user');
+        console.log(result)
       }
     } catch (error) {
       console.error('Error submitting form:', error);
     }
-    router.push(
-      'signIn?username=' + userInfo.username + '&password=' + userInfo.password
-    );
   };
 
   //need div for iput images still no idea

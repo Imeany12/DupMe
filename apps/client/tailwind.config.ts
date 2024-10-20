@@ -7,14 +7,35 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
       },
     },
+    extend: {
+      backgroundImage: {
+		'stars': 'url("/images/starBg.png")',
+		'forest': 'url("/images/forestBg.png")',
+		'snow': 'url("/images/snowBg.png")',
+		'haunt': 'url("/images/hauntBg.png")',
+		'city': 'url("/images/cityBg.png")',
+      },
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        note: 'var(--note)',
+        note1: 'var(--note1)',
+        note2: 'var(--note2)',
+       },
   },
+      animation:{
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
   plugins: [],
 };
 export default config;

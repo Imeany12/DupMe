@@ -19,11 +19,8 @@ app.get('/', (req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use('/user', userRoutes);
 app.use('/', mainRoutes);
