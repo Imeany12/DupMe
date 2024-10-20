@@ -128,7 +128,6 @@ export default function GamePage() {
   const handleKeyRelease = (event: KeyboardEvent) => {
     const releasedKey = event.key.toLowerCase();
 
-    // Find the corresponding note for the released key
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === releasedKey
     );
@@ -145,12 +144,10 @@ export default function GamePage() {
           timePressed: timePressed,
         };
 
-        // Add the note to the notes array (this is for recording purposes)
         setNotes((prev) => [...prev, newNote]);
         setPressStartTime(null);
       }
 
-      // Clear the current pressed note
       setPresNote({
         pressing: false,
         note: '',
@@ -170,7 +167,6 @@ export default function GamePage() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
-    // Cleanup the event listener on component unmount
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyRelease);
