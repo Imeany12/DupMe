@@ -47,11 +47,12 @@ export default function GamePage() {
     if (audioContext.state === 'suspended') {
       audioContext.resume();
     }
+    // make the sound clear, smooth and not too loud
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-    oscillator.type = 'sine'; // Use 'sine', 'triangle', or experiment with other waveforms
+    oscillator.type = 'sine';
 
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
@@ -60,7 +61,7 @@ export default function GamePage() {
     gainNode.gain.linearRampToValueAtTime(1, audioContext.currentTime + 0.01);
     gainNode.gain.exponentialRampToValueAtTime(
       0.001,
-      audioContext.currentTime + 1
+      audioContext.currentTime + 2
     );
 
     oscillator.start();
@@ -84,17 +85,16 @@ export default function GamePage() {
       );
       gainNode.gain.exponentialRampToValueAtTime(
         0.001,
-        audioContext!.currentTime + 0.1
-      ); // Quick release
+        audioContext!.currentTime + 0.3
+      );
 
       oscillator.stop(audioContext!.currentTime + 0.3); // Stop after release
-      setTimeout(() => {
-        setActiveOscillators((prev) => {
-          const newOscillators = { ...prev };
-          delete newOscillators[key];
-          return newOscillators;
-        });
-      }, 0.00001);
+
+      setActiveOscillators((prev) => {
+        const newOscillators = { ...prev };
+        delete newOscillators[key];
+        return newOscillators;
+      });
     }
   };
 
@@ -108,17 +108,14 @@ export default function GamePage() {
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === pressedKey
     );
-
-    // If the note is found and it's not already being pressed
+    //play many notes at once
     if (note && !activeOscillators[note]) {
-      // Get the frequency and start the sound
       const frequency = getNoteFrequency(note);
       startSound(frequency, note);
-
-      // Add the note to the pressedNotes list (but don't rely on state immediately)
+    }
+    //prevent adding the same note multiple times
+    if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
       setPressedNotes((prev) => [...prev, note]);
-
-      // Track the time when the key was pressed
       const startTime = Date.now();
       setPressStartTime(startTime);
       setPresNote({
@@ -136,11 +133,9 @@ export default function GamePage() {
       (note) => keyMappings[note] === releasedKey
     );
 
-    // Stop the sound only if the note was actually being played
     if (note && activeOscillators[note]) {
       stopSound(note);
 
-      // Calculate the time the note was pressed
       if (pressStartTime !== null) {
         const endTime = Date.now();
         const timePressed = endTime - pressStartTime;
