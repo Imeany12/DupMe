@@ -35,13 +35,17 @@ export const options: NextAuthOptions = {
       async authorize(credentials) {
         //get info from database
         //Docs : https://next-auth.js.org/configuration/providers/credentials
-        const user = { id: '0', name: 'Suntoh', password: 'nextauth' };
+        if (!credentials) return null;
+        const res = await fetch('http://localhost:5001/user/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
+        });
 
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
-          return user;
+        if (res.status === 200) {
+          return { id: credentials.username, name: credentials.username };
         } else {
           return null;
         }

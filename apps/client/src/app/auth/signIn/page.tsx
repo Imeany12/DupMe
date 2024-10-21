@@ -23,7 +23,7 @@ export default function SignInPage() {
       callbackUrl: '/',
     });
     if (res?.error) {
-      setError('Login failed. Please check your credentials.');
+      setError('Login failed. Incorrect username or password.');
     } else {
       window.location.href = '/';
     }
