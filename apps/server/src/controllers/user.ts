@@ -241,3 +241,23 @@ export const changePassword = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Error changing password' });
   }
 };
+
+export const saveKeybindings = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.params;
+    const keybindings = req.body;
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(200).json({ error: 'User not found' });
+    }
+
+    user.keybindings = keybindings;
+
+    await user.save();
+
+    return res.status(200).json({ message: 'Keybinds updated successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error saving keybindings' });
+  }
+};
