@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams , useRouter} from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
@@ -19,13 +19,10 @@ type User =
 export default function LobbyPage() {
   const router = useRouter();
   const { roomId } = useParams();
-  const { data: session ,status} = useSession({
+  const { data: session, status } = useSession({
     required: false,
   });
-  let login = false;
-  if(session){
-    login = true;
-  }
+
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   //test map
@@ -35,7 +32,7 @@ export default function LobbyPage() {
 
   useEffect(() => {
     if (!user || !socket || !roomId || status === 'loading') return;
-    console.log("Hi this is" + players);
+    console.log('Hi this is' + players);
     if (!hasJoined.current) {
       socket.emit('join_lobby', { username: user.name, roomId });
       console.log(`user ${user?.name} joined room-${roomId}`);
@@ -46,7 +43,7 @@ export default function LobbyPage() {
     }
 
     socket.on('update_players', (playerList: string[]) => {
-      console.log("this is playerlist:"+playerList);
+      console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
     });
     socket.on('start_game', () => {
@@ -58,7 +55,7 @@ export default function LobbyPage() {
       socket.off('update_players');
       socket.off('start_game');
     };
-  }, [user,socket,roomId]);
+  }, [user, socket, roomId]);
 
   const startGame = () => {
     if (players.length >= 2) {
@@ -138,8 +135,10 @@ export default function LobbyPage() {
               Leave Match
             </button>
             {ready ? (
-              <button className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
-              onClick={startGame}>
+              <button
+                className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
+                onClick={startGame}
+              >
                 Start Match
               </button>
             ) : (

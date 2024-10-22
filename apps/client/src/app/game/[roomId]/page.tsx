@@ -1,13 +1,12 @@
 'use client';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { redirect, useParams } from 'next/navigation';
+import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
-import { FaFontAwesomeFlag } from "react-icons/fa";
-import { useRouter } from 'next/navigation';
-
 
 type Note = {
   note: string;
@@ -20,11 +19,9 @@ type pressNote = {
   note: string;
 };
 
-
-
 export default function GamePage() {
   const { roomId } = useParams();
-  const [play,setPlay] = useState<boolean>(false);
+  const [play, setPlay] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
@@ -50,9 +47,9 @@ export default function GamePage() {
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
-  
+
   const sendNoteToPlayer = (notes: Note[]) => {
-    socket.emit('sendNote',roomId, notes);
+    socket.emit('sendNote', roomId, notes);
   };
 
   useEffect(() => {
@@ -61,9 +58,9 @@ export default function GamePage() {
         console.log(`Received note: ${note} for ${timePressed}ms`);
       });
     };
-    
+
     socket.on('receiveNote', handleReceiveNote);
-  
+
     return () => {
       socket.off('receiveNote', handleReceiveNote);
     };
@@ -77,7 +74,7 @@ export default function GamePage() {
     // make the sound clear, smooth and not too loud
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
-    
+
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
     oscillator.type = 'sine';
 
@@ -229,15 +226,18 @@ export default function GamePage() {
 
   return (
     <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
-        <div className='flex items-start justify-start w-full'>
-          <button className='text-white size-20 px-8 pt-6'
-          onClick={()=>{socket.emit("game_end"); 
-            console.log("player resign");
-            router.push('/lobby/'+roomId);
-           }}>
-            <FaFontAwesomeFlag size={30} className='shadow-white shadow-inner'/>
-          </button>
-        </div>
+      <div className='flex w-full items-start justify-start'>
+        <button
+          className='size-20 px-8 pt-6 text-white'
+          onClick={() => {
+            socket.emit('game_end');
+            console.log('player resign');
+            router.push('/lobby/' + roomId);
+          }}
+        >
+          <FaFontAwesomeFlag size={30} className='shadow-inner shadow-white' />
+        </button>
+      </div>
       <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
         <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
         <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
