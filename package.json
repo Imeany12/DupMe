@@ -13,7 +13,8 @@
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky && husky install",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "start": "turbo run start"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.1",

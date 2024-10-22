@@ -6,7 +6,8 @@
     "dev": "tsnd --files --watch --respawn src/server.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts*\"",
-    "clean": "rm -rf build"
+    "clean": "rm -rf build",
+    "start": "tsnd src/server.ts"
   },
   "dependencies": {
     "@repo/eslint-config": "workspace:^",
