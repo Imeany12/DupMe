@@ -8,7 +8,6 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -16,8 +15,6 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
-
 
 body {
   background-size: cover;
@@ -91,9 +88,9 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note: #82C5FFD9;
-  --note1: #5F89FF;
-  --note2: #0D1D2CD9;
+  --note: #82c5ffd9;
+  --note1: #5f89ff;
+  --note2: #0d1d2cd9;
 }
 
 .snow-bg {
@@ -102,9 +99,9 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note: #BDBDBDD9;
-  --note1: #EFEBF0;
-  --note2: #333322D9;
+  --note: #bdbdbdd9;
+  --note1: #efebf0;
+  --note2: #333322d9;
 }
 
 .city-bg {
@@ -113,9 +110,9 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note: #EFACCD;
-  --note1: #C175D4;
-  --note2: #36083F;
+  --note: #efaccd;
+  --note1: #c175d4;
+  --note2: #36083f;
 }
 .forest-bg {
   background-image: url('/images/forestBg.png');
@@ -123,10 +120,9 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note: #5FFFEF;
-  --note1: #8AFF82;
-  --note2: #03200F;
-  
+  --note: #5fffef;
+  --note1: #8aff82;
+  --note2: #03200f;
 }
 .haunt-bg {
   background-image: url('/images/hauntBg.png');
@@ -134,8 +130,15 @@ body {
   background-position: top;
   background-repeat: no-repeat;
   position: responsive;
-  --note: #F2AD8C;
-  --note1: #F24545;
-  --note2: #2F1515;
+  --note: #f2ad8c;
+  --note1: #f24545;
+  --note2: #2f1515;
 }
-
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

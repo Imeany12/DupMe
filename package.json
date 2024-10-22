@@ -14,13 +14,15 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky && husky install",
     "postinstall": "husky install",
-    "start": "turbo run start"
+    "start": "turbo run start",
+    "ui:add": "pnpm --filter client ui:add"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.1",
     "@commitlint/config-conventional": "^19.4.1",
     "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:^",
+    "@types/node": "^20.16.11",
     "eslint": "^8.57.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.10",
