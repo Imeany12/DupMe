@@ -20,16 +20,18 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const existingUser = await User.findOne({ username: req.body.username });
-    const existingEmail = await User.findOne({ email: req.body.email });
+    const { username, email, password } = req.body;
+    const existingUser = await User.findOne({ username });
+    const existingEmail = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: 'Username already exists' });
     }
-    if (existingEmail) {
-      return res.status(409).json({ error: 'Email already exists' });
+    if (email) {
+      if (existingEmail) {
+        return res.status(409).json({ error: 'Email already exists' });
+      }
     }
 
-    const { password } = req.body;
     if (!password || password.length < 4) {
       return res
         .status(400)
@@ -41,6 +43,10 @@ export const createUser = async (req: Request, res: Response) => {
     const newUser = new User({
       username: req.body.username,
       password: hashedPassword,
+      email: email || '',
+      dob: req.body.dob || '',
+      gender: req.body.gender || '',
+      bio: req.body.bio || '',
     });
 
     await newUser.save();
