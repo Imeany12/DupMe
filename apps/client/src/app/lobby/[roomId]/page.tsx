@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { redirect, useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -17,10 +17,12 @@ type User =
   | undefined;
 
 export default function LobbyPage() {
+  const router = useRouter();
   const { roomId } = useParams();
-  const { data: session } = useSession({
+  const { data: session, status } = useSession({
     required: false,
   });
+
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   //test map
@@ -29,8 +31,8 @@ export default function LobbyPage() {
   const hasJoined = useRef(false);
 
   useEffect(() => {
-    if (!user || !socket || !roomId) return;
-
+    if (!user || !socket || !roomId || status === 'loading') return;
+    console.log('Hi this is' + players);
     if (!hasJoined.current) {
       socket.emit('join_lobby', { username: user.name, roomId });
       console.log(`user ${user?.name} joined room-${roomId}`);
@@ -41,11 +43,11 @@ export default function LobbyPage() {
     }
 
     socket.on('update_players', (playerList: string[]) => {
+      console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
     });
     socket.on('start_game', () => {
       setIsGameStarting(true);
-      redirect(`/game/${roomId}`);
     });
 
     return () => {
@@ -53,11 +55,12 @@ export default function LobbyPage() {
       socket.off('update_players');
       socket.off('start_game');
     };
-  }, [socket, user, roomId]);
+  }, [user, socket, roomId]);
 
   const startGame = () => {
     if (players.length >= 2) {
       socket.emit('start_game', roomId);
+      router.push(`/game/${roomId}`);
     }
   };
   return (
@@ -74,7 +77,7 @@ export default function LobbyPage() {
               className='rounded-full'
             />
             <div className='ml-4'>
-              <h1 className='text-xl font-bold'>Suntoh</h1>
+              <h1 className='text-xl font-bold'>{user?.name}</h1>
               <p className='text-sm'>Performance: 3,161pp</p>
               <p className='text-sm'>Accuracy: 97.17%</p>
               <p className='text-sm'>Lv98</p>
@@ -132,7 +135,10 @@ export default function LobbyPage() {
               Leave Match
             </button>
             {ready ? (
-              <button className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
+              <button
+                className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
+                onClick={startGame}
+              >
                 Start Match
               </button>
             ) : (
