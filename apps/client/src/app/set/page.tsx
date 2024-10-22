@@ -1,7 +1,5 @@
 'use client';
-import React, { useState , useEffect} from 'react';
-
-import SetNote from '@/lib/setNotes';
+import React, { useEffect, useState } from 'react';
 
 interface KeyMapping {
   [key: string]: string;
