@@ -23,11 +23,11 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className='mx-auto flex h-screen w-screen flex-col'>
       <NavBar session={session} />
-      <div className='mx-auto flex h-screen w-screen flex-col items-center'>
-        <Konami triggerSnow={() => setSnowing(true)} />
-        {snowing && <Snowfall />}
+      <div className='flex flex-col w-full items-center'>
+      <Konami triggerSnow={() => setSnowing(true)} />
+      {snowing && <Snowfall />}
         <div className='text-center text-[180px] font-semibold text-white'>
           DupMe
         </div>

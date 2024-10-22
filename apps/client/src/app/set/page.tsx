@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 import SetNote from '@/lib/setNotes';
 
@@ -8,7 +8,7 @@ interface KeyMapping {
 }
 
 export default function SettingsPage() {
-  const [keyMappings, setKeyMappings] = useState<KeyMapping>({
+  const defaultKeyMappings = {
     C: 's',
     'C#': 'e',
     D: 'd',
@@ -21,7 +21,15 @@ export default function SettingsPage() {
     A: 'j',
     'A#': 'i',
     B: 'k',
+  };
+  const [keyMappings, setKeyMappings] = useState<KeyMapping>(() => {
+    const storedMappings = localStorage.getItem('keyMappings');
+    return storedMappings ? JSON.parse(storedMappings) : defaultKeyMappings;
   });
+  //change this local storage to server storage?
+  useEffect(() => {
+    localStorage.setItem('keyMappings', JSON.stringify(keyMappings));
+  }, [keyMappings]);
 
   const notes = [
     'C',
@@ -52,10 +60,11 @@ export default function SettingsPage() {
                 onClick={(event) => {
                   event.preventDefault();
                   const handleKeyPress = (e: KeyboardEvent) => {
-                    SetNote(e.key, note, keyMappings, setKeyMappings);
+                    setKeyMappings((prev) => ({
+                      ...prev,
+                      [note]: e.key,
+                    }));
                     window.removeEventListener('keydown', handleKeyPress);
-                    // Reload the window to reflect the changes
-                    window.location.reload();
                   };
                   window.addEventListener('keydown', handleKeyPress);
                 }}
