@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -128,12 +129,17 @@ export default function LobbyPage() {
             ))}
           </ul>
           <div className='flex w-full items-center justify-between gap-20 px-12 pt-2'>
-            <button
-              className='w-full rounded bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-500'
-              onClick={() => console.log(players)}
+            <Link
+              href='/'
+              className='w-full rounded bg-yellow-600 px-4 py-2 hover:bg-yellow-500'
             >
-              Leave Match
-            </button>
+              <button
+                onClick={() => console.log(players)}
+                className='w-full text-center text-white'
+              >
+                Leave Match
+              </button>
+            </Link>
             {ready ? (
               <button
                 className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
