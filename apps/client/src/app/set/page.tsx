@@ -21,7 +21,10 @@ export default function SettingsPage() {
     B: 'k',
   };
   const [keyMappings, setKeyMappings] = useState<KeyMapping>(() => {
-    const storedMappings = localStorage.getItem('keyMappings');
+    const storedMappings =
+      typeof window !== 'undefined'
+        ? localStorage.getItem('keyMappings')
+        : null;
     return storedMappings ? JSON.parse(storedMappings) : defaultKeyMappings;
   });
   //change this local storage to server storage?
