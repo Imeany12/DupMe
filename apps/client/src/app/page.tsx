@@ -22,13 +22,23 @@ export default function Home() {
     setMode(true);
   };
 
+  const handleChangeRoomId = (e: { target: { value: string } }) => {
+    const newId = parseInt(e.target.value);
+    if (!Number.isNaN(newId)) {
+      setRoomId(newId);
+    } else {
+      setRoomId(0);
+    }
+    console.log(roomId);
+  };
+
   return (
     <div className='mx-auto flex h-screen w-screen flex-col'>
       <NavBar session={session} />
       <div className='flex w-full flex-col items-center'>
         <Konami triggerSnow={() => setSnowing(true)} />
         {snowing && <Snowfall />}
-        <div className='text-center text-[180px] font-semibold text-white'>
+        <div className='text-center text-[180px] font-semibold text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]'>
           DupMe
         </div>
 
@@ -47,19 +57,38 @@ export default function Home() {
             </div>
           ) : (
             <div>
-              <div className='my-auto flex flex-col items-center gap-8'>
+              <div className='my-auto flex flex-col items-center gap-6'>
                 <Button
                   onClick={() => setMode(false)}
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-32 py-6 text-4xl text-[#FFFFFF] shadow-lg'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-32 py-6 text-4xl text-[#e6e6e6] shadow-lg'
                 >
                   Back
                 </Button>
                 <Link
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] py-2 text-center text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] py-2 text-center text-3xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
                   href={`/lobby/${roomId}`}
                 >
-                  2 Player
+                  Create Room
                 </Link>
+                <label className='bg rounded-lg bg-neutral-800 px-24 py-4 text-center text-white'>
+                  Or Enter Room ID:
+                </label>
+                <div className='flex flex-row items-center'>
+                  <input
+                    type='text'
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#a0a9b5] py-4 text-center text-2xl text-[#FFFFFF] shadow-lg'
+                    value={roomId}
+                    onChange={handleChangeRoomId}
+                  />
+                  <Button>
+                    <Link
+                      className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#436290] px-6 py-2 text-center text-xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                      href={`/lobby/${roomId}`}
+                    >
+                      Join Room
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </div>
           )}
