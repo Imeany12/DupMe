@@ -10,6 +10,7 @@ import {
   getUsers,
   loginUser,
   removeUser,
+  saveKeybindings,
   uploadImage,
 } from '../controllers/user';
 
@@ -34,5 +35,6 @@ router.post('/:username/upload', upload.single('image'), uploadImage);
 router.get('/:username/profile', getUserProfile);
 router.post('/:username/profile/edit', editUserProfile);
 router.post('/:username/profile/changePassword', changePassword);
+router.post('/:username/profile/keybinds', saveKeybindings);
 
 export default router;
