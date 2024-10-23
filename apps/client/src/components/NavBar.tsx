@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import React from 'react';
-import { FiHome } from 'react-icons/fi';
 
 type User =
   | {
@@ -17,11 +16,11 @@ export default function NavBar({ session }: { session: Session | null }) {
   return (
     <nav>
       <ul className='flex flex-grow py-4'>
-        <li className='ml-4'>
+        {/* <li className='ml-4'>
           <Link href='/' className='items-start text-3xl text-white'>
             <FiHome />
           </Link>
-        </li>
+        </li> */}
         <li className='mr-10 flex w-full flex-col items-end'>
           {!user ? (
             <div className='flex items-center gap-4'>
