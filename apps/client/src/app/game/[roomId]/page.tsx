@@ -20,7 +20,9 @@ type pressNote = {
 };
 
 export default function GamePage() {
-  const { roomId } = useParams();
+  //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
+  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
+  const { roomId } = useParams<{ roomId: string }>();
   const [play, setPlay] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
@@ -47,24 +49,44 @@ export default function GamePage() {
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
+  const [pressedNotes, setPressedNotes] = useState<string[]>([]);
+  const [pressStartTime, setPressStartTime] = useState<number | null>(null);
 
   const sendNoteToPlayer = (notes: Note[]) => {
     socket.emit('sendNote', roomId, notes);
   };
 
   useEffect(() => {
-    const handleReceiveNote = (notes: Note[]) => {
-      notes.forEach(({ note, timePressed }) => {
-        console.log(`Received note: ${note} for ${timePressed}ms`);
-      });
-    };
+    if (!isPlayerTurn && pressedNotes.length > 0) {
+      // setPressedNotes([]); //reset notes
+    }
+  }, [pressedNotes, isPlayerTurn]);
 
-    socket.on('receiveNote', handleReceiveNote);
+  useEffect(() => {
+    const handleRcieve = (recievedNote: Note) => {
+      setPressedNotes((prev) => [...prev, recievedNote.note]);
+      console.log('listening for notes');
+    };
+    socket.on('playNote', handleRcieve);
 
     return () => {
-      socket.off('receiveNote', handleReceiveNote);
+      socket.off('playNote', handleRcieve);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const handleReceiveNote = (notes: Note[]) => {
+  //     notes.forEach(({ note, timePressed }) => {
+  //       console.log(`Received note: ${note} for ${timePressed}ms`);
+  //     });
+  //   };
+
+  //   socket.on('receiveNote', handleReceiveNote);
+
+  //   return () => {
+  //     socket.off('receiveNote', handleReceiveNote);
+  //   };
+  // }, [socket]);
 
   const startSound = (frequency: number, key: string) => {
     if (!audioContext || activeOscillators[key]) return;
@@ -122,9 +144,6 @@ export default function GamePage() {
     }
   };
 
-  const [pressedNotes, setPressedNotes] = useState<string[]>([]);
-  const [pressStartTime, setPressStartTime] = useState<number | null>(null);
-
   const handleKeyDown = (event: KeyboardEvent) => {
     const pressedKey = event.key.toLowerCase();
 
@@ -132,6 +151,7 @@ export default function GamePage() {
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === pressedKey
     );
+    socket.emit('sendNote', roomId, note);
     //play many notes at once
     if (note && !activeOscillators[note]) {
       const frequency = getNoteFrequency(note);
@@ -201,6 +221,7 @@ export default function GamePage() {
   }, [pressedNotes, pressStartTime, audioContext]);
 
   const handleNoteClick = (note: string) => {
+    socket.emit('sendNote', roomId, note);
     const frequency = getNoteFrequency(note);
     startSound(frequency, note);
     setPressedNotes((prev) => [...prev, note]);
@@ -225,39 +246,91 @@ export default function GamePage() {
   };
 
   return (
-    <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
-      <div className='flex w-full items-start justify-start'>
-        <button
-          className='size-20 px-8 pt-6 text-white'
-          onClick={() => {
-            socket.emit('game_end');
-            console.log('player resign');
-            router.push('/lobby/' + roomId);
-          }}
-        >
-          <FaFontAwesomeFlag size={30} className='shadow-inner shadow-white' />
-        </button>
-      </div>
-      <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
-        <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
-        <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
-          {pressedNotes.map((note, index) => (
-            <span
-              key={index}
-              className='bg-gradient-radial shirk-0 gradient flex h-16 w-16 items-center justify-center rounded-full border border-[#2FBCE7B0] bg-white from-[#C4C4C400] from-10% to-[#2FBCE7B0] text-xl font-bold text-[#6A98FF] shadow-[0_0px_40px_8px_#6A98FF]'
+    <div>
+      {isPlayerTurn ? (
+        <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
+          <div className='flex w-full items-start justify-start'>
+            <button
+              className='size-20 px-8 pt-6 text-white'
+              onClick={() => {
+                // socket.emit('game_end');
+                // console.log('player resign');
+                // router.push('/lobby/' + roomId);
+                setIsPlayerTurn(false);
+              }}
             >
-              {note}
-            </span>
-          ))}
+              <FaFontAwesomeFlag
+                size={30}
+                className='shadow-inner shadow-white'
+              />
+            </button>
+          </div>
+          <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+            <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
+            <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
+              {pressedNotes.map((note, index) => (
+                <span
+                  key={index}
+                  className='bg-gradient-radial shirk-0 gradient flex h-16 w-16 items-center justify-center rounded-full border border-[#2FBCE7B0] bg-white from-[#C4C4C400] from-10% to-[#2FBCE7B0] text-xl font-bold text-[#6A98FF] shadow-[0_0px_40px_8px_#6A98FF]'
+                >
+                  {note}
+                </span>
+              ))}
+            </div>
+            {/* {show pressednotes here} */}
+            <div className='flex h-full flex-col justify-end pt-4'>
+              <Piano
+                onNoteClick={handleNoteClick}
+                onNoteReleased={handleNoteRelease}
+              />
+            </div>
+          </div>
         </div>
-        {/* {show pressednotes here} */}
-        <div className='flex h-full flex-col justify-end pt-4'>
-          <Piano
-            onNoteClick={handleNoteClick}
-            onNoteReleased={handleNoteRelease}
-          />
+      ) : (
+        <div>
+          <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
+            <div className='flex w-full items-start justify-start'>
+              <button
+                className='size-20 px-8 pt-6 text-white'
+                onClick={() => {
+                  socket.emit('game_end');
+                  console.log('player resign');
+                  router.push('/lobby/' + roomId);
+                }}
+              >
+                <FaFontAwesomeFlag
+                  size={30}
+                  className='shadow-inner shadow-white'
+                />
+              </button>
+            </div>
+            <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+              <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
+              <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
+                {pressedNotes.map((note, index) => (
+                  <span
+                    key={index}
+                    className='bg-gradient-radial shirk-0 gradient flex h-16 w-16 items-center justify-center rounded-full border border-[#2FBCE7B0] bg-white from-[#C4C4C400] from-10% to-[#2FBCE7B0] text-xl font-bold text-[#6A98FF] shadow-[0_0px_40px_8px_#6A98FF]'
+                  >
+                    {note}
+                  </span>
+                ))}
+              </div>
+              {/* {show pressednotes here} */}
+              <div className='flex h-full flex-col justify-end pt-4'>
+                <Piano
+                  onNoteClick={() => {
+                    return;
+                  }}
+                  onNoteReleased={() => {
+                    return;
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
