@@ -52,7 +52,7 @@ export default function LobbyPage() {
     });
 
     return () => {
-      socket.emit('leave_lobby', { roomId });
+      //socket.emit('leave_lobby', { roomId });
       socket.off('update_players');
       socket.off('start_game');
     };

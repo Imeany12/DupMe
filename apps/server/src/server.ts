@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
   socket.on(
     'leave_lobby',
     ({ username, roomId }: { username: string; roomId: number }) => {
+      console.log('leave_lobby');
       rooms[roomId] = rooms[roomId].filter((player) => player[0] !== username);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
@@ -128,7 +129,7 @@ io.on('connection', (socket) => {
     socket.emit('receiveNote', notes);
   });
 
-  socket.on('getNote', (roomId, note: string) => {
+  socket.on('getNote', (roomId: number, note: string) => {
     console.log('getNote', note);
     socket.to(roomId.toString()).emit('playNote', note);
   });

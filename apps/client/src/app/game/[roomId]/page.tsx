@@ -80,7 +80,7 @@ export default function GamePage() {
     }
 
     return () => {
-      socket.emit('leave_lobby', { roomId });
+      //socket.emit('leave_lobby', { roomId });
       socket.off('update_players');
       socket.off('start_game');
     };
@@ -93,19 +93,17 @@ export default function GamePage() {
   }, [pressedNotes, isPlayerTurn]);
 
   useEffect(() => {
-    console.log('listening');
     const handleRecieve = (recievedNote: string) => {
+      console.log('listening');
       console.log('recieved note:', recievedNote);
-      if (!isPlayerTurn) {
-        setPressedNotes((prev) => [...prev, recievedNote.toString()]);
-      }
+      setPressedNotes((prev) => [...prev, recievedNote.toString()]);
     };
     socket.on('playNote', handleRecieve);
 
     return () => {
       socket.off('playNote', handleRecieve);
     };
-  }, []);
+  }, [isPlayerTurn, socket]);
 
   // useEffect(() => {
   //   const handleReceiveNote = (notes: Note[]) => {
