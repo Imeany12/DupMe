@@ -124,6 +124,13 @@ io.on('connection', (socket) => {
     );
     io.emit('connectedUsersCount', connectedUsersCount);
   });
+  socket.on('sendNote', (roomId, notes) => {
+    socket.emit('receiveNote', notes);
+  });
+
+  socket.on('getNote', (roomId, notes) => {
+    socket.emit('playNote', notes);
+  });
 });
 
 server.listen(PORT, () => {
