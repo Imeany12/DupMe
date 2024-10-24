@@ -95,10 +95,8 @@ io.on('connection', (socket) => {
 
   socket.on('start_game', (roomId: number) => {
     const firstPlayer = handleFirstPlayer(rooms, roomId);
-    socket
-      .to(roomId.toString())
-      .emit('start_game', handleFirstPlayer(rooms, roomId));
-    socket.emit('start_game', firstPlayer);
+    socket.to(roomId.toString()).emit('start_game', firstPlayer[0]);
+    socket.emit('start_game', firstPlayer[0]);
     console.log('received start, starting player: ' + firstPlayer[0]);
   });
 
