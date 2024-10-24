@@ -94,9 +94,9 @@ export default function GamePage() {
   }, [pressedNotes, isPlayerTurn]);
 
   useEffect(() => {
+    console.log('listening');
     const handleRecieve = (recievedNote: string) => {
       if (!isPlayerTurn && recievedNote) {
-        console.log('listening');
         console.log('recieved note:', recievedNote);
         setPressedNotes((prev) => [...prev, recievedNote.toString()]);
       }
@@ -179,13 +179,14 @@ export default function GamePage() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    if (!isPlayerTurn) return;
+    console.log('key pressed' + isPlayerTurn);
     const pressedKey = event.key.toLowerCase();
 
     // Find the corresponding note for the pressed key
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === pressedKey
     );
-    socket.emit('getNote', roomId, note);
     //play many notes at once
     if (note && !activeOscillators[note]) {
       const frequency = getNoteFrequency(note);
@@ -193,6 +194,7 @@ export default function GamePage() {
     }
     //prevent adding the same note multiple times
     if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
+      socket.emit('getNote', roomId, note);
       setPressedNotes((prev) => [...prev, note]);
       const startTime = Date.now();
       setPressStartTime(startTime);
@@ -204,6 +206,7 @@ export default function GamePage() {
   };
 
   const handleKeyRelease = (event: KeyboardEvent) => {
+    if (!isPlayerTurn) return;
     const releasedKey = event.key.toLowerCase();
 
     const note = Object.keys(keyMappings).find(
@@ -244,7 +247,7 @@ export default function GamePage() {
     //     setPlay(true); //change player
     //   }
     // }, 30000);
-    //sendNote after 1 minute
+    //sendNote after 0.5 minute
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
@@ -252,7 +255,7 @@ export default function GamePage() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [pressedNotes, pressStartTime, audioContext]);
+  }, [pressedNotes, pressStartTime, audioContext, isPlayerTurn]);
 
   const handleNoteClick = (note: string) => {
     socket.emit('getNote', roomId, note);
@@ -336,7 +339,7 @@ export default function GamePage() {
                     onClick={() => {
                       socket.emit('game_end');
                       console.log('player resign');
-                      router.push('/lobby/' + roomId);
+                      router.push('/lobby/' + roomId + '?host=' + false);
                     }}
                   >
                     <FaFontAwesomeFlag
