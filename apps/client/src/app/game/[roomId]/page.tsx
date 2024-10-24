@@ -1,12 +1,21 @@
 'use client';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
+
+type User =
+  | {
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;
 
 type Note = {
   note: string;
@@ -20,6 +29,12 @@ type pressNote = {
 };
 
 export default function GamePage() {
+  const { data: session, status } = useSession({
+    required: false,
+  });
+
+  const user = session?.user ?? ({ name: 'Guest' } as User);
+
   //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const { roomId } = useParams<{ roomId: string }>();
@@ -51,10 +66,25 @@ export default function GamePage() {
   }>({});
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
+  const hasJoined = useRef(false);
 
   const sendNoteToPlayer = (notes: Note[]) => {
     socket.emit('sendNote', roomId, notes);
   };
+  useEffect(() => {
+    if (!user || !socket || !roomId) return;
+    if (!hasJoined.current) {
+      socket.emit('join_lobby', { username: user.name, roomId });
+      console.log(`user ${user?.name} joined room-${roomId}`);
+      hasJoined.current = true; // Mark as joined
+    }
+
+    return () => {
+      socket.emit('leave_lobby', { roomId });
+      socket.off('update_players');
+      socket.off('start_game');
+    };
+  }, [user, socket, roomId]);
 
   useEffect(() => {
     if (!isPlayerTurn && pressedNotes.length > 0) {
@@ -63,14 +93,17 @@ export default function GamePage() {
   }, [pressedNotes, isPlayerTurn]);
 
   useEffect(() => {
-    const handleRcieve = (recievedNote: Note) => {
-      setPressedNotes((prev) => [...prev, recievedNote.note]);
-      console.log('listening for notes');
+    console.log('listening');
+    const handleRecieve = (recievedNote: string) => {
+      console.log('recieved note:', recievedNote);
+      if (!isPlayerTurn) {
+        setPressedNotes((prev) => [...prev, recievedNote.toString()]);
+      }
     };
-    socket.on('playNote', handleRcieve);
+    socket.on('playNote', handleRecieve);
 
     return () => {
-      socket.off('playNote', handleRcieve);
+      socket.off('playNote', handleRecieve);
     };
   }, []);
 
@@ -203,13 +236,13 @@ export default function GamePage() {
     if (!audioContext) {
       setAudioContext(new AudioContext());
     }
-    const timer = setTimeout(() => {
-      if (pressedNotes.length > 0) {
-        console.log('sending notes');
-        sendNoteToPlayer(notes);
-        setPlay(true); //change player
-      }
-    }, 30000);
+    // const timer = setTimeout(() => {
+    //   if (pressedNotes.length > 0) {
+    //     //console.log('sending notes');
+    //     sendNoteToPlayer(notes);
+    //     setPlay(true); //change player
+    //   }
+    // }, 30000);
     //sendNote after 1 minute
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
@@ -221,7 +254,8 @@ export default function GamePage() {
   }, [pressedNotes, pressStartTime, audioContext]);
 
   const handleNoteClick = (note: string) => {
-    socket.emit('sendNote', roomId, note);
+    socket.emit('getNote', roomId, note);
+    console.log('sending note', note);
     const frequency = getNoteFrequency(note);
     startSound(frequency, note);
     setPressedNotes((prev) => [...prev, note]);
