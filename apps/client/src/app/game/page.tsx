@@ -376,7 +376,7 @@ export default function GamePage() {
             </span>
           ))}
         </div>
-        <div ref={trackContainerRef}></div>
+        <div ref={trackContainerRef} className='track-container'></div>
         {/* {show pressednotes here} */}
         <div className='flex h-full flex-col justify-end pt-4'>
           <Piano
