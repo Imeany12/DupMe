@@ -1,5 +1,5 @@
 'use client';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -33,12 +33,15 @@ export default function GamePage() {
     required: false,
   });
 
+  const searchParams = useSearchParams();
+  const host: boolean = searchParams.get('host') === 'true';
+
   const user = session?.user ?? ({ name: 'Guest' } as User);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
-  //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
+  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
   //playerTurn form randaomization backend
-  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
+  //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const { roomId } = useParams<{ roomId: string }>();
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
