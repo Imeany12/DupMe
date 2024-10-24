@@ -55,12 +55,15 @@ export default function LobbyPage() {
       setPlayers(playerList);
     });
     socket.on('start_game', (username) => {
-      console.log(username[0] + user.name);
-      if (username[0] === user.name) {
+      if (username.toString() === user.name?.toString()) {
+        console.log(username + 'vs' + user.name);
         router.push(`/game/${roomId}?host=true`);
+      } else {
+        console.log(username + 'false' + user.name);
+        router.push(`/game/${roomId}?host=false`);
       }
-      router.push(`/game/${roomId}?host=false`);
     });
+    //now having problem first player, host always false
 
     return () => {
       //socket.emit('leave_lobby', { roomId });
