@@ -125,13 +125,15 @@ io.on('connection', (socket) => {
     );
     io.emit('connectedUsersCount', connectedUsersCount);
   });
-  socket.on('sendNote', (roomId, notes) => {
-    socket.emit('receiveNote', notes);
-  });
 
   socket.on('getNote', (roomId: number, note: string) => {
     console.log('getNote', note);
     socket.to(roomId.toString()).emit('playNote', note);
+  });
+
+  socket.on('countReady', (readyPlayers: number, roomId) => {
+    console.log('countReady', readyPlayers);
+    socket.to(roomId).emit('setReady', readyPlayers);
   });
 });
 

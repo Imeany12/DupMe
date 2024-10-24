@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -18,6 +18,8 @@ type User =
   | undefined;
 
 export default function LobbyPage() {
+  const searchParams = useSearchParams();
+  const host: boolean = searchParams.get('host') === 'true';
   const router = useRouter();
   const { roomId } = useParams();
   const { data: session, status } = useSession({
@@ -26,14 +28,19 @@ export default function LobbyPage() {
 
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
+  const [readyPlayers, setReadyPlayers] = useState(1);
   //test map
   const [players, setPlayers] = useState<string[]>([]);
-  const [isGameStarting, setIsGameStarting] = useState(false);
+  const [amReady, setAmReady] = useState(false);
   const hasJoined = useRef(false);
 
   useEffect(() => {
+    console.log('readyPlayers');
+    socket.on('setReady', (readyPlayers: number) => {
+      console.log('setReady', readyPlayers);
+      setReadyPlayers(readyPlayers);
+    });
     if (!user || !socket || !roomId || status === 'loading') return;
-    console.log('Hi this is' + players);
     if (!hasJoined.current) {
       socket.emit('join_lobby', { username: user.name, roomId });
       console.log(`user ${user?.name} joined room-${roomId}`);
@@ -48,21 +55,20 @@ export default function LobbyPage() {
       setPlayers(playerList);
     });
     socket.on('start_game', () => {
-      setIsGameStarting(true);
+      router.push(`/game/${roomId}`);
     });
 
     return () => {
       //socket.emit('leave_lobby', { roomId });
       socket.off('update_players');
       socket.off('start_game');
+      socket.off('setReady');
     };
-  }, [user, socket, roomId]);
+  }, [user, socket, roomId, readyPlayers]);
 
   const startGame = () => {
-    if (players.length >= 2) {
-      socket.emit('start_game', roomId);
-      router.push(`/game/${roomId}`);
-    }
+    socket.emit('start_game', roomId);
+    router.push(`/game/${roomId}`);
   };
   return (
     <div className='min-h-screen bg-gray-800 text-white'>
@@ -128,7 +134,7 @@ export default function LobbyPage() {
               </li>
             ))}
           </ul>
-          <div className='flex w-full items-center justify-between gap-20 px-12 pt-2'>
+          <div className='flex w-full items-center justify-between gap-10 px-12 pt-2'>
             <Link
               href='/'
               className='w-full rounded bg-yellow-600 px-4 py-2 hover:bg-yellow-500'
@@ -140,17 +146,47 @@ export default function LobbyPage() {
                 Leave Match
               </button>
             </Link>
-            {ready ? (
-              <button
-                className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
-                onClick={startGame}
-              >
-                Start Match
-              </button>
+            {host ? (
+              <div className='w-full'>
+                {ready && readyPlayers >= players.length ? (
+                  <button
+                    className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
+                    onClick={startGame}
+                  >
+                    Start Match
+                  </button>
+                ) : (
+                  <p className='flex w-full items-center justify-center rounded bg-gray-600 px-4 py-2 text-white'>
+                    Waiting for other players...
+                  </p>
+                )}
+              </div>
             ) : (
-              <p className='flex w-full items-center justify-center rounded bg-gray-600 px-4 py-2 text-white'>
-                Waiting for other players...
-              </p>
+              <div className='w-full'>
+                {!amReady ? (
+                  <button
+                    className='w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'
+                    onClick={() => {
+                      setAmReady(true);
+                      socket.emit('countReady', readyPlayers + 1, roomId);
+                      setReadyPlayers(readyPlayers + 1);
+                    }}
+                  >
+                    Ready
+                  </button>
+                ) : (
+                  <button
+                    className='w-full rounded bg-orange-800 px-4 py-2 text-white hover:bg-red-500'
+                    onClick={() => {
+                      setAmReady(false);
+                      socket.emit('countReady', readyPlayers - 1, roomId);
+                      setReadyPlayers(readyPlayers - 1);
+                    }}
+                  >
+                    UnReady
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -164,7 +200,7 @@ export default function LobbyPage() {
           </div>
           <div className='mt-4'>
             <p className='text-gray-400'>Room Id::</p>
-            <p className='text-lg font-bold'>123456</p>
+            <p className='text-lg font-bold'>{roomId}</p>
           </div>
           <button className='mt-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
             Change Modes
