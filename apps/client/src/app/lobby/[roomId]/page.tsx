@@ -54,8 +54,12 @@ export default function LobbyPage() {
       console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
     });
-    socket.on('start_game', () => {
-      router.push(`/game/${roomId}`);
+    socket.on('start_game', (username) => {
+      console.log(username[0] + user.name);
+      if (username[0] === user.name) {
+        router.push(`/game/${roomId}?host=true`);
+      }
+      router.push(`/game/${roomId}?host=false`);
     });
 
     return () => {
@@ -68,7 +72,7 @@ export default function LobbyPage() {
 
   const startGame = () => {
     socket.emit('start_game', roomId);
-    router.push(`/game/${roomId}`);
+    // router.push(`/game/${roomId}`);
   };
   return (
     <div className='min-h-screen bg-gray-800 text-white'>
