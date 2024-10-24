@@ -128,8 +128,9 @@ io.on('connection', (socket) => {
     socket.emit('receiveNote', notes);
   });
 
-  socket.on('getNote', (roomId, notes) => {
-    socket.emit('playNote', notes);
+  socket.on('getNote', (roomId, note: string) => {
+    console.log('getNote', note);
+    socket.to(roomId.toString()).emit('playNote', note);
   });
 });
 
