@@ -195,7 +195,7 @@ export default function GamePage({
     const note = Object.keys(keyMappings).find(
       (note) => keyMappings[note] === pressedKey
     );
-    socket.emit('sendNote', roomId, note);
+    socket.emit('getNote', roomId, note);
     //play many notes at once
     if (note && !activeOscillators[note]) {
       const frequency = getNoteFrequency(note);
