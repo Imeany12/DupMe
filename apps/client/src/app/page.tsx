@@ -26,9 +26,9 @@ export default function Home(): React.JSX.Element {
   const handleChangeRoomId = (e: { target: { value: string } }) => {
     const newId = parseInt(e.target.value);
     if (!Number.isNaN(newId)) {
-      setRoomId(newId);
+      setJoinId(newId);
     } else {
-      setRoomId(0);
+      setJoinId(0);
     }
     console.log(roomId);
   };
