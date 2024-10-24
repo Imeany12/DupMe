@@ -11,6 +11,7 @@ import Konami from '@/lib/Konami';
 
 export default function Home(): React.JSX.Element {
   const [roomId, setRoomId] = useState(0);
+  const [joinId, setJoinId] = useState(0);
   const [snowing, setSnowing] = useState(false);
   const [mode, setMode] = useState(false);
   const { data: session } = useSession({
@@ -26,9 +27,9 @@ export default function Home(): React.JSX.Element {
   const handleChangeRoomId = (e: { target: { value: string } }) => {
     const newId = parseInt(e.target.value);
     if (!Number.isNaN(newId)) {
-      setRoomId(newId);
+      setJoinId(newId);
     } else {
-      setRoomId(0);
+      setJoinId(0);
     }
     console.log(roomId);
   };
@@ -49,8 +50,8 @@ export default function Home(): React.JSX.Element {
               <button
                 className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C] px-44 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
                 onClick={() => {
-                  setUpGame();
                   setSnowing(false);
+                  setUpGame();
                 }}
               >
                 Play
@@ -67,7 +68,7 @@ export default function Home(): React.JSX.Element {
                 </Button>
                 <Link
                   className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] py-2 text-center text-3xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
-                  href={`/lobby/${roomId}`}
+                  href={`/lobby/${roomId}?host=true`}
                 >
                   Create Room
                 </Link>
@@ -78,12 +79,12 @@ export default function Home(): React.JSX.Element {
                   <input
                     type='text'
                     className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#a0a9b5] py-4 text-center text-2xl text-[#FFFFFF] shadow-lg'
-                    value={roomId}
+                    value={joinId}
                     onChange={handleChangeRoomId}
                   />
                   <Link
                     className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-40 rounded-full border border-solid border-black bg-[#436290] px-8 text-center text-xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
-                    href={`/lobby/${roomId}`}
+                    href={`/lobby/${joinId}?host=false`}
                   >
                     Join Room
                   </Link>
