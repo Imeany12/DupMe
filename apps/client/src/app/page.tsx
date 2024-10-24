@@ -42,11 +42,11 @@ export default function Home() {
           DupMe
         </div>
 
-        <div className='mt-10 flex min-h-72 flex-grow items-center justify-between'>
+        <div className='mt-[12%] flex min-h-72 flex-grow items-center justify-between'>
           {!mode ? (
             <div className='my-auto flex flex-row items-center'>
               <button
-                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C] px-32 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] rounded-full border border-solid border-black bg-[#5B687C] px-44 py-2 text-4xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
                 onClick={() => {
                   setUpGame();
                   setSnowing(false);
@@ -60,7 +60,7 @@ export default function Home() {
               <div className='my-auto flex flex-col items-center gap-6'>
                 <Button
                   onClick={() => setMode(false)}
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-32 py-6 text-4xl text-[#e6e6e6] shadow-lg'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-44 py-6 text-4xl text-[#e6e6e6] shadow-lg'
                 >
                   Back
                 </Button>
@@ -80,14 +80,12 @@ export default function Home() {
                     value={roomId}
                     onChange={handleChangeRoomId}
                   />
-                  <Button>
-                    <Link
-                      className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#436290] px-6 py-2 text-center text-xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
-                      href={`/lobby/${roomId}`}
-                    >
-                      Join Room
-                    </Link>
-                  </Button>
+                  <Link
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-40 rounded-full border border-solid border-black bg-[#436290] px-8 text-center text-xl text-[#FFFFFF] shadow-lg hover:bg-[#8572b5]'
+                    href={`/lobby/${roomId}`}
+                  >
+                    Join Room
+                  </Link>
                 </div>
               </div>
             </div>
