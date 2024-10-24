@@ -62,7 +62,7 @@ export default function Home(): React.JSX.Element {
               <div className='my-auto flex flex-col items-center gap-6'>
                 <Button
                   onClick={() => setMode(false)}
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-32 py-6 text-4xl text-[#e6e6e6] shadow-lg'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-44 py-6 text-4xl text-[#e6e6e6] shadow-lg'
                 >
                   Back
                 </Button>
