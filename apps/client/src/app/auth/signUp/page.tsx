@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState } from 'react';
 
-export default function SignUpPage() {
+export default function SignUpPage(): React.JSX.Element {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<IUser>({
     username: '',
@@ -21,7 +21,9 @@ export default function SignUpPage() {
     total_score: 0,
     matchHistory: [],
   });
-  const handleInput = (e: { target: { name: string; value: string } }) => {
+  const handleInput = (e: {
+    target: { name: string; value: string };
+  }): void => {
     const { name, value } = e.target;
     setUserInfo({
       ...userInfo,
@@ -29,10 +31,13 @@ export default function SignUpPage() {
     });
     console.log(userInfo);
   };
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: {
+    preventDefault: () => void;
+  }): Promise<void> => {
     e.preventDefault();
 
     try {
+      // Test this with 2 devices
       const res = await fetch('http://localhost:5001/user/signup', {
         method: 'POST',
         headers: {

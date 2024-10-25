@@ -6,7 +6,7 @@ import JoinRoomPage from '@/pages/joinRoom/page';
 
 import { socket } from '../../socket';
 
-export default function DebugPage() {
+export default function DebugPage(): React.JSX.Element {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
 
@@ -39,11 +39,11 @@ export default function DebugPage() {
   }, []);
 
   return (
-    <div>
+    <>
       <p>Status: {isConnected ? 'connected' : 'disconnected'}</p>
       <p>Transport: {transport}</p>
 
       <JoinRoomPage socket={socket} />
-    </div>
+    </>
   );
 }

@@ -1,11 +1,12 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 
 interface KeyMapping {
   [key: string]: string;
 }
 
-export default function SettingsPage() {
+export default function SettingsPage(): React.JSX.Element {
   const defaultKeyMappings = {
     C: 's',
     'C#': 'e',

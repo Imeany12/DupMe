@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -16,9 +16,15 @@ type User =
     }
   | undefined;
 
-export default function LobbyPage() {
+export default function LobbyPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}): React.JSX.Element {
   const router = useRouter();
-  const { roomId } = useParams();
+  const roomId = params.slug;
   const { data: session, status } = useSession({
     required: false,
   });

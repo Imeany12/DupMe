@@ -1,5 +1,5 @@
 'use client';
-import { useParams } from 'next/navigation';
+
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
@@ -19,8 +19,12 @@ type pressNote = {
   note: string;
 };
 
-export default function GamePage() {
-  const { roomId } = useParams();
+export default function GamePage({
+  params,
+}: {
+  params: { slug: string };
+}): React.JSX.Element {
+  const roomId = params.slug;
   const [play, setPlay] = useState<boolean>(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
