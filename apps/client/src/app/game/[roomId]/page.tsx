@@ -365,8 +365,12 @@ export default function GamePage({
                     onClick={() => {
                       socket.emit('game_end');
                       console.log('player resign');
-                      socket.emit('leave_lobby', { roomId });
-                      router.push('/lobby/' + roomId + '?host=' + false);
+                      socket.emit('leave_lobby', {
+                        username: user?.name,
+                        roomId,
+                      });
+                      router.push('/lobby/' + roomId + '?host=' + host);
+                      //use host as temporary code for development
                     }}
                   >
                     <FaFontAwesomeFlag
