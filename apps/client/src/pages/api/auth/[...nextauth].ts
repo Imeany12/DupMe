@@ -71,7 +71,22 @@ export const options: NextAuthOptions = {
     async session({ session }) {
       const res = await fetch(`${SERVER_URL}/user/${session.user.name}`);
       const { user } = (await res.json()) as GetUserResponse;
-      session.user = user;
+      session.user = {
+        username: user.username,
+        email: user.email,
+        image: user.image,
+        createdAt: user.createdAt,
+        country: user.country,
+        bio: user.bio,
+        dob: user.dob,
+        gender: user.gender,
+        games_won: user.games_won,
+        games_lost: user.games_lost,
+        games_draw: user.games_draw,
+        total_score: user.total_score,
+        matchHistory: user.matchHistory,
+        keybindings: user.keybindings,
+      };
       return session;
     },
   },

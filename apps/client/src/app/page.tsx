@@ -21,6 +21,7 @@ export default function Home(): React.JSX.Element {
     setRoomId(Math.floor(Math.random() * 1000000));
     setMode(true);
   };
+  console.log('user', session?.user);
 
   return (
     <div className='mx-auto flex h-screen w-screen flex-col'>
