@@ -1,4 +1,5 @@
 'use client';
+
 import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -28,11 +29,7 @@ type pressNote = {
   note: string;
 };
 
-export default function GamePage({
-  params,
-}: {
-  params: { slug: string };
-}): React.JSX.Element {
+export default function GamePage() {
   const { data: session, status } = useSession({
     required: false,
   });
@@ -79,6 +76,26 @@ export default function GamePage({
   const sendNoteToPlayer = (notes: Note[]) => {
     socket.emit('sendNote', roomId, notes);
   };
+  // useEffect(() => {
+  //   if (!user || !socket || !roomId) return;
+  //   if (!hasJoined.current) {
+  //     socket.emit('join_lobby', { username: user.name, roomId });
+  //     console.log(`user ${user?.name} joined room-${roomId}`);
+  //     hasJoined.current = true; // Mark as joined
+  //   }
+
+  //   return () => {
+  //     //socket.emit('leave_lobby', { roomId });
+  //     socket.off('update_players');
+  //     socket.off('start_game');
+  //   };
+  // }, [user, socket, roomId]);
+
+  useEffect(() => {
+    if (!isPlayerTurn && pressedNotes.length > 0) {
+      // setPressedNotes([]); //reset notes
+    }
+  }, [pressedNotes, isPlayerTurn]);
   // useEffect(() => {
   //   if (!user || !socket || !roomId) return;
   //   if (!hasJoined.current) {

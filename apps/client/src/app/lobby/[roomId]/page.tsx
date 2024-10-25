@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
@@ -17,11 +17,11 @@ type User =
     }
   | undefined;
 
-export default function LobbyPage() {
+export default function LobbyPage({ params }: { params: { roomId: string } }) {
   const searchParams = useSearchParams();
   const host: boolean = searchParams.get('host') === 'true';
   const router = useRouter();
-  const { roomId } = useParams();
+  const { roomId } = params;
   const { data: session, status } = useSession({
     required: false,
   });
