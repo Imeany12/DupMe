@@ -64,7 +64,7 @@
   
   .track {
     position: relative;
-    flex: 0 0 calc(100% / 7);
+    flex: 0 0 calc(75% / 12);
   }
   
   .track:not(:last-child) {
@@ -106,9 +106,9 @@
   
   .note {
     position: absolute;
-    width: 100%;
     height: 1.5rem;
-    top: -3.5rem;
+    top: -10rem;
+    z-index: 99;
   }
   
   .keypress {
@@ -315,8 +315,8 @@
   
   @keyframes moveDown {
     0% { top: -1.5rem; }
-    98% { top: 100%; opacity: 1; }
-    100% { top: 105%; opacity: 0; }
+    98% { top: 200%; opacity: 1; }
+    100% { top: 205%; opacity: 0; }
   }
   
   @keyframes moveDownFade {

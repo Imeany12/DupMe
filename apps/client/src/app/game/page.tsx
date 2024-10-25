@@ -267,8 +267,8 @@ export default function GamePage() {
           note.delay / 1000 + speed + 's'
         );
         // noteElement.style.animationPlayState = 'paused';
-        noteElement.style.width = '50px'; // Set width
-        noteElement.style.height = '50px'; // Set height
+        noteElement.style.width = '44px'; // Set width
+        noteElement.style.height = `${note.longNoteDuration * 0.1}px`; // Set height
         trackElement.appendChild(noteElement);
       });
       if (trackContainer) trackContainer.appendChild(trackElement);
@@ -277,13 +277,17 @@ export default function GamePage() {
     });
   };
 
+  function playSong() {
+    initializedSong();
+    document.querySelectorAll('.note').forEach(function (note) {
+      (note as HTMLDivElement).style.animationPlayState = 'running';
+    });
+    console.log('initialzed Song');
+  }
+
   useEffect(() => {
     if (isPlaying) {
-      initializedSong();
-      document.querySelectorAll('.note').forEach(function (note) {
-        (note as HTMLDivElement).style.animationPlayState = 'running';
-      });
-      console.log('initialzed Song');
+      playSong();
     }
   }, [isPlaying]);
 
@@ -339,7 +343,7 @@ export default function GamePage() {
         longNoteDuration: Math.max(timePressed, 150),
         fallDuration: 3,
         // Find a way to keep track game start time and get the delay from start.
-        delay: endTime - initialStartTime,
+        delay: isFirstNote ? 0 : endTime - initialStartTime,
       };
       updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
       console.log(notes);
@@ -365,7 +369,7 @@ export default function GamePage() {
   return (
     /* still need to change background? or make a white box? */
     <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
-      <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+      <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center rounded-2xl bg-slate-300 px-12 pb-8'>
         <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
         {/* <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
           {pressedNotes.map((note, index) => (
@@ -379,10 +383,10 @@ export default function GamePage() {
         </div> */}
         <div
           ref={trackContainerRef}
-          className='flex min-h-[220px] w-full gap-2'
+          className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
         ></div>
         {/* {show pressednotes here} */}
-        <div className='flex flex-col justify-end pt-4'>
+        <div className='flex flex-col justify-end'>
           <Piano
             onNoteClick={handleNoteClick}
             onNoteReleased={handleNoteRelease}
@@ -409,7 +413,7 @@ export default function GamePage() {
         </button>
         <button
           onClick={() => {
-            setIsPlaying(true);
+            playSong();
           }}
         >
           Play
