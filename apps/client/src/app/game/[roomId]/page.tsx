@@ -44,6 +44,7 @@ export default function GamePage() {
   //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const { roomId } = useParams<{ roomId: string }>();
   const [notes, setNotes] = useState<Note[]>([]);
+  const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -68,7 +69,6 @@ export default function GamePage() {
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
-  const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
   const hasJoined = useRef(false);
 
@@ -97,6 +97,7 @@ export default function GamePage() {
   }, [pressedNotes, isPlayerTurn]);
 
   useEffect(() => {
+    console.log('Play along first:', playAlong);
     console.log('listening');
     const handleRecieve = (recievedNote: string) => {
       if (!isPlayerTurn && recievedNote) {
@@ -240,17 +241,35 @@ export default function GamePage() {
   };
 
   useEffect(() => {
+    if (playAlong === false) {
+      setTimeout(() => {
+        if (pressedNotes.length > 0) {
+          //console.log('sending notes');
+          //sendNoteToPlayer(notes);
+          setPressedNotes([]);
+          setNotes([]);
+        }
+        setPlayAlong(true);
+        console.log('playalong : ', playAlong);
+      }, 30000);
+    }
+    if (playAlong === true) {
+      setTimeout(() => {
+        if (pressedNotes.length > 0) {
+          //console.log('sending notes');
+          //sendNoteToPlayer(notes);
+        }
+        setPlayAlong(false);
+        console.log('playalong : ', playAlong);
+      }, 60000);
+    }
+    //sendNote after 0.5 minute
+  }, [playAlong]);
+
+  useEffect(() => {
     if (!audioContext) {
       setAudioContext(new AudioContext());
     }
-    // const timer = setTimeout(() => {
-    //   if (pressedNotes.length > 0) {
-    //     //console.log('sending notes');
-    //     sendNoteToPlayer(notes);
-    //     setPlay(true); //change player
-    //   }
-    // }, 30000);
-    //sendNote after 0.5 minute
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
@@ -342,6 +361,7 @@ export default function GamePage() {
                     onClick={() => {
                       socket.emit('game_end');
                       console.log('player resign');
+                      socket.emit('leave_lobby', { roomId });
                       router.push('/lobby/' + roomId + '?host=' + false);
                     }}
                   >
