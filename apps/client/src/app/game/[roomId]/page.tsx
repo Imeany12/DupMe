@@ -96,20 +96,6 @@ export default function GamePage() {
       // setPressedNotes([]); //reset notes
     }
   }, [pressedNotes, isPlayerTurn]);
-  // useEffect(() => {
-  //   if (!user || !socket || !roomId) return;
-  //   if (!hasJoined.current) {
-  //     socket.emit('join_lobby', { username: user.name, roomId });
-  //     console.log(`user ${user?.name} joined room-${roomId}`);
-  //     hasJoined.current = true; // Mark as joined
-  //   }
-
-  //   return () => {
-  //     //socket.emit('leave_lobby', { roomId });
-  //     socket.off('update_players');
-  //     socket.off('start_game');
-  //   };
-  // }, [user, socket, roomId]);
 
   useEffect(() => {
     if (!isPlayerTurn && pressedNotes.length > 0) {
@@ -382,8 +368,12 @@ export default function GamePage() {
                     onClick={() => {
                       socket.emit('game_end');
                       console.log('player resign');
-                      socket.emit('leave_lobby', { roomId });
-                      router.push('/lobby/' + roomId + '?host=' + false);
+                      socket.emit('leave_lobby', {
+                        username: user?.name,
+                        roomId,
+                      });
+                      router.push('/lobby/' + roomId + '?host=' + host);
+                      //use host as temporary code for development
                     }}
                   >
                     <FaFontAwesomeFlag

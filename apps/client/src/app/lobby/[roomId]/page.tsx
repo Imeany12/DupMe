@@ -35,7 +35,7 @@ export default function LobbyPage({ params }: { params: { roomId: string } }) {
   const hasJoined = useRef(false);
 
   useEffect(() => {
-    console.log('readyPlayers');
+    console.log('this is player');
     socket.on('setReady', (readyPlayers: number) => {
       console.log('setReady', readyPlayers);
       setReadyPlayers(readyPlayers);
@@ -55,6 +55,7 @@ export default function LobbyPage({ params }: { params: { roomId: string } }) {
       setPlayers(playerList);
     });
     socket.on('start_game', (username) => {
+      hasJoined.current = false;
       if (username.toString() === user.name?.toString()) {
         console.log(username + 'vs' + user.name);
         router.push(`/game/${roomId}?host=true`);
@@ -71,9 +72,10 @@ export default function LobbyPage({ params }: { params: { roomId: string } }) {
       socket.off('start_game');
       socket.off('setReady');
     };
-  }, [user, socket, roomId, readyPlayers]);
+  }, [user, socket, roomId, readyPlayers, hasJoined, players]);
 
   const startGame = () => {
+    hasJoined.current = false;
     socket.emit('start_game', roomId);
     // router.push(`/game/${roomId}`);
   };
@@ -147,7 +149,7 @@ export default function LobbyPage({ params }: { params: { roomId: string } }) {
               className='w-full rounded bg-yellow-600 px-4 py-2 hover:bg-yellow-500'
             >
               <button
-                onClick={() => console.log(players)}
+                onClick={() => socket.emit('leave_lobby', { roomId })}
                 className='w-full text-center text-white'
               >
                 Leave Match
