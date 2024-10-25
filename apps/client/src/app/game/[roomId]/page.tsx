@@ -66,6 +66,7 @@ export default function GamePage() {
   });
   //need to get keybindings from the server
   const router = useRouter();
+  const turncount = useRef(0);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
@@ -76,20 +77,17 @@ export default function GamePage() {
   const sendNoteToPlayer = (notes: Note[]) => {
     socket.emit('sendNote', roomId, notes);
   };
-  // useEffect(() => {
-  //   if (!user || !socket || !roomId) return;
-  //   if (!hasJoined.current) {
-  //     socket.emit('join_lobby', { username: user.name, roomId });
-  //     console.log(`user ${user?.name} joined room-${roomId}`);
-  //     hasJoined.current = true; // Mark as joined
-  //   }
 
-  //   return () => {
-  //     //socket.emit('leave_lobby', { roomId });
-  //     socket.off('update_players');
-  //     socket.off('start_game');
-  //   };
-  // }, [user, socket, roomId]);
+  useEffect(() => {
+    if (turncount.current === 4) {
+      socket.emit('leave_lobby', { roomId, username: user?.name });
+      socket.emit('end_game', roomId);
+      router.push('/lobby/' + roomId + '?host=' + host);
+    }
+    socket.on('end_game', () => {
+      router.push('/lobby/' + roomId + '?host=' + host);
+    });
+  }, [turncount.current]);
 
   useEffect(() => {
     if (!isPlayerTurn && pressedNotes.length > 0) {
@@ -258,7 +256,8 @@ export default function GamePage() {
         }
         setPlayAlong(true);
         console.log('playalong : ', playAlong);
-      }, 30000);
+        console.log('isPlayerTurn : ', isPlayerTurn);
+      }, 10000);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -266,9 +265,15 @@ export default function GamePage() {
           //console.log('sending notes');
           //sendNoteToPlayer(notes);
         }
+        turncount.current += 1;
         setPlayAlong(false);
+        setIsPlayerTurn((prev) => !prev);
         console.log('playalong : ', playAlong);
-      }, 60000);
+        console.log('isPlayerTurn : ', isPlayerTurn);
+        setPressedNotes([]);
+        setNotes([]);
+        console.log('playalong : ', playAlong);
+      }, 20000);
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
@@ -315,7 +320,18 @@ export default function GamePage() {
   return (
     <div className='flex h-screen w-screen flex-col items-center'>
       {playAlong ? (
-        <div>{/* waiting for rainfall from mark */}</div>
+        <div>
+          {/* waiting for rainfall from mark */}
+          {!isPlayerTurn ? (
+            <div>
+              <p className='text-3xl text-white'>rainfall</p>
+            </div>
+          ) : (
+            <div>
+              <p className='text-3xl text-white'>watch other rainfall</p>
+            </div>
+          )}
+        </div>
       ) : (
         <div>
           {isPlayerTurn ? (
