@@ -3,6 +3,9 @@ import 'dotenv/config';
 export const SOCKET_URL =
   process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5001';
 
+export const SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5001';
+
 export const CLIENT_GOOGLE_ID = process.env.GOOGLE_ID as string;
 export const CLIENT_GOOGLE_SECRET = process.env.GOOGLE_SECRET as string;
 

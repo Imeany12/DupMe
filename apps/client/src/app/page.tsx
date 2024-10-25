@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import NavBar from '@/components/NavBar';
 import Snowfall from '@/components/Snowfall';
 import { Button } from '@/components/ui/button';
 import Konami from '@/lib/Konami';
 
-export default function Home() {
+export default function Home(): React.JSX.Element {
   const [roomId, setRoomId] = useState(0);
   const [snowing, setSnowing] = useState(false);
   const [mode, setMode] = useState(false);

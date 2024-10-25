@@ -3,13 +3,7 @@ import { Session } from 'next-auth';
 import React from 'react';
 import { FiHome } from 'react-icons/fi';
 
-type User =
-  | {
-      name?: string | null | undefined;
-      email?: string | null | undefined;
-      image?: string | null | undefined;
-    }
-  | undefined;
+import { User } from '@/interfaces/user/user';
 
 export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;

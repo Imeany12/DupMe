@@ -2,19 +2,12 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
-
-type User =
-  | {
-      name?: string | null | undefined;
-      email?: string | null | undefined;
-      image?: string | null | undefined;
-    }
-  | undefined;
 
 export default function LobbyPage({
   params,
