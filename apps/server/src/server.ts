@@ -53,6 +53,10 @@ mongoose
   .catch((error) => console.error('Error connecting to database:', error));
 
 io.on('connection', (socket) => {
+  if (socket.id === undefined || socket.handshake.headers === undefined) {
+    console.log('undefiened');
+    return;
+  }
   console.log(
     'a user connected:',
     socket.id,
