@@ -57,7 +57,7 @@
     animation: fade 1s;
   }
   
-  .track-container {
+  .track_container {
     display: flex;
     flex: 1 0 auto;
   }

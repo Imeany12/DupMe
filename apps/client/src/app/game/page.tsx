@@ -249,6 +249,7 @@ export default function GamePage() {
     Object.entries(song.sheet).forEach(([key, value]) => {
       const trackElement = document.createElement('div');
       trackElement.classList.add('track');
+      trackElement.classList.add(style.track);
 
       value.notes.forEach(function (note: INote) {
         const noteElement = document.createElement('div');
@@ -366,19 +367,22 @@ export default function GamePage() {
     <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
       <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
         <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
-        <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
+        {/* <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
           {pressedNotes.map((note, index) => (
             <span
-              key={index}
-              className='bg-gradient-radial shirk-0 gradient flex h-16 w-16 items-center justify-center rounded-full border border-[#2FBCE7B0] bg-white from-[#C4C4C400] from-10% to-[#2FBCE7B0] text-xl font-bold text-[#6A98FF] shadow-[0_0px_40px_8px_#6A98FF]'
+            key={index}
+            className='bg-gradient-radial shirk-0 gradient flex h-16 w-16 items-center justify-center rounded-full border border-[#2FBCE7B0] bg-white from-[#C4C4C400] from-10% to-[#2FBCE7B0] text-xl font-bold text-[#6A98FF] shadow-[0_0px_40px_8px_#6A98FF]'
             >
               {note}
             </span>
           ))}
-        </div>
-        <div ref={trackContainerRef} className='track-container'></div>
+        </div> */}
+        <div
+          ref={trackContainerRef}
+          className='flex min-h-[220px] w-full gap-2'
+        ></div>
         {/* {show pressednotes here} */}
-        <div className='flex h-full flex-col justify-end pt-4'>
+        <div className='flex flex-col justify-end pt-4'>
           <Piano
             onNoteClick={handleNoteClick}
             onNoteReleased={handleNoteRelease}
