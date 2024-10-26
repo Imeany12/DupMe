@@ -9,7 +9,7 @@ import Snowfall from '@/components/Snowfall';
 import { Button } from '@/components/ui/button';
 import Konami from '@/lib/Konami';
 
-export default function Home(): React.JSX.Element {
+export default function Home() {
   const [roomId, setRoomId] = useState(0);
   const [joinId, setJoinId] = useState(0);
   const [snowing, setSnowing] = useState(false);

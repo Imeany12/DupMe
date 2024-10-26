@@ -1,6 +1,7 @@
 'use client';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
@@ -8,14 +9,6 @@ import { FaFontAwesomeFlag } from 'react-icons/fa';
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
-
-type User =
-  | {
-      name?: string | null | undefined;
-      email?: string | null | undefined;
-      image?: string | null | undefined;
-    }
-  | undefined;
 
 type Note = {
   note: string;
@@ -28,11 +21,7 @@ type pressNote = {
   note: string;
 };
 
-export default function GamePage({
-  params,
-}: {
-  params: { slug: string };
-}): React.JSX.Element {
+export default function GamePage() {
   const { data: session, status } = useSession({
     required: false,
   });

@@ -2,7 +2,13 @@ import Link from 'next/link';
 import { Session } from 'next-auth';
 import React from 'react';
 
-import { User } from '@/interfaces/user/user';
+type User =
+  | {
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;
 
 export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;

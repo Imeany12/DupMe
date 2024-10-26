@@ -12,9 +12,7 @@ import {
   CLIENT_GOOGLE_SECRET,
   CLIENT_TWITTER_ID,
   CLIENT_TWITTER_SECRET,
-  SERVER_URL,
 } from '@/env';
-import { GetUserResponse } from '@/interfaces/user/user';
 
 // .env.local later be add(change secret key)
 
@@ -38,7 +36,7 @@ export const options: NextAuthOptions = {
         //get info from database
         //Docs : https://next-auth.js.org/configuration/providers/credentials
         if (!credentials) return null;
-        const res = await fetch(`${SERVER_URL}/user/login`, {
+        const res = await fetch('http://localhost:5001/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -68,25 +66,28 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    // async session({ session }) {
+    //   const res = await fetch(`${SERVER_URL}/user/${session.user.name}`);
+    //   const { user } = (await res.json()) as GetUserResponse;
+    //   session.user = {
+    //     username: user.username,
+    //     email: user.email,
+    //     image: user.image,
+    //     createdAt: user.createdAt,
+    //     country: user.country,
+    //     bio: user.bio,
+    //     dob: user.dob,
+    //     gender: user.gender,
+    //     games_won: user.games_won,
+    //     games_lost: user.games_lost,
+    //     games_draw: user.games_draw,
+    //     total_score: user.total_score,
+    //     matchHistory: user.matchHistory,
+    //     keybindings: user.keybindings,
+    //   };
+    //   return session;
+    // },
     async session({ session }) {
-      const res = await fetch(`${SERVER_URL}/user/${session.user.name}`);
-      const { user } = (await res.json()) as GetUserResponse;
-      session.user = {
-        username: user.username,
-        email: user.email,
-        image: user.image,
-        createdAt: user.createdAt,
-        country: user.country,
-        bio: user.bio,
-        dob: user.dob,
-        gender: user.gender,
-        games_won: user.games_won,
-        games_lost: user.games_lost,
-        games_draw: user.games_draw,
-        total_score: user.total_score,
-        matchHistory: user.matchHistory,
-        keybindings: user.keybindings,
-      };
       return session;
     },
   },
