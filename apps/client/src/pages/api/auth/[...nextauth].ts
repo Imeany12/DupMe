@@ -1,3 +1,4 @@
+import { IUser } from '@repo/shared-types';
 import type { NextAuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -45,8 +46,26 @@ export const options: NextAuthOptions = {
           },
           body: JSON.stringify(credentials),
         });
+        const { user } = (await res.json()) as GetUserResponse;
         if (res.status === 200) {
-          return { id: credentials.username, name: credentials.username };
+          return {
+            id: user.id,
+            name: credentials.username,
+            username: user.username,
+            email: user.email,
+            image: user.image,
+            createdAt: user.createdAt,
+            country: user.country,
+            bio: user.bio,
+            dob: user.dob,
+            gender: user.gender,
+            games_won: user.games_won,
+            games_lost: user.games_lost,
+            games_draw: user.games_draw ?? 0,
+            total_score: user.total_score ?? 0,
+            matchHistory: user.matchHistory ?? [],
+            keybindings: user.keybindings,
+          };
         } else {
           return null;
         }
@@ -68,24 +87,18 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    async session({ session }) {
-      const res = await fetch(`${SERVER_URL}/user/${session.user.name}`);
-      const { user } = (await res.json()) as GetUserResponse;
-      session.user = {
-        username: user.username,
-        email: user.email,
-        image: user.image,
-        createdAt: user.createdAt,
-        country: user.country,
-        bio: user.bio,
-        dob: user.dob,
-        gender: user.gender,
-        games_won: user.games_won,
-        games_lost: user.games_lost,
-        games_draw: user.games_draw,
-        total_score: user.total_score,
-        matchHistory: user.matchHistory,
-        keybindings: user.keybindings,
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Attach the user data to the session
+      session.user = token.user as Omit<IUser, 'password'> & {
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
       };
       return session;
     },

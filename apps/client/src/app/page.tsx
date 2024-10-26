@@ -16,12 +16,12 @@ export default function Home(): React.JSX.Element {
   const { data: session } = useSession({
     required: false,
   });
+  console.log(session);
 
   const setUpGame = () => {
     setRoomId(Math.floor(Math.random() * 1000000));
     setMode(true);
   };
-  console.log('user', session?.user);
 
   return (
     <div className='mx-auto flex h-screen w-screen flex-col'>
