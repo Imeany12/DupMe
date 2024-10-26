@@ -104,7 +104,7 @@ export const loginUser = async (req: Request, res: Response) => {
       process.env.JWT_SECRET || 'default_secret',
       { expiresIn: '24h' }
     );
-    return res.status(200).json({ message: 'Login successful', token });
+    return res.status(200).json({ message: 'Login successful', user, token });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
