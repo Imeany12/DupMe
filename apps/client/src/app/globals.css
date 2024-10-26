@@ -97,7 +97,7 @@ body {
   background-image: url('/images/snowBg.png');
   background-size: cover;
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   position: responsive;
   --note: #bdbdbdd9;
   --note1: #efebf0;
@@ -106,9 +106,9 @@ body {
 
 .city-bg {
   background-image: url('/images/cityBg.png');
-  background-size: cover;
+  background-size: fill;
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   position: responsive;
   --note: #efaccd;
   --note1: #c175d4;
