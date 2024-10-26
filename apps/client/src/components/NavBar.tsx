@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import React from 'react';
+import { IoMdSettings } from 'react-icons/io';
 
 type User =
   | {
@@ -21,6 +22,11 @@ export default function NavBar({ session }: { session: Session | null }) {
             <FiHome />
           </Link>
         </li> */}
+        <li className='ml-4'>
+          <Link href='/set' className='text-3xl text-white'>
+            <IoMdSettings />
+          </Link>
+        </li>
         <li className='mr-10 flex w-full flex-col items-end'>
           {!user ? (
             <div className='flex items-center gap-4'>

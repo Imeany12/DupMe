@@ -1,16 +1,19 @@
 'use client';
 
+import { TH } from 'country-flag-icons/react/3x2';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
+import { MdOutlineMale } from 'react-icons/md';
 
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
 
 export default function LobbyPage() {
+  //I can't use searchParams here idk why
   const searchParams = useSearchParams();
   const host: boolean = searchParams.get('host') === 'true';
   const router = useRouter();
@@ -87,9 +90,16 @@ export default function LobbyPage() {
             />
             <div className='ml-4'>
               <h1 className='text-xl font-bold'>{user?.name}</h1>
-              <p className='text-sm'>Performance: 3,161pp</p>
-              <p className='text-sm'>Accuracy: 97.17%</p>
-              <p className='text-sm'>Lv98</p>
+              <p className='text-sm'>Game Won : {0}</p> {/*IUSer.gameWon */}
+              <p className='text-sm'>Lv98</p> {/*IUser.level maybe */}
+              <p className='flex gap-4 text-sm'>
+                country flag :
+                <TH width={32} />
+              </p>
+              <p className='flex gap-4 text-sm'>
+                Gender :
+                <MdOutlineMale width={12} height={12} className='mt-1' />
+              </p>
             </div>
           </div>
         ) : (
@@ -98,13 +108,13 @@ export default function LobbyPage() {
           </div>
         )}
         <div className='flex items-center'>
-          <div className='relative h-2 w-40 rounded-full bg-gray-700'>
+          {/* <div className='relative h-2 w-40 rounded-full bg-gray-700'>
             <div
               className='absolute left-0 top-0 h-2 rounded-full bg-pink-500'
               style={{ width: '75%' }}
             ></div>
           </div>
-          <p className='ml-2 text-sm'>#248705</p>
+          <p className='ml-2 text-sm'>#248705</p> */}
         </div>
       </header>
 
@@ -202,7 +212,7 @@ export default function LobbyPage() {
           </div>
           <div className='mt-4'>
             <p className='text-gray-400'>Room Id::</p>
-            <p className='text-lg font-bold'>{roomId}</p>
+            <p className='text-2xl font-bold'>{roomId}</p>
           </div>
           <button className='mt-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
             Change Modes
