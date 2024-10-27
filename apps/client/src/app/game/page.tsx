@@ -155,7 +155,6 @@ export default function GamePage() {
 
   const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
   const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
-
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -179,62 +178,181 @@ export default function GamePage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [animation, setAnimation] = useState('moveDown');
   const [speed, setSpeed] = useState(1);
-
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
+  const [startTime, setStartTime] = useState<number>(Date.now());
 
   const trackContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    const pressedKey = event.key.toLowerCase();
+  const getKeyIndex = function (key: string): number {
+    if (key === 's') {
+      return 0;
+    } else if (key === 'e') {
+      return 1;
+    } else if (key === 'd') {
+      return 2;
+    } else if (key === 'r') {
+      return 3;
+    } else if (key === 'f') {
+      return 4;
+    } else if (key === 'g') {
+      return 5;
+    } else if (key === 'y') {
+      return 6;
+    } else if (key === 'h') {
+      return 7;
+    } else if (key === 'u') {
+      return 8;
+    } else if (key === 'j') {
+      return 9;
+    } else if (key === 'i') {
+      return 10;
+    } else if (key === 'k') {
+      return 11;
+    } else return 12;
+  };
 
-    // Find the corresponding note for the pressed key
-    const note = Object.keys(keyMappings).find(
-      (note) => keyMappings[note] === pressedKey
-    );
+  const getKeyString = function (index: number): string {
+    const keyMapping: { [key: number]: string } = {
+      0: 'C',
+      1: 'C#',
+      2: 'D',
+      3: 'D#',
+      4: 'E',
+      5: 'F',
+      6: 'F#',
+      7: 'G',
+      8: 'G#',
+      9: 'A',
+      10: 'A#',
+      11: 'B',
+    };
+    return keyMapping[index];
+  };
 
-    if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
-      setPressedNotes((prev) => [...prev, note]);
-      const startTime = Date.now();
-      setPressStartTime(startTime);
-      setPresNote({
-        pressing: true,
-        note: pressedKey,
-      });
+  const updateNext = function (indexString: string | undefined) {
+    if (indexString) song.sheet[indexString].nextNoteInd++;
+  };
+
+  const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
+    const timeInSecond = (Date.now() - startTime) / 1000;
+    const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
+    console.log(nextNoteIndex, song.sheet[getKeyString(index)].notes.length);
+    if (nextNoteIndex < song.sheet[getKeyString(index)].notes.length) {
+      const nextNote = song.sheet[getKeyString(index)].notes[nextNoteIndex];
+      const perfectTime = nextNote.fallDuration + nextNote.delay / 1000;
+      const accuracy = Math.abs(timeInSecond - perfectTime);
+      console.log(accuracy);
+
+      /**
+       * As long as the note has travelled less than 3/4 of the height of
+       * the track, any key press on this track will be ignored.
+       */
+      if (accuracy > (nextNote.fallDuration - speed) / 4) {
+        return;
+      }
+
+      const hitJudgement = getHitJudgement(accuracy);
+      removeNoteFromTrack(tracks[index], tracks[index].firstChild);
+      updateNext(getKeyString(index));
+
+      console.log(hitJudgement);
+    } else console.log('Note out of range!');
+  };
+
+  const getHitJudgement = function (accuracy: number) {
+    if (accuracy < 0.1) {
+      return 'perfect';
+    } else if (accuracy < 0.2) {
+      return 'good';
+    } else if (accuracy < 0.3) {
+      return 'bad';
+    } else {
+      return 'miss';
     }
   };
 
-  const handleKeyRelease = (event: KeyboardEvent) => {
-    const releasedKey = event.key.toLowerCase();
-    const note = Object.keys(keyMappings).find(
-      (note) => keyMappings[note] === releasedKey
-    );
-    if (pressStartTime !== null && note && pressedNotes.includes(note)) {
-      const endTime = Date.now();
-      const timePressed = endTime - pressStartTime;
+  const removeNoteFromTrack = function (
+    parent: ChildNode | ParentNode | null,
+    child: ChildNode | null
+  ) {
+    if (parent != null && child != null) {
+      parent.removeChild(child);
+    }
+  };
 
-      const newNote: INote = {
-        isLongNote: timePressed > 150,
-        longNoteDuration: Math.max(timePressed, 150),
-        fallDuration: 3,
-        // Find a way to keep track game start time and get the delay from start.
-        delay: isFirstNote ? 0 : endTime - initialStartTime,
-      };
-      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
-      // console.log(notes);
-      //idk why this console.log dealyed by 1 note
-      setPressStartTime(null);
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const pressedKey = event.key.toLowerCase();
+    if (!isPlaying) {
+      // Find the corresponding note for the pressed key
+      const note = Object.keys(keyMappings).find(
+        (note) => keyMappings[note] === pressedKey
+      );
 
-      if (isFirstNote) {
-        console.log(true);
-        setInitialStartTime(endTime);
-        setIsFirstNote(false);
+      if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
+        setPressedNotes((prev) => [...prev, note]);
+        const startTime = Date.now();
+        setPressStartTime(startTime);
+        setPresNote({
+          pressing: true,
+          note: pressedKey,
+        });
+      }
+    } else {
+      const tracks = document.querySelectorAll('.track');
+      const keyIndex = getKeyIndex(pressedKey);
+      if (tracks[keyIndex].firstChild) {
+        judge(keyIndex, tracks);
       }
     }
-    setPresNote({
-      pressing: false,
-      note: '',
-    });
+  };
+
+  const createNote = function (
+    timePressed: number,
+    isFirstNote: boolean,
+    endTime: number,
+    initialStartTime: number
+  ): INote {
+    return {
+      isLongNote: timePressed > 100,
+      longNoteDuration: Math.max(timePressed, 100),
+      fallDuration: 2,
+      // Find a way to keep track game start time and get the delay from start.
+      delay: isFirstNote ? 0 : endTime - initialStartTime,
+    };
+  };
+
+  const handleKeyRelease = (event: KeyboardEvent) => {
+    if (!isPlaying) {
+      const releasedKey = event.key.toLowerCase();
+      const note = Object.keys(keyMappings).find(
+        (note) => keyMappings[note] === releasedKey
+      );
+      if (pressStartTime !== null && note && pressedNotes.includes(note)) {
+        const endTime = Date.now();
+        const timePressed = endTime - pressStartTime;
+        const newNote: INote = createNote(
+          timePressed,
+          isFirstNote,
+          endTime,
+          initialStartTime
+        );
+        updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
+        // console.log(notes);
+        //idk why this console.log dealyed by 1 note
+        setPressStartTime(null);
+
+        if (isFirstNote) {
+          console.log(true);
+          setInitialStartTime(endTime);
+          setIsFirstNote(false);
+        }
+      }
+      setPresNote({
+        pressing: false,
+        note: '',
+      });
+    }
   };
 
   const initializedSong = function (): void {
@@ -264,11 +382,22 @@ export default function GamePage() {
         );
         noteElement.style.setProperty(
           '--delay',
-          note.delay / 1000 + speed + 's'
+          Math.max(
+            0,
+            note.delay / 1000 +
+              speed -
+              (note.longNoteDuration * 0.2) /
+                (400 / (note.fallDuration - speed))
+          ) + 's'
+        );
+        noteElement.style.setProperty(
+          '--bottomHeight',
+          `${250 - note.longNoteDuration * 0.2}px`
         );
         // noteElement.style.animationPlayState = 'paused';
         noteElement.style.width = '44px'; // Set width
-        noteElement.style.height = `${note.longNoteDuration * 0.1}px`; // Set height
+        noteElement.style.height = `${note.longNoteDuration * 0.2}px`; // Set height
+        noteElement.style.top = `-${note.longNoteDuration * 0.2}px`;
         trackElement.appendChild(noteElement);
       });
       if (trackContainer) trackContainer.appendChild(trackElement);
@@ -277,19 +406,63 @@ export default function GamePage() {
     });
   };
 
-  function playSong() {
+  const setupNoteMiss = function () {
+    if (trackContainerRef.current) {
+      trackContainerRef.current.addEventListener(
+        'animationend',
+        function (event: AnimationEvent) {
+          if (
+            event.target &&
+            event.target instanceof HTMLElement &&
+            event.target.classList.item(1)
+          ) {
+            const indexString = event.target.classList.item(2)?.split('--')[1];
+            removeNoteFromTrack(event.target.parentNode, event.target);
+            updateNext(indexString);
+          }
+        }
+      );
+    }
+  };
+
+  const playSong = () => {
+    setIsPlaying(true);
     initializedSong();
     document.querySelectorAll('.note').forEach(function (note) {
       (note as HTMLDivElement).style.animationPlayState = 'running';
     });
     console.log('initialzed Song');
-  }
+    setStartTime(Date.now());
+    setupNoteMiss();
+  };
 
-  useEffect(() => {
-    if (isPlaying) {
-      playSong();
+  const handleNoteRelease = (note: string) => {
+    if (pressStartTime !== null) {
+      const endTime = Date.now();
+      const timePressed = endTime - pressStartTime;
+
+      if (isFirstNote) {
+        setInitialStartTime(endTime);
+        setIsFirstNote(false);
+      }
+
+      const newNote: INote = createNote(
+        timePressed,
+        isFirstNote,
+        endTime,
+        initialStartTime
+      );
+      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
+      console.log(notes);
+      setPressStartTime(null);
     }
-  }, [isPlaying]);
+  };
+
+  const handleNoteClick = (note: string) => {
+    setPressedNotes((prev) => [...prev, note]);
+    const startTime = Date.now();
+    setPressStartTime(startTime);
+  };
 
   useEffect(() => {
     socket.on('receive_song', (song: ISong) => {
@@ -321,35 +494,6 @@ export default function GamePage() {
   useEffect(() => {
     console.log(notes);
   }, [notes]);
-
-  const handleNoteClick = (note: string) => {
-    setPressedNotes((prev) => [...prev, note]);
-    const startTime = Date.now();
-    setPressStartTime(startTime);
-  };
-
-  const handleNoteRelease = (note: string) => {
-    if (pressStartTime !== null) {
-      const endTime = Date.now();
-      const timePressed = endTime - pressStartTime;
-
-      if (isFirstNote) {
-        setInitialStartTime(endTime);
-        setIsFirstNote(false);
-      }
-
-      const newNote: INote = {
-        isLongNote: timePressed > 150,
-        longNoteDuration: Math.max(timePressed, 150),
-        fallDuration: 3,
-        // Find a way to keep track game start time and get the delay from start.
-        delay: isFirstNote ? 0 : endTime - initialStartTime,
-      };
-      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
-      console.log(notes);
-      setPressStartTime(null);
-    }
-  };
 
   // const sendNotesToServer = async () => {
   //   try {

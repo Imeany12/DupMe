@@ -107,8 +107,9 @@
   .note {
     position: absolute;
     height: 1.5rem;
-    top: -10rem;
+    /* top: -50px; */
     z-index: 99;
+    opacity: 1;
   }
   
   .keypress {
@@ -314,9 +315,9 @@
   }
   
   @keyframes moveDown {
-    0% { top: -1.5rem; }
-    98% { top: 200%; opacity: 1; }
-    100% { top: 205%; opacity: 0; }
+    0% { opacity: 1; }
+    100% { top: var(--bottomHeight); opacity: 1; }
+    /* 100% { top: 205%; opacity: 0; } */
   }
   
   @keyframes moveDownFade {
