@@ -87,6 +87,26 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    async signIn({ user }) {
+      // Only attempt signup if user data is new
+      const res = await fetch('http://localhost:5001/user/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: user.name || user.email, // Adjust based on available fields
+          password: 'sessionUser',
+        }),
+      });
+
+      if (res.status === 200) {
+        console.log('User signed up successfully');
+      } else {
+        console.log('User signup failed');
+      }
+      return true; // Continue sign-in regardless of signup result
+    },
     async jwt({ token, user }) {
       if (user) {
         token.user = user;

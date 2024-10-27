@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 
@@ -11,6 +12,10 @@ interface KeyMapping {
 }
 
 export default function SettingsPage(): React.JSX.Element {
+  const { data: session } = useSession({
+    required: false,
+  });
+  const user = session?.user;
   const defaultKeyMappings = {
     C: 's',
     'C#': 'e',
@@ -34,8 +39,29 @@ export default function SettingsPage(): React.JSX.Element {
   });
   //change this local storage to server storage?
   useEffect(() => {
+    console.log('username: ', user?.name);
     localStorage.setItem('keyMappings', JSON.stringify(keyMappings));
-  }, [keyMappings]);
+    const sendKeyMappings = async () => {
+      const res = await fetch(
+        `http://localhost:5001/user/${user?.name}/profile/keybinds`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(keyMappings),
+        }
+      );
+      if (res.status === 200) {
+        console.log('Keybindings saved to ' + JSON.stringify(keyMappings));
+      } else {
+        console.log('Keybind cant be' + JSON.stringify(keyMappings));
+      }
+    };
+    if (session) {
+      sendKeyMappings();
+    }
+  }, [keyMappings, user]);
 
   const notes = [
     'C',
@@ -54,19 +80,15 @@ export default function SettingsPage(): React.JSX.Element {
 
   return (
     <div>
-      <div className='ml-4 pt-2'>
+      <div className='ml-4 pt-4'>
         <Link href='/' className='items-start text-3xl text-white'>
           <FiHome />
         </Link>
       </div>
       <div className='w-svh mx-10 my-12 flex flex-col items-center gap-4 rounded-lg bg-neutral-50 pb-24'>
-        <div className='text-note bg-note2 mt-6 rounded-lg'>
-          <ToggleTheme />
-        </div>
-
-        <div className='flex flex-col items-center py-4 text-gray-500'>
-          <h1>Settings</h1>
-          <h2>Set Keys to Notes</h2>
+        <div className='flex flex-col items-center gap-2 py-4 text-gray-500'>
+          <h1 className='text-3xl font-bold'>Settings</h1>
+          <h1 className='text-xl font-semibold'>Set Keys to Notes</h1>
           <form className='mx-auto flex flex-row items-center gap-3 rounded-lg bg-white p-4 shadow-md'>
             {notes.map((note) => (
               <div
@@ -81,11 +103,12 @@ export default function SettingsPage(): React.JSX.Element {
                       onClick={(event) => {
                         event.preventDefault();
                         const handleKeyPress = (e: KeyboardEvent) => {
+                          window.removeEventListener('keydown', handleKeyPress);
+                          if (e.key === 'Escape') return;
                           setKeyMappings((prev) => ({
                             ...prev,
                             [note]: e.key,
                           }));
-                          window.removeEventListener('keydown', handleKeyPress);
                         };
                         window.addEventListener('keydown', handleKeyPress);
                       }}
@@ -97,6 +120,9 @@ export default function SettingsPage(): React.JSX.Element {
               </div>
             ))}
           </form>
+        </div>
+        <div className='text-note mt-6 rounded-lg bg-black'>
+          <ToggleTheme />
         </div>
       </div>
     </div>

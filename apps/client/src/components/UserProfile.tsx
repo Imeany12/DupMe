@@ -28,7 +28,6 @@ export default function UserProfile({ user }: Props) {
   return (
     <section className='flex flex-col items-center gap-4 py-2'>
       {userImage}
-      {greeting}
     </section>
   );
 }

@@ -16,7 +16,7 @@ export default function AccountPage(): React.JSX.Element {
   const { data: session } = useSession({
     required: true,
     onUnauthenticated() {
-      redirect('/api/auth/signin?callbackUrl=/myAccount');
+      redirect('/api/auth/signin?callbackUrl=/me');
     },
   });
 

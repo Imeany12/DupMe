@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { SERVER_URL } from '@/env';
 
 export default function SignUpPage(): React.JSX.Element {
+  const typed_password_confirm = '';
+  const [password_confirm, setPassword_confirm] = useState('');
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<IUser>({
     username: '',
@@ -22,6 +24,20 @@ export default function SignUpPage(): React.JSX.Element {
     games_draw: 0,
     total_score: 0,
     matchHistory: [],
+    keybindings: {
+      C: 's',
+      'C#': 'e',
+      D: 'd',
+      'D#': 'r',
+      E: 'f',
+      F: 'g',
+      'F#': 'y',
+      G: 'h',
+      'G#': 'u',
+      A: 'j',
+      'A#': 'i',
+      B: 'k',
+    },
   });
   const handleInput = (e: {
     target: { name: string; value: string };
@@ -37,7 +53,8 @@ export default function SignUpPage(): React.JSX.Element {
     preventDefault: () => void;
   }): Promise<void> => {
     e.preventDefault();
-
+    if (password_confirm !== userInfo.password || userInfo.password.length < 4)
+      return;
     try {
       // Test this with 2 devices
       const res = await fetch(`${SERVER_URL}/user/signup`, {
@@ -48,6 +65,12 @@ export default function SignUpPage(): React.JSX.Element {
         body: JSON.stringify({
           username: userInfo.username,
           password: userInfo.password,
+          email: userInfo.email,
+          dob: userInfo.dob,
+          bio: userInfo.bio,
+          gender: userInfo.gender,
+          country: userInfo.country,
+          keybindings: userInfo.keybindings,
         }),
       });
 
@@ -90,6 +113,7 @@ export default function SignUpPage(): React.JSX.Element {
               id='username'
               name='username'
               type='text'
+              value={userInfo.username}
               placeholder='IGN (In-Game Name)'
               onChange={handleInput}
             />
@@ -101,10 +125,39 @@ export default function SignUpPage(): React.JSX.Element {
               id='password'
               name='password'
               type='password'
+              value={userInfo.password}
               placeholder='your password'
               onChange={handleInput}
             />
           </div>
+          <div className='flex flex-col'>
+            <label className='text-3xl font-semibold'>
+              Confirm Your Password
+            </label>
+            <input
+              className='mb-3 mt-4 w-3/5 rounded border px-2 py-2 text-lg leading-tight focus:outline-indigo-300'
+              id='password'
+              name='password_confirm'
+              type='password'
+              value={password_confirm}
+              placeholder='your password'
+              onChange={(e) => {
+                setPassword_confirm(e.target.value);
+              }}
+            />
+          </div>
+          {password_confirm !== userInfo.password &&
+          password_confirm.length >= (userInfo.password?.length || 0) ? (
+            <p className='text-red-500'>Your password do not match</p>
+          ) : (
+            <></>
+          )}
+          {password_confirm === userInfo.password &&
+          password_confirm.length > 4 ? (
+            <></>
+          ) : (
+            <p>password must contain at least 4 letters</p>
+          )}
           <div className='flex flex-col'>
             <label className='text-3xl font-semibold'>Email (Optional)</label>
             <input

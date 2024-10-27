@@ -48,7 +48,7 @@ export default function Home() {
           {!mode ? (
             <div className='my-auto flex flex-row items-center'>
               <button
-                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] hover:bg-note rounded-full border border-solid border-black bg-[#5B687C] px-44 py-2 text-4xl text-[#FFFFFF] shadow-lg'
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 text-note2 hover:bg-note1 rounded-full border border-solid border-black px-44 py-2 text-4xl shadow-lg'
                 onClick={() => {
                   setSnowing(false);
                   setUpGame();
@@ -62,17 +62,17 @@ export default function Home() {
               <div className='my-auto flex flex-col items-center gap-6'>
                 <Button
                   onClick={() => setMode(false)}
-                  className='hover:bg-note1 shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#5B687C] px-44 py-6 text-4xl text-[#e6e6e6] shadow-lg'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px bg-note1 hover:bg-note text-note2 w-full rounded-full border border-solid border-black px-44 py-6 text-4xl shadow-lg'
                 >
                   Back
                 </Button>
                 <Link
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px hover:bg-note w-full rounded-full border border-solid border-black bg-[#5B687C] py-2 text-center text-3xl text-[#FFFFFF] shadow-lg'
+                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px hover:bg-note bg-note1 text-note2 w-full rounded-full border border-solid border-black py-2 text-center text-3xl shadow-lg'
                   href={`/lobby/${roomId}?host=true`}
                 >
                   Create Room
                 </Link>
-                <label className='bg rounded-lg bg-neutral-800 px-24 py-4 text-center text-white'>
+                <label className='bg bg-note rounded-lg px-24 py-1 text-center text-xl text-white'>
                   Or Enter Room ID:
                 </label>
                 <div className='flex flex-row items-center gap-2'>

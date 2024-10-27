@@ -4,10 +4,13 @@ import './signin.css';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 
 export default function SignInPage(): React.JSX.Element {
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +23,7 @@ export default function SignInPage(): React.JSX.Element {
       redirect: false,
       username: username,
       password: password,
-      callbackUrl: '/',
+      callbackUrl: callbackUrl,
     });
     if (res?.error) {
       setError('Login failed. Incorrect username or password.');
@@ -96,7 +99,7 @@ export default function SignInPage(): React.JSX.Element {
                 <button
                   type='submit'
                   name='googleButton'
-                  onClick={() => signIn('google', { callbackUrl: '/' })}
+                  onClick={() => signIn('google', { callbackUrl: callbackUrl })}
                   style={
                     {
                       '--provider-bg': '#fff',
@@ -124,7 +127,7 @@ export default function SignInPage(): React.JSX.Element {
                 <button
                   type='submit'
                   name='githubButton'
-                  onClick={() => signIn('github', { callbackUrl: '/' })}
+                  onClick={() => signIn('github', { callbackUrl: callbackUrl })}
                   style={
                     {
                       '--provider-bg': 'rgba(36, 41, 47, 0.8)',
@@ -152,7 +155,9 @@ export default function SignInPage(): React.JSX.Element {
                 <button
                   type='submit'
                   name='twitterButton'
-                  onClick={() => signIn('twitter', { callbackUrl: '/' })}
+                  onClick={() =>
+                    signIn('twitter', { callbackUrl: callbackUrl })
+                  }
                   style={
                     {
                       '--provider-bg': 'rgba(29, 161, 242, 0.8)',
