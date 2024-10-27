@@ -235,7 +235,7 @@ export default function GamePage() {
   };
 
   const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
-    const perfectTimeOffset = 0.17;
+    const perfectTimeOffset = 0.17; // manual calibration for perfect note
     const timeInSecond = (Date.now() - startTime) / 1000;
     const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
     console.log(nextNoteIndex, song.sheet[getKeyString(index)].notes.length);
