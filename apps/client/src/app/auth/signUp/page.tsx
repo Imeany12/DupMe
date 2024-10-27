@@ -83,7 +83,6 @@ export default function SignUpPage(): React.JSX.Element {
           </legend>
           <div className='flex flex-col'>
             <label className='text-3xl font-semibold'>Username</label>
-            <label className='text-3xl font-semibold'>Username</label>
             <input
               className='mb-3 mt-4 w-3/5 rounded border px-2 py-2 text-lg leading-tight focus:outline-indigo-300'
               id='username'
@@ -117,8 +116,7 @@ export default function SignUpPage(): React.JSX.Element {
           </div>
           <div className='flex flex-col'>
             <label className='text-3xl font-semibold'>
-              What&apos;s your date of birth (optional) What&apos;s your date of
-              birth (optional)
+              What&apos;s your date of birth (optional)
             </label>
             <input
               className='mb-3 mt-4 w-3/5 rounded border px-2 py-2 text-lg leading-tight focus:outline-indigo-300'
@@ -152,7 +150,7 @@ export default function SignUpPage(): React.JSX.Element {
         </fieldset>
         <fieldset className='flex flex-col gap-2 border px-4 py-2'>
           <legend className='mb-2 text-2xl font-semibold text-gray-500'>
-            About you! About you!
+            About you!
           </legend>
           <textarea
             className='mb-4 border border-dashed px-2 py-3 focus:outline-indigo-200'

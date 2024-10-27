@@ -1,7 +1,6 @@
 'use client';
 
 import './homepage.css';
-import './homepage.css';
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
