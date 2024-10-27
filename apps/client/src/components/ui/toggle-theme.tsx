@@ -29,10 +29,7 @@ export function ToggleTheme() {
         <DropdownMenuItem onClick={() => setTheme('star')} className='text-xl'>
           Star
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => setTheme('snow')}
-          className='text-xl font-semibold'
-        >
+        <DropdownMenuItem onClick={() => setTheme('snow')}>
           Snow
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('forest')}>

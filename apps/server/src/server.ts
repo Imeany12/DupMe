@@ -53,6 +53,10 @@ mongoose
   .catch((error) => console.error('Error connecting to database:', error));
 
 io.on('connection', (socket) => {
+  if (socket.id === undefined || socket.handshake.headers === undefined) {
+    console.log('undefiened');
+    return;
+  }
   console.log(
     'a user connected:',
     socket.id,
@@ -86,6 +90,7 @@ io.on('connection', (socket) => {
   socket.on(
     'leave_lobby',
     ({ username, roomId }: { username: string; roomId: number }) => {
+      console.log('leave_lobby');
       rooms[roomId] = rooms[roomId].filter((player) => player[0] !== username);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
@@ -94,9 +99,8 @@ io.on('connection', (socket) => {
 
   socket.on('start_game', (roomId: number) => {
     const firstPlayer = handleFirstPlayer(rooms, roomId);
-    socket
-      .to(roomId.toString())
-      .emit('start_game', handleFirstPlayer(rooms, roomId));
+    socket.to(roomId.toString()).emit('start_game', firstPlayer[0]);
+    socket.emit('start_game', firstPlayer[0]);
     console.log('received start, starting player: ' + firstPlayer[0]);
   });
 
@@ -123,6 +127,16 @@ io.on('connection', (socket) => {
       0
     );
     io.emit('connectedUsersCount', connectedUsersCount);
+  });
+
+  socket.on('getNote', (roomId: number, note: string) => {
+    console.log('getNote', note);
+    socket.to(roomId.toString()).emit('playNote', note);
+  });
+
+  socket.on('countReady', (readyPlayers: number, roomId) => {
+    console.log('countReady', readyPlayers);
+    socket.to(roomId).emit('setReady', readyPlayers);
   });
 });
 

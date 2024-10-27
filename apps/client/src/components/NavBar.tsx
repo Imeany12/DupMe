@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import { Session } from 'next-auth';
 import React from 'react';
-import { FiHome } from 'react-icons/fi';
+import { IoMdSettings } from 'react-icons/io';
 
-import { User } from '@/interfaces/user/user';
+type User =
+  | {
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;
 
 export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;
@@ -11,9 +17,14 @@ export default function NavBar({ session }: { session: Session | null }) {
   return (
     <nav>
       <ul className='flex flex-grow py-4'>
-        <li className='ml-4'>
+        {/* <li className='ml-4'>
           <Link href='/' className='items-start text-3xl text-white'>
             <FiHome />
+          </Link>
+        </li> */}
+        <li className='ml-4'>
+          <Link href='/set' className='text-3xl text-white'>
+            <IoMdSettings />
           </Link>
         </li>
         <li className='mr-10 flex w-full flex-col items-end'>
