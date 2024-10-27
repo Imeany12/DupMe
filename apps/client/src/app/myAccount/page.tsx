@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
 import NavBar from '@/components/NavBar';
+import UserProfile from '@/components/UserProfile';
 
 export default function AccountPage() {
   const { data: session } = useSession({
