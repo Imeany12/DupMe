@@ -1,11 +1,8 @@
 import { IUser } from '@repo/shared-types';
 import Image from 'next/image';
+import { IoMdMale } from 'react-icons/io';
 
-import { User } from '@/interfaces/user/user';
-
-type Props = {
-  user: User;
-};
+import getAllUsers from '@/lib/getAllUser';
 
 export default async function UserProfile({ username }: { username: string }) {
   const users: IUser[] = await getAllUsers();
