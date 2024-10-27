@@ -235,12 +235,14 @@ export default function GamePage() {
   };
 
   const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
+    const perfectTimeOffset = 0.17;
     const timeInSecond = (Date.now() - startTime) / 1000;
     const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
     console.log(nextNoteIndex, song.sheet[getKeyString(index)].notes.length);
     if (nextNoteIndex < song.sheet[getKeyString(index)].notes.length) {
       const nextNote = song.sheet[getKeyString(index)].notes[nextNoteIndex];
-      const perfectTime = nextNote.fallDuration + nextNote.delay / 1000;
+      const perfectTime =
+        nextNote.fallDuration + nextNote.delay / 1000 - perfectTimeOffset;
       const accuracy = Math.abs(timeInSecond - perfectTime);
       console.log(accuracy);
 
@@ -281,29 +283,30 @@ export default function GamePage() {
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDownIsNotPlaying = (event: KeyboardEvent) => {
     const pressedKey = event.key.toLowerCase();
-    if (!isPlaying) {
-      // Find the corresponding note for the pressed key
-      const note = Object.keys(keyMappings).find(
-        (note) => keyMappings[note] === pressedKey
-      );
+    // Find the corresponding note for the pressed key
+    const note = Object.keys(keyMappings).find(
+      (note) => keyMappings[note] === pressedKey
+    );
 
-      if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
-        setPressedNotes((prev) => [...prev, note]);
-        const startTime = Date.now();
-        setPressStartTime(startTime);
-        setPresNote({
-          pressing: true,
-          note: pressedKey,
-        });
-      }
-    } else {
-      const tracks = document.querySelectorAll('.track');
-      const keyIndex = getKeyIndex(pressedKey);
-      if (tracks[keyIndex].firstChild) {
-        judge(keyIndex, tracks);
-      }
+    if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
+      setPressedNotes((prev) => [...prev, note]);
+      const startTime = Date.now();
+      setPressStartTime(startTime);
+      setPresNote({
+        pressing: true,
+        note: pressedKey,
+      });
+    }
+  };
+
+  const handleKeyDownIsPlaying = (event: KeyboardEvent) => {
+    const pressedKey = event.key.toLowerCase();
+    const tracks = document.querySelectorAll('.track');
+    const keyIndex = getKeyIndex(pressedKey);
+    if (tracks[keyIndex].firstChild) {
+      judge(keyIndex, tracks);
     }
   };
 
@@ -481,15 +484,19 @@ export default function GamePage() {
         //sendNotesToPlayer();
       }
     }, 5000);
-    window.addEventListener('keydown', handleKeyDown);
+    if (!isPlaying) {
+      window.addEventListener('keydown', handleKeyDownIsNotPlaying);
+    } else window.addEventListener('keydown', handleKeyDownIsPlaying);
     window.addEventListener('keyup', handleKeyRelease);
 
     // Cleanup the event listener on component unmount
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      if (!isPlaying) {
+        window.removeEventListener('keydown', handleKeyDownIsNotPlaying);
+      } else window.removeEventListener('keydown', handleKeyDownIsPlaying);
       window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [keyMappings, pressedNotes, pressStartTime]);
+  }, [keyMappings, pressedNotes, pressStartTime, isPlaying]);
 
   useEffect(() => {
     console.log(notes);
