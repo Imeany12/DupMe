@@ -250,7 +250,7 @@ export default function GamePage() {
        * As long as the note has travelled less than 3/4 of the height of
        * the track, any key press on this track will be ignored.
        */
-      if (accuracy > (nextNote.fallDuration - speed) / 4) {
+      if (accuracy > (nextNote.fallDuration - speed) / 2) {
         return;
       }
 
