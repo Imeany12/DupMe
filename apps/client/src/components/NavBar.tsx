@@ -3,7 +3,13 @@ import { Session } from 'next-auth';
 import React from 'react';
 import { IoMdSettings } from 'react-icons/io';
 
-import { User } from '@/interfaces/user/user';
+type User =
+  | {
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;
 
 export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;

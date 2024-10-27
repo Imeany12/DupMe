@@ -92,9 +92,9 @@ export default function LobbyPage() {
               <h1 className='text-xl font-bold'>{user?.name}</h1>
               <p className='text-sm'>Game Won : {0}</p> {/*IUSer.gameWon */}
               <p className='text-sm'>Lv98</p> {/*IUser.level maybe */}
-              <p className='flex gap-4 text-sm'>
+              <p className='flex gap-2 text-sm'>
                 country flag :
-                <TH width={32} />
+                <TH width={22} className='mt-0.5' />
               </p>
               <p className='flex gap-4 text-sm'>
                 Gender :
