@@ -11,6 +11,8 @@ import { MdOutlineMale } from 'react-icons/md';
 
 import { socket } from '@/socket';
 
+import ChatPage from '../chat/page';
+
 export default function Lobby({
   host,
   roomId,
@@ -77,7 +79,7 @@ export default function Lobby({
     // router.push(`/game/${roomId}`);
   };
   return (
-    <div className='min-h-screen bg-gray-800 text-white'>
+    <div className='flex min-h-screen flex-col bg-gray-800 text-white'>
       {/* Header: Player Info */}
       <header className='flex items-center justify-between bg-gray-900 p-4'>
         {session ? (
@@ -222,18 +224,12 @@ export default function Lobby({
       </div>
 
       {/* chat room*/}
-      <footer className='flex justify-center space-x-4 bg-gray-700 p-4'>
-        <button
-          className='rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-500'
-          onClick={() => {
-            console.log({ roomId });
-            console.log(players);
-          }}
-        >
-          chatroom
-        </button>
-        {/* <ChatPage socket={socket} username={user?.name ?? 'Guest'
-            } roomId= {parseInt(roomId as string)} /> */}
+      <footer className='flex flex-grow items-center justify-center space-x-4 bg-gray-700 p-4'>
+        <ChatPage
+          socket={socket}
+          username={user?.name ?? 'Guest'}
+          roomId={parseInt(roomId as string)}
+        />
       </footer>
     </div>
   );
