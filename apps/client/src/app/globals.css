@@ -17,7 +17,7 @@
 }
 
 body {
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 @layer utilities {

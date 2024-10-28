@@ -7,8 +7,8 @@ import getAllUsers from '@/lib/getAllUser';
 export default async function UserProfile({ username }: { username: string }) {
   const users: IUser[] = await getAllUsers();
   // const user: IUser = await getUser(username);
-  // const user = users.find((user) => user.username === username);
-  const user = users[0];
+  const user = users.find((user) => user.username === username);
+  //const user = users[0];
 
   const userImage = user?.image ? (
     <Image

@@ -102,7 +102,7 @@ export default function SignUpPage(): React.JSX.Element {
       >
         <fieldset className='flex flex-col gap-2 border px-4 py-2'>
           <legend className='mb-2 text-2xl font-semibold text-gray-500'>
-            Set up your account Set up your account
+            Set up your account
           </legend>
           <div className='flex flex-col'>
             <label className='text-3xl font-semibold'>Username</label>
