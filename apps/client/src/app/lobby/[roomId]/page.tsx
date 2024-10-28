@@ -1,14 +1,13 @@
 'use client';
 
-import { TH } from 'country-flag-icons/react/3x2';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { MdOutlineMale } from 'react-icons/md';
 
+import ProfileAvatar from '@/components/ProfileAvatar';
 import { socket } from '@/socket';
 //need to change User to IUser and retrive the data from the server
 
@@ -79,43 +78,7 @@ export default function LobbyPage() {
     <div className='min-h-screen bg-gray-800 text-white'>
       {/* Header: Player Info */}
       <header className='flex items-center justify-between bg-gray-900 p-4'>
-        {session ? (
-          <div className='flex items-center'>
-            <Image
-              src={user?.image ?? '/images/default-profile.png'}
-              alt='Player Avatar'
-              width={100}
-              height={100}
-              className='rounded-full'
-            />
-            <div className='ml-4'>
-              <h1 className='text-xl font-bold'>{user?.name}</h1>
-              <p className='text-sm'>Game Won : {0}</p> {/*IUSer.gameWon */}
-              <p className='text-sm'>Lv98</p> {/*IUser.level maybe */}
-              <p className='flex gap-2 text-sm'>
-                country flag :
-                <TH width={22} className='mt-0.5' />
-              </p>
-              <p className='flex gap-4 text-sm'>
-                Gender :
-                <MdOutlineMale width={12} height={12} className='mt-1' />
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className='flex items-center'>
-            <h1 className='text-xl font-bold'>Guest</h1>
-          </div>
-        )}
-        <div className='flex items-center'>
-          {/* <div className='relative h-2 w-40 rounded-full bg-gray-700'>
-            <div
-              className='absolute left-0 top-0 h-2 rounded-full bg-pink-500'
-              style={{ width: '75%' }}
-            ></div>
-          </div>
-          <p className='ml-2 text-sm'>#248705</p> */}
-        </div>
+        <ProfileAvatar session={session} />
       </header>
 
       {/* Main Lobby Content */}

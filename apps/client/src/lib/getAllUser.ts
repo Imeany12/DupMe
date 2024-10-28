@@ -1,5 +1,5 @@
 export default async function getAllUsers() {
-  const res = await fetch('http://localhost:5001/user', {
+  const res = await fetch('http://localhost:5001/user/list', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
