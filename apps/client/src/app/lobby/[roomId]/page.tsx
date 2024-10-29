@@ -6,7 +6,7 @@ export default async function LobbyPage({
 }: {
   params: { roomId: string };
   searchParams: {
-    host: boolean;
+    host: string;
   };
 }): Promise<React.JSX.Element> {
   const host = searchParams.host;

@@ -13,7 +13,7 @@ export default function Game({
   host,
 }: {
   roomId: string;
-  host: boolean;
+  host: string;
 }) {
   type Note = {
     note: string;
@@ -29,12 +29,13 @@ export default function Game({
   const { data: session, status } = useSession({
     required: false,
   });
-
+  const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
-  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
+  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(Host);
   //playerTurn form randaomization backend
+  //currently allow 2 players turn, multiplayer in future
   //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const [notes, setNotes] = useState<Note[]>([]);
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
