@@ -14,7 +14,7 @@ const ChatPage = ({
   socket: Socket;
   username: string;
   roomId: number;
-}) => {
+}): React.JSX.Element => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [onlinePlayers, setOnlinePlayers] = useState(-999);
@@ -32,7 +32,7 @@ const ChatPage = ({
           new Date(Date.now()).getMinutes(),
       };
       socket.emit('send_msg', msgData);
-      setChat((pre) => [...pre, msgData]);
+      setChat((pre) => [msgData, ...pre]);
       setCurrentMsg('');
     }
   };
@@ -44,7 +44,7 @@ const ChatPage = ({
 
   useEffect(() => {
     socket.on('receive_msg', (data: IMsgDataTypes) => {
-      setChat((pre) => [...pre, data]);
+      setChat((pre) => [data, ...pre]);
     });
 
     socket.on('connectedUsersCount', (usersCount: number) => {
@@ -76,7 +76,7 @@ const ChatPage = ({
             Online Players: <b>{onlinePlayers}</b>
           </p>
         </div>
-        <div className='flex min-h-24 flex-col gap-1 rounded-xl border border-gray-400 bg-black px-4 py-2'>
+        <div className='flex h-32 max-h-44 flex-col-reverse gap-1 overflow-y-auto rounded-xl border border-gray-400 bg-black px-4 py-2'>
           {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
