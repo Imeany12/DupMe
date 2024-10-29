@@ -32,15 +32,15 @@ const ChatPage = ({
           new Date(Date.now()).getMinutes(),
       };
       socket.emit('send_msg', msgData);
-      setChat((pre) => [...pre, msgData]);
+      // setChat((pre) => [...pre, msgData]);
       setCurrentMsg('');
     }
   };
 
-  const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    socket.emit('start_game', roomId);
-  };
+  // const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   socket.emit('start_game', roomId);
+  // };
 
   useEffect(() => {
     socket.on('receive_msg', (data: IMsgDataTypes) => {
@@ -108,9 +108,9 @@ const ChatPage = ({
             />
             <button className={style.chat_button}>Send</button>
           </form>
-          <button className={style.chat_button} onClick={(e) => sendStart(e)}>
+          {/* <button className={style.chat_button} onClick={(e) => sendStart(e)}>
             Start
-          </button>
+          </button> */}
         </div>
       </div>
     </div>
