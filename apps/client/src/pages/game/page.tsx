@@ -1,5 +1,6 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { KeyMapping } from '@repo/shared-types';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
@@ -26,10 +27,14 @@ export default function Game({
     pressing: boolean;
     note: string;
   };
-
+  const searchParams = useSearchParams();
+  //const host = searchParams.get('host') === 'true';
+  const players = searchParams.get('players') ?? '1';
+  const countPlayer = parseInt(players, 10);
   const { data: session, status } = useSession({
     required: false,
   });
+  // const Host = host === 'true';
   const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
 
@@ -44,7 +49,7 @@ export default function Game({
     pressing: false,
     note: '',
   });
-  const [keyMappings, setKeyMappings] = useState<{ [key: string]: string }>({
+  const keyMappings: KeyMapping = user.keybindings ?? {
     C: 's',
     'C#': 'e',
     D: 'd',
@@ -57,7 +62,7 @@ export default function Game({
     A: 'j',
     'A#': 'i',
     B: 'k',
-  });
+  };
   //need to get keybindings from the server
   const router = useRouter();
   const turncount = useRef(0);
@@ -66,13 +71,14 @@ export default function Game({
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
-  const hasJoined = useRef(false);
 
   const sendNoteToPlayer = (notes: Note[]) => {
     socket.emit('sendNote', roomId, notes);
   };
 
   useEffect(() => {
+    console.log('players', players);
+    console.log('number of plaers:', countPlayer);
     if (turncount.current === 4) {
       socket.emit('leave_lobby', { roomId, username: user?.name });
       socket.emit('end_game', roomId);

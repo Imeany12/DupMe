@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
@@ -31,9 +31,12 @@ export default function Lobby({
   const [players, setPlayers] = useState<string[]>([]);
   const [amReady, setAmReady] = useState(false);
   const hasJoined = useRef(false);
+  const searchParams = useSearchParams();
+  const limit = searchParams.get('multi') === 'true';
+  //same for this need to use searchParams
 
   useEffect(() => {
-    console.log('this is player');
+    console.log('multiplayer', limit);
     socket.on('setReady', (readyPlayers: number) => {
       console.log('setReady', readyPlayers);
       setReadyPlayers(readyPlayers);
@@ -60,10 +63,10 @@ export default function Lobby({
       hasJoined.current = false;
       if (username.toString() === user.name?.toString()) {
         console.log(username + 'vs' + user.name);
-        router.push(`/game/${roomId}?host=true`);
+        router.push(`/game/${roomId}?host=true&players=${readyPlayers}`);
       } else {
         console.log(username + 'false' + user.name);
-        router.push(`/game/${roomId}?host=false`);
+        router.push(`/game/${roomId}?host=false&players=${readyPlayers}`);
       }
     });
     //now having problem first player, host always false

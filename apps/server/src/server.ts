@@ -145,7 +145,7 @@ io.on('connection', (socket) => {
 
   socket.on('countReady', (readyPlayers: number, roomId) => {
     console.log('countReady', readyPlayers);
-    socket.to(roomId).emit('setReady', readyPlayers);
+    io.to(roomId).emit('setReady', readyPlayers);
   });
 });
 
