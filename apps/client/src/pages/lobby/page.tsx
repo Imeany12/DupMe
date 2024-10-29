@@ -16,14 +16,14 @@ export default function Lobby({
   host,
   roomId,
 }: {
-  host: boolean;
+  host: string;
   roomId: string;
 }): React.JSX.Element {
   const router = useRouter();
   const { data: session, status } = useSession({
     required: false,
   });
-
+  const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   const [readyPlayers, setReadyPlayers] = useState(1);
@@ -40,7 +40,11 @@ export default function Lobby({
     });
     if (!user || !socket || !roomId || status === 'loading') return;
     if (!hasJoined.current) {
-      socket.emit('join_lobby', { username: user.name, roomId });
+      socket.emit('join_lobby', {
+        username: user.name,
+        image: user.image ?? '/images/default-profile.png',
+        roomId,
+      });
       console.log(`user ${user?.name} joined room-${roomId}`);
       hasJoined.current = true; // Mark as joined
     }
@@ -98,7 +102,7 @@ export default function Lobby({
                 <div className='flex items-center gap-4'>
                   <Image
                     className='mx-auto mb-2 mt-2 flex rounded-full border-2 border-black shadow-black drop-shadow-xl dark:border-slate-500'
-                    src={session?.user?.image ?? '/images/default-profile.png'}
+                    src={user[1] ?? '/images/default-profile.png'}
                     width={50}
                     height={50}
                     alt={session?.user?.name ?? 'Profile Pic'}
@@ -124,7 +128,7 @@ export default function Lobby({
                 Leave Match
               </button>
             </Link>
-            {host ? (
+            {Host ? (
               <div className='w-full'>
                 {ready && readyPlayers >= players.length ? (
                   <button
@@ -147,7 +151,7 @@ export default function Lobby({
                     onClick={() => {
                       setAmReady(true);
                       socket.emit('countReady', readyPlayers + 1, roomId);
-                      setReadyPlayers(readyPlayers + 1);
+                      // setReadyPlayers(readyPlayers + 1);
                     }}
                   >
                     Ready
@@ -187,7 +191,7 @@ export default function Lobby({
       </div>
 
       {/* chat room*/}
-      <footer className='flex flex-grow items-center justify-center space-x-4 bg-gray-700 p-4'>
+      <footer className='flex w-full flex-grow items-center justify-center space-x-4 bg-gray-700 p-4'>
         <ChatPage
           socket={socket}
           username={user?.name ?? 'Guest'}

@@ -65,9 +65,10 @@ const ChatPage = ({
   }, [socket]);
 
   return (
-    <div className={style.chat_div}>
-      <div className={style.chat_border}>
-        <div style={{ marginBottom: '1rem' }}>
+    <div className='flex w-full flex-col items-center justify-center px-4'>
+      <div className='mx-auto flex w-full flex-col gap-4 rounded-lg border-2 border-gray-100 p-8 pt-1'>
+        <div className='flex flex-col items-center'>
+          <h1 className='text-3xl font-semibold text-white'>Chat</h1>
           <p>
             Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
           </p>
@@ -75,7 +76,7 @@ const ChatPage = ({
             Online Players: <b>{onlinePlayers}</b>
           </p>
         </div>
-        <div>
+        <div className='flex min-h-24 flex-col gap-1 rounded-xl border border-gray-400 bg-black px-4 py-2'>
           {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
@@ -91,16 +92,22 @@ const ChatPage = ({
               >
                 {user.charAt(0)}
               </span>
-              <h3 style={{ textAlign: user == username ? 'right' : 'left' }}>
+              <h3
+                style={{ textAlign: user == username ? 'right' : 'left' }}
+                className='rounded-lg border border-gray-900 bg-gray-800 px-4 py-1 text-zinc-50'
+              >
                 {msg}
               </h3>
             </div>
           ))}
         </div>
         <div>
-          <form onSubmit={(e) => sendData(e)}>
+          <form
+            onSubmit={(e) => sendData(e)}
+            className='flex w-full items-center justify-center gap-2'
+          >
             <input
-              className={style.chat_input}
+              className='flex rounded-lg bg-white px-2 py-1 text-neutral-800'
               type='text'
               value={currentMsg}
               placeholder='Type your message..'

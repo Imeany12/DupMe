@@ -69,11 +69,19 @@ io.on('connection', (socket) => {
 
   socket.on(
     'join_lobby',
-    ({ username, roomId }: { username: string; roomId: number }) => {
+    ({
+      username,
+      image,
+      roomId,
+    }: {
+      username: string;
+      image: string;
+      roomId: number;
+    }) => {
       if (!rooms[roomId]) {
         rooms[roomId] = [];
       }
-      rooms[roomId].push([username, socket.id]);
+      rooms[roomId].push([username, image, socket.id]);
       console.log(rooms[roomId]);
       socket.join(roomId.toString());
       io.to(roomId.toString()).emit('update_players', rooms[roomId]);
@@ -83,6 +91,7 @@ io.on('connection', (socket) => {
         (total, roomArray) => total + roomArray.length,
         0
       );
+      console.log('connectedUsersCount', connectedUsersCount);
       io.emit('connectedUsersCount', connectedUsersCount);
     }
   );
@@ -117,7 +126,7 @@ io.on('connection', (socket) => {
     console.log('a user disconnected:', socket.id);
 
     for (const roomId in rooms) {
-      rooms[roomId] = rooms[roomId].filter((player) => player[1] !== socket.id);
+      rooms[roomId] = rooms[roomId].filter((player) => player[2] !== socket.id);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
     }

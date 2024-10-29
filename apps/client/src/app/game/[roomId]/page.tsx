@@ -10,7 +10,7 @@ export default function GamePage({
 }: {
   params: { roomId: string };
   searchParams: {
-    host: boolean;
+    host: string;
   };
 }) {
   return <Game roomId={params.roomId} host={searchParams.host} />;
