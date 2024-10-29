@@ -16,6 +16,8 @@ export default function Home() {
   const [joinId, setJoinId] = useState(0);
   const [snowing, setSnowing] = useState(false);
   const [mode, setMode] = useState(false);
+  const [multi, setMulti] = useState(false);
+  const [playerMode, setPlayerMode] = useState(false);
   const { data: session } = useSession({
     required: false,
   });
@@ -50,7 +52,7 @@ export default function Home() {
           {!mode ? (
             <div className='my-auto flex flex-row items-center'>
               <button
-                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 text-note2 hover:bg-note1 rounded-full border border-solid border-black px-44 py-2 text-4xl shadow-lg'
+                className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 text-note2 hover:bg-note rounded-full border border-solid border-black px-44 py-2 text-4xl shadow-lg'
                 onClick={() => {
                   setSnowing(false);
                   setUpGame();
@@ -60,42 +62,74 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div>
-              <div className='my-auto flex flex-col items-center gap-6'>
-                <Button
-                  onClick={() => setMode(false)}
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px bg-note1 hover:bg-note text-note2 w-full rounded-full border border-solid border-black px-44 py-6 text-4xl shadow-lg'
-                >
-                  Back
-                </Button>
-                <Link
-                  className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px hover:bg-note bg-note1 text-note2 w-full rounded-full border border-solid border-black py-2 text-center text-3xl shadow-lg'
-                  href={`/lobby/${roomId}?host=true`}
-                >
-                  Create Room
-                </Link>
-                <label className='bg bg-note rounded-lg px-24 py-1 text-center text-xl text-white'>
-                  Or Enter Room ID:
-                </label>
-                <div className='flex flex-row items-center gap-2'>
-                  <input
-                    type='text'
-                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#a0a9b5] py-2 text-center text-2xl text-[#FFFFFF] shadow-lg'
-                    value={joinId}
-                    onChange={handleChangeRoomId}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter')
-                        window.location.href = `/lobby/${joinId}?host=false`;
-                    }}
-                  />
-                  <Link
-                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px hover:bg-note w-40 rounded-full border border-solid border-black bg-[#436290] px-8 text-center text-xl text-[#FFFFFF] shadow-lg'
-                    href={`/lobby/${joinId}?host=false`}
+            <div className='w-svw px-[30%]'>
+              {!playerMode ? (
+                <div className='my-auto flex w-full flex-col items-center gap-8'>
+                  <Button
+                    onClick={() => setMode(false)}
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 hover:bg-note text-note2 w-full rounded-full border border-solid border-black py-6 text-4xl shadow-lg'
                   >
-                    Join Room
-                  </Link>
+                    Back
+                  </Button>
+                  <button
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 text-note2 hover:bg-note w-full rounded-full border border-solid border-black px-12 py-2 text-4xl shadow-lg'
+                    onClick={() => {
+                      setSnowing(false);
+                      //setUpGame();
+                      setPlayerMode(true);
+                    }}
+                  >
+                    2-Players
+                  </button>
+                  <button
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 text-note2 hover:bg-note w-full rounded-full border border-solid border-black px-12 py-2 text-4xl shadow-lg'
+                    onClick={() => {
+                      setSnowing(false);
+                      //setUpGame();
+                      setPlayerMode(true);
+                      setMulti(true);
+                    }}
+                  >
+                    Multi Players
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className='my-auto flex flex-col items-center gap-6'>
+                  <Button
+                    onClick={() => setPlayerMode(false)}
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] bg-note1 hover:bg-note text-note2 w-full rounded-full border border-solid border-black py-6 text-4xl shadow-lg'
+                  >
+                    Back
+                  </Button>
+                  <Link
+                    className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] hover:bg-note bg-note1 text-note2 w-full rounded-full border border-solid border-black py-2 text-center text-3xl shadow-lg'
+                    href={`/lobby/${roomId}?host=true&multi=${multi}`}
+                  >
+                    Create Room
+                  </Link>
+                  <label className='bg bg-note rounded-lg px-24 py-1 text-center text-xl text-white'>
+                    Or Enter Room ID:
+                  </label>
+                  <div className='flex flex-row items-center gap-2'>
+                    <input
+                      type='text'
+                      className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px w-full rounded-full border border-solid border-black bg-[#a0a9b5] py-2 text-center text-2xl text-[#FFFFFF] shadow-lg'
+                      value={joinId}
+                      onChange={handleChangeRoomId}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter')
+                          window.location.href = `/lobby/${joinId}?host=false&multi=${multi}`;
+                      }}
+                    />
+                    <Link
+                      className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] w-500px hover:bg-note w-40 rounded-full border border-solid border-black bg-[#436290] px-8 text-center text-xl text-[#FFFFFF] shadow-lg'
+                      href={`/lobby/${joinId}?host=false&multi=${multi}`}
+                    >
+                      Join Room
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

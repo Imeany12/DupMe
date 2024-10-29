@@ -60,7 +60,7 @@ export default function NavBar({ session }: { session: Session | null }) {
               </Link>
               <Link
                 href={'/api/auth/signout'}
-                className='text-note2 bg-note rounded-lg border px-2 pt-1.5 text-xl font-semibold'
+                className='text-note2 bg-note hover:bg-note1 rounded-lg border px-2 pt-1.5 text-xl font-semibold'
               >
                 Sign Out
               </Link>
