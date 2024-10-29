@@ -32,7 +32,7 @@ const ChatPage = ({
           new Date(Date.now()).getMinutes(),
       };
       socket.emit('send_msg', msgData);
-      // setChat((pre) => [...pre, msgData]);
+      setChat((pre) => [...pre, msgData]);
       setCurrentMsg('');
     }
   };
