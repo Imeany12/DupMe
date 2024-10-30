@@ -37,7 +37,7 @@ export default function Game({
   });
   // const Host = host === 'true';
   const Host = host === 'true';
-  const turn = searchParams.get('turn');
+  const turn = parseInt(searchParams.get('turn') ?? '1', 10);
   const user = session?.user ?? ({ name: 'Guest' } as User);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
@@ -67,7 +67,7 @@ export default function Game({
   };
   //need to get keybindings from the server
   const router = useRouter();
-  const turncount = useRef(0);
+  const turncount = useRef(1);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
@@ -79,14 +79,15 @@ export default function Game({
   };
 
   useEffect(() => {
-    console.log('players', players);
+    console.log('turn', turn);
     console.log('number of plaers:', countPlayer);
-    if (turncount.current === 2 * countPlayer) {
+    if (turncount.current > 2 * countPlayer) {
       socket.emit('leave_lobby', { roomId, username: user?.name });
       socket.emit('end_game', roomId);
       router.push('/lobby/' + roomId + '?host=' + host);
     }
     socket.on('end_game', () => {
+      socket.emit('leave_lobby', { roomId, username: user?.name });
       router.push('/lobby/' + roomId + '?host=' + host);
     });
   }, [turncount.current]);
@@ -261,7 +262,10 @@ export default function Game({
         }
         turncount.current += 1;
         setPlayAlong(false);
-        setIsPlayerTurn((prev) => !prev);
+        if (isPlayerTurn === true) setIsPlayerTurn(false);
+        if ((turncount.current - turn) % countPlayer === 0) {
+          setIsPlayerTurn((prev) => !prev);
+        }
         console.log('playalong : ', playAlong);
         console.log('isPlayerTurn : ', isPlayerTurn);
         setPressedNotes([]);
