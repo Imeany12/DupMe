@@ -1,6 +1,6 @@
 'use client';
 import { INote, INotes, ISong } from '@repo/shared-types/src/types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import Piano from '@/components/Piano';
 import { socket } from '@/socket';
@@ -153,6 +153,26 @@ export default function GamePage() {
     },
   });
 
+  const resetNextNoteInd = () => {
+    // Create a new object for the updated sheet
+    const updatedSheet = Object.entries(song.sheet).reduce(
+      (acc, [key, value]) => {
+        acc[key] = {
+          ...value, // Keep other properties
+          nextNoteInd: 0, // Set nextNoteInd to 0
+        };
+        return acc;
+      },
+      {} as { [key: string]: INotes }
+    );
+
+    // Update the song state
+    setSong((prevSong) => ({
+      ...prevSong,
+      sheet: updatedSheet,
+    }));
+  };
+
   const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
   const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
   const [presNote, setPresNote] = useState<pressNote>({
@@ -176,7 +196,6 @@ export default function GamePage() {
   //need to get keybindings from the server
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [animation, setAnimation] = useState('moveDown');
   const [speed, setSpeed] = useState(1);
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
@@ -230,27 +249,40 @@ export default function GamePage() {
     return keyMapping[index];
   };
 
-  const updateNext = function (indexString: string | undefined) {
-    if (indexString) song.sheet[indexString].nextNoteInd++;
+  const updateNext = (indexString: string | undefined) => {
+    if (indexString) {
+      setSong((prevSong) => {
+        return {
+          ...prevSong,
+          sheet: {
+            ...prevSong.sheet,
+            [indexString]: {
+              ...prevSong.sheet[indexString],
+              nextNoteInd: prevSong.sheet[indexString].nextNoteInd + 1,
+            },
+          },
+        };
+      });
+    }
   };
 
   const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
     const perfectTimeOffset = 0.17; // manual calibration for perfect note
     const timeInSecond = (Date.now() - startTime) / 1000;
+    console.log(timeInSecond);
     const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
-    console.log(nextNoteIndex, song.sheet[getKeyString(index)].notes.length);
     if (nextNoteIndex < song.sheet[getKeyString(index)].notes.length) {
       const nextNote = song.sheet[getKeyString(index)].notes[nextNoteIndex];
       const perfectTime =
         nextNote.fallDuration + nextNote.delay / 1000 - perfectTimeOffset;
       const accuracy = Math.abs(timeInSecond - perfectTime);
-      console.log(accuracy);
+      console.log(`perfect time: ${perfectTime} accuracy : ${accuracy}`);
 
       /**
        * As long as the note has travelled less than 3/4 of the height of
        * the track, any key press on this track will be ignored.
        */
-      if (accuracy > (nextNote.fallDuration - speed) / 2) {
+      if (accuracy > (nextNote.fallDuration - speed) / 3) {
         return;
       }
 
@@ -283,6 +315,14 @@ export default function GamePage() {
     }
   };
 
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (isPlaying) {
+      handleKeyDownIsPlaying(event);
+    } else {
+      handleKeyDownIsNotPlaying(event);
+    }
+  };
+
   const handleKeyDownIsNotPlaying = (event: KeyboardEvent) => {
     const pressedKey = event.key.toLowerCase();
     // Find the corresponding note for the pressed key
@@ -292,8 +332,7 @@ export default function GamePage() {
 
     if (note && (!presNote.pressing || presNote.note !== pressedKey)) {
       setPressedNotes((prev) => [...prev, note]);
-      const startTime = Date.now();
-      setPressStartTime(startTime);
+      setPressStartTime(Date.now());
       setPresNote({
         pressing: true,
         note: pressedKey,
@@ -341,12 +380,10 @@ export default function GamePage() {
           initialStartTime
         );
         updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
-        // console.log(notes);
         //idk why this console.log dealyed by 1 note
         setPressStartTime(null);
 
         if (isFirstNote) {
-          console.log(true);
           setInitialStartTime(endTime);
           setIsFirstNote(false);
         }
@@ -373,8 +410,6 @@ export default function GamePage() {
       trackElement.classList.add(style.track);
 
       value.notes.forEach(function (note: INote) {
-        value.nextNoteInd = 0; // Initianilize Index to 0 for replayability
-
         const noteElement = document.createElement('div');
         noteElement.classList.add(style.note);
         noteElement.classList.add(style.moveDown);
@@ -411,34 +446,44 @@ export default function GamePage() {
     });
   };
 
+  const handleNoteMiss = useCallback((event: AnimationEvent) => {
+    // Use callback to prevent React to re-render function
+    if (
+      event.target &&
+      event.target instanceof HTMLElement &&
+      event.target.classList.item(1)
+    ) {
+      const indexString = event.target.classList.item(2)?.split('--')[1];
+      removeNoteFromTrack(event.target.parentNode, event.target);
+      updateNext(indexString);
+    }
+  }, []);
+
   const setupNoteMiss = function () {
     if (trackContainerRef.current) {
+      trackContainerRef.current.removeEventListener(
+        // Clean up event listener
+        'animationend',
+        handleNoteMiss
+      );
+
       trackContainerRef.current.addEventListener(
         'animationend',
-        function (event: AnimationEvent) {
-          if (
-            event.target &&
-            event.target instanceof HTMLElement &&
-            event.target.classList.item(1)
-          ) {
-            const indexString = event.target.classList.item(2)?.split('--')[1];
-            removeNoteFromTrack(event.target.parentNode, event.target);
-            updateNext(indexString);
-          }
-        }
+        handleNoteMiss
       );
     }
   };
 
   const playSong = () => {
+    setIsPlaying(false);
     setIsPlaying(true);
+    resetNextNoteInd();
     initializedSong();
     document.querySelectorAll('.note').forEach(function (note) {
       (note as HTMLDivElement).style.animationPlayState = 'running';
     });
-    console.log('initialzed Song');
-    setStartTime(Date.now());
     setupNoteMiss();
+    setStartTime(Date.now());
   };
 
   const handleNoteRelease = (note: string) => {
@@ -458,21 +503,18 @@ export default function GamePage() {
         initialStartTime
       );
       updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
-      console.log(notes);
       setPressStartTime(null);
     }
   };
 
   const handleNoteClick = (note: string) => {
     setPressedNotes((prev) => [...prev, note]);
-    const startTime = Date.now();
-    setPressStartTime(startTime);
+    setPressStartTime(Date.now());
   };
 
   useEffect(() => {
     socket.on('receive_song', (song: ISong) => {
       setSong(song);
-      console.log(song);
     });
 
     return () => {
@@ -486,38 +528,26 @@ export default function GamePage() {
         //sendNotesToPlayer();
       }
     }, 5000);
-    if (!isPlaying) {
-      window.addEventListener('keydown', handleKeyDownIsNotPlaying);
-    } else window.addEventListener('keydown', handleKeyDownIsPlaying);
+    window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyRelease);
 
     // Cleanup the event listener on component unmount
     return () => {
-      if (!isPlaying) {
-        window.removeEventListener('keydown', handleKeyDownIsNotPlaying);
-      } else window.removeEventListener('keydown', handleKeyDownIsPlaying);
+      window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [keyMappings, pressedNotes, pressStartTime, isPlaying]);
+  }, [keyMappings, pressedNotes, pressStartTime, isPlaying, startTime, song]);
 
+  // Debugging Section
   useEffect(() => {
     console.log(notes);
   }, [notes]);
-
-  // const sendNotesToServer = async () => {
-  //   try {
-  //     await fetch('/api/notes', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ notes: pressedNotes }),
-  //     });
-  //     setPressedNotes([]);
-  //   } catch (error) {
-  //     console.error('Error sending notes to server:', error);
-  //   }
-  // };
+  useEffect(() => {
+    console.log(song);
+  }, [song]);
+  useEffect(() => {
+    console.log(startTime);
+  }, [startTime]);
 
   return (
     /* still need to change background? or make a white box? */
