@@ -344,7 +344,7 @@ export default function GamePage() {
     const pressedKey = event.key.toLowerCase();
     const tracks = document.querySelectorAll('.track');
     const keyIndex = getKeyIndex(pressedKey);
-    if (tracks[keyIndex].firstChild) {
+    if (tracks[keyIndex] && tracks[keyIndex].firstChild) {
       judge(keyIndex, tracks);
     }
   };
