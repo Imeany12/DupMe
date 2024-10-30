@@ -31,11 +31,13 @@ export default function Game({
   //const host = searchParams.get('host') === 'true';
   const players = searchParams.get('players') ?? '1';
   const countPlayer = parseInt(players, 10);
+  //I cant put this in params
   const { data: session, status } = useSession({
     required: false,
   });
   // const Host = host === 'true';
   const Host = host === 'true';
+  const turn = searchParams.get('turn');
   const user = session?.user ?? ({ name: 'Guest' } as User);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
@@ -79,7 +81,7 @@ export default function Game({
   useEffect(() => {
     console.log('players', players);
     console.log('number of plaers:', countPlayer);
-    if (turncount.current === 4) {
+    if (turncount.current === 2 * countPlayer) {
       socket.emit('leave_lobby', { roomId, username: user?.name });
       socket.emit('end_game', roomId);
       router.push('/lobby/' + roomId + '?host=' + host);
@@ -96,8 +98,6 @@ export default function Game({
   }, [pressedNotes, isPlayerTurn]);
 
   useEffect(() => {
-    console.log('Play along first:', playAlong);
-    console.log('listening');
     const handleRecieve = (recievedNote: string) => {
       if (!isPlayerTurn && recievedNote) {
         console.log('recieved note:', recievedNote);

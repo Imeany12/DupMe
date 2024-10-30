@@ -26,6 +26,7 @@ export default function Lobby({
   });
   const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
+  const [turn, setTurn] = useState(1);
   const [ready, setReady] = useState(false);
   const [readyPlayers, setReadyPlayers] = useState(1);
   //test map
@@ -60,16 +61,32 @@ export default function Lobby({
       console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
     });
-    socket.on('start_game', (username) => {
+    socket.on('start_game', (username: string[]) => {
       hasJoined.current = false;
-      if (username.toString() === user.name?.toString()) {
-        console.log(username + 'vs' + user.name);
-        router.push(`/game/${roomId}?host=true&players=${readyPlayers}`);
-      } else {
-        console.log(username + 'false' + user.name);
-        router.push(`/game/${roomId}?host=false&players=${readyPlayers}`);
+      for (let i = 0; i < username.length; i++) {
+        console.log(username[i]);
+        for (let j = 0; j < players.length; j++) {
+          if (username[i][0].toString() === players[j][0].toString()) {
+            console.log(username + 'vs' + players[j][0]);
+            router.push(
+              `/game/${roomId}?host=true&players=${readyPlayers}&turn=${i + 1}`
+            );
+          }
+        }
       }
     });
+    // if (username.toString() === user.name?.toString()) {
+    //   console.log(username + 'vs' + user.name);
+    //   router.push(
+    //     `/game/${roomId}?host=true&players=${readyPlayers}&turn=${turn}`
+    //   );
+    // } else {
+    //   console.log(username + 'false' + user.name);
+    //   router.push(
+    //     `/game/${roomId}?host=false&players=${readyPlayers}&${turn}`
+    //   );
+    // }
+    //});
     //now having problem first player, host always false
 
     return () => {
