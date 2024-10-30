@@ -10,6 +10,7 @@ import { MONGO_URL, PORT } from './env';
 import mainRoutes from './routes/main';
 import scoreRoutes from './routes/score';
 import userRoutes from './routes/user';
+import { shuffleArray } from './utils/shuffle';
 
 const app = express();
 app.use(express.json());
@@ -38,12 +39,13 @@ const io = new Server(server, {
 });
 const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room
 
-function handleFirstPlayer(
+function handlePlayerTurn(
   rooms: { [key: number]: string[][] },
   roomId: number
 ) {
-  const randomPlayer = Math.floor(Math.random() * rooms[roomId].length);
-  return rooms[roomId][randomPlayer];
+  // This will randomize the player turns by shuffling the array
+  const randomPlayerTurn = shuffleArray(rooms[roomId]);
+  return randomPlayerTurn;
 }
 
 mongoose
@@ -107,10 +109,10 @@ io.on('connection', (socket) => {
   );
 
   socket.on('start_game', (roomId: number) => {
-    const firstPlayer = handleFirstPlayer(rooms, roomId);
-    socket.to(roomId.toString()).emit('start_game', firstPlayer[0]);
-    socket.emit('start_game', firstPlayer[0]);
-    console.log('received start, starting player: ' + firstPlayer[0]);
+    const playerTurns = handlePlayerTurn(rooms, roomId);
+    socket.to(roomId.toString()).emit('start_game', playerTurns);
+    socket.emit('start_game', playerTurns);
+    console.log('received start, starting player: ' + playerTurns);
   });
 
   socket.on('end_game', (roomId: number) => {
