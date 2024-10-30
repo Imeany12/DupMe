@@ -373,6 +373,8 @@ export default function GamePage() {
       trackElement.classList.add(style.track);
 
       value.notes.forEach(function (note: INote) {
+        value.nextNoteInd = 0; // Initianilize Index to 0 for replayability
+
         const noteElement = document.createElement('div');
         noteElement.classList.add(style.note);
         noteElement.classList.add(style.moveDown);
