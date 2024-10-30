@@ -65,29 +65,15 @@ export default function Lobby({
       hasJoined.current = false;
       for (let i = 0; i < username.length; i++) {
         console.log(username[i]);
-        for (let j = 0; j < players.length; j++) {
-          if (username[i][0].toString() === players[j][0].toString()) {
-            console.log(username + 'vs' + players[j][0]);
-            router.push(
-              `/game/${roomId}?host=true&players=${readyPlayers}&turn=${i + 1}`
-            );
-          }
+        if (username[i][0].toString() === user.name?.toString()) {
+          console.log(username[i][0] + 'vs' + user.name);
+          const start: boolean = i === 0;
+          router.push(
+            `/game/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
+          );
         }
       }
     });
-    // if (username.toString() === user.name?.toString()) {
-    //   console.log(username + 'vs' + user.name);
-    //   router.push(
-    //     `/game/${roomId}?host=true&players=${readyPlayers}&turn=${turn}`
-    //   );
-    // } else {
-    //   console.log(username + 'false' + user.name);
-    //   router.push(
-    //     `/game/${roomId}?host=false&players=${readyPlayers}&${turn}`
-    //   );
-    // }
-    //});
-    //now having problem first player, host always false
 
     return () => {
       //socket.emit('leave_lobby', { roomId });
