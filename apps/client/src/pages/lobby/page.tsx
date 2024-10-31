@@ -9,10 +9,17 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { MdOutlineMale } from 'react-icons/md';
 
+import { CountryCode, countryNameRecord } from '@/components/countryCode';
+import ProfileAvatar from '@/components/ProfileAvatar';
 import { socket } from '@/socket';
 
 import ChatPage from '../chat/page';
 
+function getCountryCodeByName(countryName: string): CountryCode | undefined {
+  return Object.keys(countryNameRecord).find(
+    (code) => countryNameRecord[code as CountryCode] === countryName
+  ) as CountryCode | undefined;
+}
 export default function Lobby({
   host,
   roomId,
@@ -20,13 +27,19 @@ export default function Lobby({
   host: string;
   roomId: string;
 }): React.JSX.Element {
+  const countryCode = getCountryCodeByName('Thailand');
+  //const flag = getCountryFlagEmoji(countryCode as CountryCode);
+
+  useEffect(() => {
+    console.log('countryCode:', countryCode);
+  }, []);
+
   const router = useRouter();
   const { data: session, status } = useSession({
     required: false,
   });
   const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
-  const [turn, setTurn] = useState(1);
   const [ready, setReady] = useState(false);
   const [readyPlayers, setReadyPlayers] = useState(1);
   //test map
