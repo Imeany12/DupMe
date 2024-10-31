@@ -318,14 +318,33 @@ export default function Game({
 
   return (
     <div className='flex h-screen w-screen flex-col items-center'>
-      <div className='flex w-full flex-row px-10'>
+      <div className='flex w-full flex-row justify-end px-10 pt-4'>
         <div className='my-auto flex max-h-min w-min flex-row items-end rounded-full bg-white'>
           <ProfileInGame session={session} />
         </div>
         <div>
-          <p className='text-3xl text-white'>{user.name}</p>
-          <p className='text-xl text-white'>Your Turn!</p>
-          <div className='bg-note h-[16px] w-[400px] flex-shrink-0 rounded-lg'></div>
+          <p className='justify-center px-3 text-xl text-white'>{user.name}</p>
+          <p className='mt-3 px-2 text-sm text-white'>Your Turn!</p>
+          <div className='bg-note flesx-shrink-0 h-[16px] w-[400px] rounded-lg'></div>
+        </div>
+        <div className='flex w-full items-start justify-end'>
+          <button
+            className='size-20 px-8 pt-6 text-white'
+            onClick={() => {
+              socket.emit('game_end');
+              console.log('player resign');
+              // socket.emit('leave_lobby', {
+              //   username: user?.name,
+              //   roomId,
+              // });
+              router.push('/lobby/' + roomId + '?host=' + host);
+            }}
+          >
+            <FaFontAwesomeFlag
+              size={30}
+              className='shadow-inner shadow-white'
+            />
+          </button>
         </div>
       </div>
       {playAlong ? (
@@ -345,24 +364,8 @@ export default function Game({
         <div>
           {isPlayerTurn ? (
             <div>
-              <div className='flex w-full items-start justify-start'>
-                <button
-                  className='size-20 px-8 pt-6 text-white'
-                  onClick={() => {
-                    // socket.emit('game_end');
-                    // console.log('player resign');
-                    // router.push('/lobby/' + roomId);
-                    setIsPlayerTurn(false);
-                  }}
-                >
-                  <FaFontAwesomeFlag
-                    size={30}
-                    className='shadow-inner shadow-white'
-                  />
-                </button>
-              </div>
-              <div className='flex h-full flex-col justify-end'>
-                <div className='max-w-screen-svh mx-16 flex max-h-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+              <div className='flex h-full max-w-full flex-col items-center justify-end pt-2'>
+                <div className='max-w-svw mx-16 flex max-h-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
                   <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
                   <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
                     {pressedNotes.map((note, index) => (
@@ -386,27 +389,7 @@ export default function Game({
             </div>
           ) : (
             <div>
-              <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
-                <div className='flex w-full items-start justify-start'>
-                  <button
-                    className='size-20 px-8 pt-6 text-white'
-                    onClick={() => {
-                      socket.emit('game_end');
-                      console.log('player resign');
-                      socket.emit('leave_lobby', {
-                        username: user?.name,
-                        roomId,
-                      });
-                      router.push('/lobby/' + roomId + '?host=' + host);
-                      //use host as temporary code for development
-                    }}
-                  >
-                    <FaFontAwesomeFlag
-                      size={30}
-                      className='shadow-inner shadow-white'
-                    />
-                  </button>
-                </div>
+              <div className='flex h-full max-w-full flex-col items-center justify-end pt-2'>
                 <div className='max-w-screen-svh mx-16 flex max-h-svh flex-col items-center gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
                   <p className='pt-6 text-3xl text-white'>
                     Memorize your opponent notes:
