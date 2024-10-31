@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
+import ProfileInGame from '@/components/ProfileInGame';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -242,17 +243,17 @@ export default function Game({
 
   useEffect(() => {
     if (playAlong === false) {
-      setTimeout(() => {
-        if (pressedNotes.length > 0) {
-          //console.log('sending notes');
-          //sendNoteToPlayer(notes);
-          setPressedNotes([]);
-          setNotes([]);
-        }
-        setPlayAlong(true);
-        console.log('playalong : ', playAlong);
-        console.log('isPlayerTurn : ', isPlayerTurn);
-      }, 10000);
+      // setTimeout(() => {
+      //   if (pressedNotes.length > 0) {
+      //     //console.log('sending notes');
+      //     //sendNoteToPlayer(notes);
+      //     setPressedNotes([]);
+      //     setNotes([]);
+      //   }
+      //   setPlayAlong(true);
+      //   console.log('playalong : ', playAlong);
+      //   console.log('isPlayerTurn : ', isPlayerTurn);
+      // }, 15000);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -271,7 +272,7 @@ export default function Game({
         setPressedNotes([]);
         setNotes([]);
         console.log('playalong : ', playAlong);
-      }, 20000);
+      }, 30000);
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
@@ -317,6 +318,16 @@ export default function Game({
 
   return (
     <div className='flex h-screen w-screen flex-col items-center'>
+      <div className='flex w-full flex-row px-10'>
+        <div className='my-auto flex max-h-min w-min flex-row items-end rounded-full bg-white'>
+          <ProfileInGame session={session} />
+        </div>
+        <div>
+          <p className='text-3xl text-white'>{user.name}</p>
+          <p className='text-xl text-white'>Your Turn!</p>
+          <div className='bg-note h-[16px] w-[400px] flex-shrink-0 rounded-lg'></div>
+        </div>
+      </div>
       {playAlong ? (
         <div>
           {/* waiting for rainfall from mark */}
