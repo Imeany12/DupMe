@@ -215,14 +215,6 @@ export default function SignUpPage(): React.JSX.Element {
             placeholder='Tell us something about you'
             onChange={handleInput}
           />
-          <textarea
-            className='mb-4 border border-dashed px-2 py-3 focus:outline-indigo-200'
-            id='bio'
-            name='bio'
-            rows={5}
-            placeholder='Tell us something about you'
-            onChange={handleInput}
-          />
         </fieldset>
         <div className='flex w-full flex-col items-center'>
           <button

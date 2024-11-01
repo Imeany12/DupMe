@@ -5,7 +5,10 @@
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
+import { FiHome } from 'react-icons/fi';
 
+import EditUserProfile from '@/components/EditUserProfile';
+import { Button } from '@/components/ui/button';
 import UserProfile from '@/components/UserProfile';
 
 export default function AccountPage(): React.JSX.Element {
@@ -16,8 +19,27 @@ export default function AccountPage(): React.JSX.Element {
     },
   });
   const user = session?.user;
+  const [edit, setEdit] = React.useState(false);
 
-  return <UserProfile username={user?.username ?? 'Guest'} />;
+  return (
+    <div>
+      <nav className='bg-note2 flex w-svw justify-between px-10'>
+        <Button className=''>
+          <FiHome />
+        </Button>
+        {edit ? (
+          <Button onClick={() => setEdit(false)}>Cancel</Button>
+        ) : (
+          <Button onClick={() => setEdit(true)}>Edit</Button>
+        )}
+      </nav>
+      {edit ? (
+        <>{user ? <EditUserProfile user={user} /> : <></>}</>
+      ) : (
+        <div>{user ? <UserProfile user={user} /> : <></>}</div>
+      )}
+    </div>
+  );
   //   <div className='h-full bg-zinc-900 font-sans text-white'>
   //     {/* Header */}
   //     <header className='flex items-center justify-between bg-slate-600 p-4'>
