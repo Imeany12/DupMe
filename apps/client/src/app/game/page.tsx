@@ -361,7 +361,7 @@ export default function GamePage() {
     initialStartTime: number
   ): INote {
     return {
-      isLongNote: timePressed > 150,
+      isLongNote: timePressed > 200,
       longNoteDuration: Math.max(timePressed, 100),
       fallDuration: 2,
       delay: isFirstNote ? 0 : pressedStartTime - initialStartTime,
@@ -375,13 +375,27 @@ export default function GamePage() {
 
   const handleKeyReleaseIsPlaying = (event: KeyboardEvent) => {
     const pressedKey = event.key.toLowerCase();
+    const tracks = document.querySelectorAll('.track');
     const keyIndex = getKeyIndex(pressedKey);
 
     // Check if Released key is in Piano key
     if (keyIndex == pressingNoteTime[0]) {
       const duration = Date.now() - pressingNoteTime[1];
-      console.log(pressingNoteTime[0], duration);
+      const nextNoteIndex = song.sheet[getKeyString(keyIndex)].nextNoteInd;
+      if (nextNoteIndex < song.sheet[getKeyString(keyIndex)].notes.length) {
+        const nextNote =
+          song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex];
+        // console.log(pressingNoteTime[0], duration, song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex].longNoteDuration);
+        const perfectDuartion = nextNote.longNoteDuration * 0.771; // manual calibration
+        const accuracy = Math.abs(duration - perfectDuartion);
+        // console.log(perfectDuartion, accuracy);
+        // console.log(`perfect duration: ${perfectDuartion}, pressed duration: ${duration}, accuracy : ${accuracy}`);
 
+        const hitJudgement = getHitJudgement(accuracy / 1500);
+        console.log(hitJudgement);
+        removeNoteFromTrack(tracks[keyIndex], tracks[keyIndex].firstChild);
+        updateNext(getKeyString(keyIndex));
+      }
       setPressingNoteTime([-1, Date.now()]);
     }
   };
@@ -405,7 +419,7 @@ export default function GamePage() {
       setPressStartTime(null);
 
       if (isFirstNote) {
-        setInitialStartTime(endTime);
+        setInitialStartTime(pressStartTime);
         setIsFirstNote(false);
       }
     }
@@ -510,7 +524,7 @@ export default function GamePage() {
       const newNote: INote = createNote(
         timePressed,
         isFirstNote,
-        endTime,
+        pressStartTime,
         initialStartTime
       );
       updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
@@ -550,6 +564,7 @@ export default function GamePage() {
   }, [
     keyMappings,
     pressedNotes,
+    initialStartTime,
     pressStartTime,
     pressingNoteTime,
     isPlaying,
@@ -561,15 +576,18 @@ export default function GamePage() {
   // useEffect(() => {
   //   console.log(notes);
   // }, [notes]);
-  useEffect(() => {
-    console.log(song);
-  }, [song]);
+  // useEffect(() => {
+  //   console.log(song);
+  // }, [song]);
   // useEffect(() => {
   //   console.log(startTime);
   // }, [startTime]);
-  useEffect(() => {
-    console.log(pressingNoteTime);
-  }, [pressingNoteTime]);
+  // useEffect(() => {
+  //   console.log(pressingNoteTime);
+  // }, [pressingNoteTime]);
+  // useEffect(() => {
+  //   console.log(pressStartTime);
+  // }, [pressStartTime]);
 
   return (
     /* still need to change background? or make a white box? */
