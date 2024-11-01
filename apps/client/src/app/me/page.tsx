@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 
 // Remember you must use an AuthProvider for
 // client components to useSession
@@ -25,7 +25,7 @@ export default function AccountPage(): React.JSX.Element {
       >
         Back
       </Link>
-      {/* now having problem back button need a hard refresh 
+      {/* now having problem back button need a hard refresh
       can not navigate back to ref='/' . now using /home for temp fix*/}
       <section className='flex flex-col gap-4'>
         <UserProfile user={session?.user} />

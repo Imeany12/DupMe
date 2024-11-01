@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import Countdown from '@/components/CountDown';
 import JoinRoomPage from '@/pages/joinRoom/page';
 
 import { socket } from '../../socket';
