@@ -1,28 +1,36 @@
 import { IUser } from '@repo/shared-types';
 import Image from 'next/image';
 
-import { User } from '@/interfaces/user/user';
+import { IoMdMale } from 'react-icons/io';
 
-type Props = {
-  user: User;
-};
+import getFormattedDate from '@/lib/getFormattedDate';
 
-export default async function UserProfile({ username }: { username: string }) {
-  const users: IUser[] = await getAllUsers();
-  // const user: IUser = await getUser(username);
-  const user = users.find((user) => user.username === username);
-  //const user = users[0];
-
+export default function UserProfile({ user }: { user: IUser }) {
+  // const user0 = await fetch(`http://localhost:5001/user/${user.username}`, {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // });
+  // user = await user0.json();
   const userImage = user?.image ? (
     <Image
-      className='mx-auto mt-8 rounded-full border-4 border-black shadow-black drop-shadow-xl dark:border-slate-500'
+      className='mx-auto mt-8 rounded-full border-4 border-black shadow-black drop-shadow-xl'
       src={user?.image}
       width={200}
       height={200}
       alt={user?.username ?? 'Profile Pic'}
       priority={true}
     />
-  ) : null;
+  ) : (
+    <Image
+      className='border-note mx-auto mt-8 rounded-full border-4 shadow-black drop-shadow-xl'
+      src={'/images/default-profile.png'}
+      alt='Player Avatar'
+      width={100}
+      height={100}
+    />
+  );
 
   return (
     <div className='h-screen bg-zinc-900 font-sans text-white'>
@@ -43,11 +51,21 @@ export default async function UserProfile({ username }: { username: string }) {
         <div className='mt-8 grid grid-cols-2 items-center justify-between gap-4'>
           <div className='flex flex-col items-center pl-24'>
             <h2 className='text-xl font-semibold'>Joined Since:</h2>
-            <p>{user?.createdAt?.getDate()}</p>
+            <p>
+              {getFormattedDate(user?.createdAt?.toString() || '01/01/2000')}
+            </p>
           </div>
           <div className='flex flex-col items-center pr-24'>
-            <h2 className='text-xl font-semibold'>Country Rank</h2>
-            <p>#2,608</p>
+            <h2 className='text-xl font-semibold'>Country : </h2>
+            <p>{user?.country}</p>
+          </div>
+          <div className='flex flex-col items-center pr-24'>
+            <h2 className='text-xl font-semibold'>Gender : </h2>
+            <p>{user?.gender}</p>
+          </div>
+          <div className='flex flex-col items-center pr-24'>
+            <h2 className='text-xl font-semibold'>About me : </h2>
+            <p>{user?.bio}</p>
           </div>
         </div>
 
@@ -57,13 +75,13 @@ export default async function UserProfile({ username }: { username: string }) {
           <div className='my-6 grid grid-cols-2 gap-32'>
             <div className='flex w-full flex-col items-center gap-4'>
               <p>
-                Total Score: <span className='font-bold'>3,718,176,703</span>
+                Game Won : <span className='font-bold'>{user?.games_won}</span>
               </p>
               <p>
-                Average Accuracy: <span className='font-bold'>97.17%</span>
+                Game Lost :<span className='font-bold'>{user?.games_lost}</span>
               </p>
               <p>
-                Play Count: <span className='font-bold'>17,652</span>
+                Game Draw :<span className='font-bold'>{user?.games_draw}</span>
               </p>
             </div>
             <div className='flex w-full flex-col items-center gap-4'>
