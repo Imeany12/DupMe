@@ -200,6 +200,10 @@ export default function GamePage() {
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number>(Date.now());
+  const [pressingNoteTime, setPressingNoteTime] = useState<[number, number]>([
+    -1,
+    Date.now(),
+  ]);
 
   const trackContainerRef = useRef<HTMLDivElement>(null);
 
@@ -267,30 +271,31 @@ export default function GamePage() {
   };
 
   const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
-    const perfectTimeOffset = 0.17; // manual calibration for perfect note
+    const perfectTimeOffset = -0.7; // manual calibration for perfect note
     const timeInSecond = (Date.now() - startTime) / 1000;
-    console.log(timeInSecond);
+    // console.log(timeInSecond);
     const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
     if (nextNoteIndex < song.sheet[getKeyString(index)].notes.length) {
       const nextNote = song.sheet[getKeyString(index)].notes[nextNoteIndex];
-      const perfectTime =
-        nextNote.fallDuration + nextNote.delay / 1000 - perfectTimeOffset;
-      const accuracy = Math.abs(timeInSecond - perfectTime);
-      console.log(`perfect time: ${perfectTime} accuracy : ${accuracy}`);
+      if (!song.sheet[getKeyString(index)].notes[nextNoteIndex].isLongNote) {
+        const perfectTime =
+          nextNote.fallDuration + nextNote.delay / 1000 - perfectTimeOffset;
+        const accuracy = Math.abs(timeInSecond - perfectTime);
+        // console.log(`perfect time: ${perfectTime} accuracy : ${accuracy}`);
 
-      /**
-       * As long as the note has travelled less than 3/4 of the height of
-       * the track, any key press on this track will be ignored.
-       */
-      if (accuracy > (nextNote.fallDuration - speed) / 3) {
-        return;
+        if (accuracy > (nextNote.fallDuration - speed) / 3) {
+          return;
+        }
+
+        const hitJudgement = getHitJudgement(accuracy);
+        console.log(hitJudgement);
+        removeNoteFromTrack(tracks[index], tracks[index].firstChild);
+        updateNext(getKeyString(index));
+      } else {
+        if (index != pressingNoteTime[0]) {
+          setPressingNoteTime([index, Date.now()]);
+        }
       }
-
-      const hitJudgement = getHitJudgement(accuracy);
-      removeNoteFromTrack(tracks[index], tracks[index].firstChild);
-      updateNext(getKeyString(index));
-
-      console.log(hitJudgement);
     } else console.log('Note out of range!');
   };
 
@@ -352,47 +357,62 @@ export default function GamePage() {
   const createNote = function (
     timePressed: number,
     isFirstNote: boolean,
-    endTime: number,
+    pressedStartTime: number,
     initialStartTime: number
   ): INote {
     return {
-      isLongNote: timePressed > 100,
+      isLongNote: timePressed > 150,
       longNoteDuration: Math.max(timePressed, 100),
       fallDuration: 2,
-      // Find a way to keep track game start time and get the delay from start.
-      delay: isFirstNote ? 0 : endTime - initialStartTime,
+      delay: isFirstNote ? 0 : pressedStartTime - initialStartTime,
     };
   };
 
   const handleKeyRelease = (event: KeyboardEvent) => {
-    if (!isPlaying) {
-      const releasedKey = event.key.toLowerCase();
-      const note = Object.keys(keyMappings).find(
-        (note) => keyMappings[note] === releasedKey
-      );
-      if (pressStartTime !== null && note && pressedNotes.includes(note)) {
-        const endTime = Date.now();
-        const timePressed = endTime - pressStartTime;
-        const newNote: INote = createNote(
-          timePressed,
-          isFirstNote,
-          endTime,
-          initialStartTime
-        );
-        updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
-        //idk why this console.log dealyed by 1 note
-        setPressStartTime(null);
+    if (isPlaying) handleKeyReleaseIsPlaying(event);
+    else handleKeyReleaseIsNotPlaying(event);
+  };
 
-        if (isFirstNote) {
-          setInitialStartTime(endTime);
-          setIsFirstNote(false);
-        }
-      }
-      setPresNote({
-        pressing: false,
-        note: '',
-      });
+  const handleKeyReleaseIsPlaying = (event: KeyboardEvent) => {
+    const pressedKey = event.key.toLowerCase();
+    const keyIndex = getKeyIndex(pressedKey);
+
+    // Check if Released key is in Piano key
+    if (keyIndex == pressingNoteTime[0]) {
+      const duration = Date.now() - pressingNoteTime[1];
+      console.log(pressingNoteTime[0], duration);
+
+      setPressingNoteTime([-1, Date.now()]);
     }
+  };
+
+  const handleKeyReleaseIsNotPlaying = (event: KeyboardEvent) => {
+    const releasedKey = event.key.toLowerCase();
+    const note = Object.keys(keyMappings).find(
+      (note) => keyMappings[note] === releasedKey
+    );
+    if (pressStartTime !== null && note && pressedNotes.includes(note)) {
+      const endTime = Date.now();
+      const timePressed = endTime - pressStartTime;
+      const newNote: INote = createNote(
+        timePressed,
+        isFirstNote,
+        pressStartTime,
+        initialStartTime
+      );
+      updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
+      //idk why this console.log dealyed by 1 note
+      setPressStartTime(null);
+
+      if (isFirstNote) {
+        setInitialStartTime(endTime);
+        setIsFirstNote(false);
+      }
+    }
+    setPresNote({
+      pressing: false,
+      note: '',
+    });
   };
 
   const initializedSong = function (): void {
@@ -418,26 +438,17 @@ export default function GamePage() {
         // Set dynamic properties for duration and delay using CSS variables
         noteElement.style.setProperty(
           '--duration',
-          note.fallDuration - speed + 's'
+          note.fallDuration + (note.longNoteDuration * 0.1) / 110 + 's'
         );
         noteElement.style.setProperty(
           '--delay',
-          Math.max(
-            0,
-            note.delay / 1000 +
-              speed -
-              (note.longNoteDuration * 0.2) /
-                (400 / (note.fallDuration - speed))
-          ) + 's'
+          note.delay / 1000 + speed + 's'
         );
-        noteElement.style.setProperty(
-          '--bottomHeight',
-          `${250 - note.longNoteDuration * 0.2}px`
-        );
+        noteElement.style.setProperty('--bottomHeight', `${250}px`);
         // noteElement.style.animationPlayState = 'paused';
         noteElement.style.width = '44px'; // Set width
-        noteElement.style.height = `${note.longNoteDuration * 0.2}px`; // Set height
-        noteElement.style.top = `-${note.longNoteDuration * 0.2}px`;
+        noteElement.style.height = `${note.longNoteDuration * 0.1}px`; // Set height
+        noteElement.style.top = `-${note.longNoteDuration * 0.1}px`;
         trackElement.appendChild(noteElement);
       });
       if (trackContainer) trackContainer.appendChild(trackElement);
@@ -536,18 +547,29 @@ export default function GamePage() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyRelease);
     };
-  }, [keyMappings, pressedNotes, pressStartTime, isPlaying, startTime, song]);
+  }, [
+    keyMappings,
+    pressedNotes,
+    pressStartTime,
+    pressingNoteTime,
+    isPlaying,
+    startTime,
+    song,
+  ]);
 
   // Debugging Section
-  useEffect(() => {
-    console.log(notes);
-  }, [notes]);
+  // useEffect(() => {
+  //   console.log(notes);
+  // }, [notes]);
   useEffect(() => {
     console.log(song);
   }, [song]);
+  // useEffect(() => {
+  //   console.log(startTime);
+  // }, [startTime]);
   useEffect(() => {
-    console.log(startTime);
-  }, [startTime]);
+    console.log(pressingNoteTime);
+  }, [pressingNoteTime]);
 
   return (
     /* still need to change background? or make a white box? */
