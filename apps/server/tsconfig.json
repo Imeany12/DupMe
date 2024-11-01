@@ -3,6 +3,10 @@
   "include": ["."],
   "exclude": ["build", "node_modules"],
   "compilerOptions": {
-    "outDir": "./build"
+    "outDir": "./build",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   }
 }

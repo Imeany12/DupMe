@@ -1,6 +1,8 @@
 'use client';
+
 import { IMsgDataTypes } from '@repo/shared-types/src/types';
 import React, { useEffect, useState } from 'react';
+import { Socket } from 'socket.io-client';
 
 import style from './page.module.css';
 
@@ -9,7 +11,7 @@ const ChatPage = ({
   username,
   roomId,
 }: {
-  socket: any;
+  socket: Socket;
   username: string;
   roomId: number;
 }) => {

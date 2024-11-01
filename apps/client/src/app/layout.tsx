@@ -2,6 +2,9 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
+
+import ThemeHandler from '@/components/ThemeHandler';
 
 import AuthProvider from './context/AuthProvider';
 
@@ -21,8 +24,14 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`background-image ${inter.className}`}>
         <AuthProvider>
-          {/* <NavBar /> */}
-          <main>{children}</main>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='star'
+            enableSystem={true}
+          >
+            <ThemeHandler />
+            <main>{children}</main>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

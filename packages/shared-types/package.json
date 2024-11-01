@@ -6,6 +6,7 @@
   "types": "./dist/types.d.ts",
   "scripts": {
     "build": "tsc -d",
+    "start": "tsc -d",
     "postinstall": "pnpm build"
   },
   "devDependencies": {

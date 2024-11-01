@@ -5,14 +5,14 @@ import './signin.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-export default function SignInPage() {
+export default function SignInPage(): React.JSX.Element {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     // Call NextAuth's signIn function with credentials
@@ -23,14 +23,14 @@ export default function SignInPage() {
       callbackUrl: '/',
     });
     if (res?.error) {
-      setError('Login failed. Please check your credentials.');
+      setError('Login failed. Incorrect username or password.');
     } else {
       window.location.href = '/';
     }
   };
 
   return (
-    <div>
+    <>
       <div className='card'>
         <div className='page'>
           <div className='signin'>
@@ -180,6 +180,6 @@ export default function SignInPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
