@@ -89,7 +89,7 @@ export const options: NextAuthOptions = {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
     async signIn({ user }) {
       // Only attempt signup if user data is new
-      const res = await fetch('http://localhost:5001/user/signup', {
+      const res = await fetch(`${SERVER_URL}/user/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
