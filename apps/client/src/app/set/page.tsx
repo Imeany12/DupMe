@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 
 import { ToggleTheme } from '@/components/ui/toggle-theme';
+import { SERVER_URL } from '@/env';
 
 interface KeyMapping {
   [key: string]: string;
@@ -43,7 +44,7 @@ export default function SettingsPage(): React.JSX.Element {
     localStorage.setItem('keyMappings', JSON.stringify(keyMappings));
     const sendKeyMappings = async () => {
       const res = await fetch(
-        `http://localhost:5001/user/${user?.name}/profile/keybinds`,
+        `${SERVER_URL}/user/${user?.name}/profile/keybinds`,
         {
           method: 'POST',
           headers: {

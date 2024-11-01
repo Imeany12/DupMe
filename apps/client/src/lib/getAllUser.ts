@@ -1,5 +1,7 @@
+import { SERVER_URL } from '@/env';
+
 export default async function getAllUsers() {
-  const res = await fetch('http://localhost:5001/user/list', {
+  const res = await fetch(`${SERVER_URL}/user/list`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

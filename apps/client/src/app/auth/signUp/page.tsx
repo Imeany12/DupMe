@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState } from 'react';
 
+import { SERVER_URL } from '@/env';
+
 export default function SignUpPage(): React.JSX.Element {
   const typed_password_confirm = '';
   const [password_confirm, setPassword_confirm] = useState('');
@@ -55,7 +57,7 @@ export default function SignUpPage(): React.JSX.Element {
       return;
     try {
       // Test this with 2 devices
-      const res = await fetch('http://localhost:5001/user/signup', {
+      const res = await fetch(`${SERVER_URL}/user/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
