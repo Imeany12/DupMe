@@ -301,11 +301,6 @@ export default function GamePage() {
   const [activeOscillators, setActiveOscillators] = useState<{
     [key: string]: { oscillator: OscillatorNode; gainNode: GainNode };
   }>({});
-  const hasJoined = useRef(false);
-
-  const sendNoteToPlayer = (notes: Note[]) => {
-    socket.emit('sendNote', roomId, notes);
-  };
 
   useEffect(() => {
     if (turncount.current === 4) {
@@ -573,8 +568,13 @@ export default function GamePage() {
     if (playAlong === false) {
       setTimeout(() => {
         if (pressedNotes.length > 0) {
-          //console.log('sending notes');
-          //sendNoteToPlayer(notes);
+          console.log('sending notes');
+          const song: ISong = {
+            roomID: parseInt(roomId),
+            user: user.name ?? 'Guest',
+            sheet: notes,
+          };
+          socket.emit('send_song', song);
           setPressedNotes([]);
           // setNotes([]);
         }
@@ -588,6 +588,7 @@ export default function GamePage() {
         if (pressedNotes.length > 0) {
           //console.log('sending notes');
           //sendNoteToPlayer(notes);
+          playSong();
         }
         turncount.current += 1;
         setPlayAlong(false);
@@ -772,17 +773,41 @@ export default function GamePage() {
     <div className='flex h-screen w-screen flex-col items-center'>
       {playAlong ? (
         <div>
-          <div
-            ref={trackContainerRef}
-            className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
-          ></div>
           {!isPlayerTurn ? (
             <div>
               <p className='text-3xl text-white'>rainfall</p>
+              <div
+                ref={trackContainerRef}
+                className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
+              ></div>
+              <div className='flex w-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+                <div>
+                  <Piano
+                    onNoteClick={handleNoteClick}
+                    onNoteReleased={handleNoteRelease}
+                  />
+                </div>
+              </div>
             </div>
           ) : (
             <div>
               <p className='text-3xl text-white'>watch other rainfall</p>
+              <div
+                ref={trackContainerRef}
+                className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
+              ></div>
+              <div className='flex w-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+                <div>
+                  <Piano
+                    onNoteClick={() => {
+                      return;
+                    }}
+                    onNoteReleased={() => {
+                      return;
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           )}
         </div>
