@@ -7,7 +7,7 @@ export default function Countdown({ duration }: { duration?: number }) {
   // State to manage the countdown timer value
   const [timeLeft, setTimeLeft] = useState<number>(duration ?? 0);
   // State to track if the timer is active
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(true);
   // Reference to store the timer ID
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -78,26 +78,26 @@ export default function Countdown({ duration }: { duration?: number }) {
 
   return (
     // Container div for centering the content
-    <div className='flex h-screen flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center'>
       {/* Timer box container */}
-      <div className='w-full max-w-md rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800'>
+      <div className='w-full max-w-md rounded-lg bg-white px-4 py-1 shadow-lg'>
         {/* Title of the countdown timer */}
-        <h1 className='mb-4 text-center text-2xl font-bold text-gray-800 dark:text-gray-200'>
-          Countdown Timer
+        <h1 className='mb-4 text-center text-2xl font-bold text-gray-800'>
+          Your Turn
         </h1>
         {/* Display the formatted time left */}
-        <div className='mb-8 text-center text-6xl font-bold text-gray-800 dark:text-gray-200'>
+        <div className='mb-2 text-center text-6xl font-bold text-gray-800'>
           {formatTime(timeLeft)}
         </div>
         {/* Buttons to start, pause, and reset the timer */}
-        <div className='flex justify-center gap-4'>
+        {/* <div className='flex justify-center gap-4'>
           <button
             onClick={handleStart}
             className='text-gray-800 dark:text-gray-200'
           >
             Start
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
