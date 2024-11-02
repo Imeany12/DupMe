@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
+import Countdown from '@/components/CountDown';
 import Piano from '@/components/Piano';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
@@ -307,6 +308,7 @@ export default function GamePage() {
     <div className='flex h-screen w-screen flex-col items-center'>
       {playAlong ? (
         <div>
+          <Countdown duration={60} />
           {/* waiting for rainfall from mark */}
           {!isPlayerTurn ? (
             <div>
@@ -314,6 +316,7 @@ export default function GamePage() {
             </div>
           ) : (
             <div>
+              <Countdown duration={60} />
               <p className='text-3xl text-white'>watch other rainfall</p>
             </div>
           )}
@@ -323,6 +326,7 @@ export default function GamePage() {
           {isPlayerTurn ? (
             <div>
               <div className='flex w-full items-start justify-start'>
+                <Countdown duration={30} />
                 <button
                   className='size-20 px-8 pt-6 text-white'
                   onClick={() => {
@@ -363,6 +367,7 @@ export default function GamePage() {
             </div>
           ) : (
             <div>
+              <Countdown duration={30} />
               <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
                 <div className='flex w-full items-start justify-start'>
                   <button
