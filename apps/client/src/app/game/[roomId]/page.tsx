@@ -25,6 +25,15 @@ type pressNote = {
 };
 
 export default function GamePage() {
+  const { data: session, status } = useSession({
+    required: false,
+  });
+
+  const searchParams = useSearchParams();
+  const host: boolean = searchParams.get('host') === 'true';
+
+  const user = session?.user ?? ({ name: 'Guest' } as User);
+  const { roomId } = useParams<{ roomId: string }>();
   const [notes, setNotes] = useState<{ [key: string]: INotes }>({
     C: {
       color: '#3A2618',
@@ -89,6 +98,7 @@ export default function GamePage() {
   });
 
   const updateNotesForKey = (key: string, newNote: INote) => {
+    console.log('updating notes for key:', key);
     setNotes((prevNotes) => ({
       ...prevNotes,
       [key]: {
@@ -96,10 +106,11 @@ export default function GamePage() {
         notes: [...prevNotes[key].notes, newNote], // Update the notes array
       },
     }));
+    console.log('new notes:', notes);
   };
 
   const [song, setSong] = useState<ISong>({
-    roomID: -999,
+    roomID: roomId,
     user: 'dummy',
     sheet: {
       C: {
@@ -187,20 +198,11 @@ export default function GamePage() {
 
   const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
   const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
-  const { data: session, status } = useSession({
-    required: false,
-  });
-
-  const searchParams = useSearchParams();
-  const host: boolean = searchParams.get('host') === 'true';
-
-  const user = session?.user ?? ({ name: 'Guest' } as User);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
   //playerTurn form randaomization backend
   //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
-  const { roomId } = useParams<{ roomId: string }>();
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -567,21 +569,19 @@ export default function GamePage() {
   useEffect(() => {
     if (playAlong === false) {
       setTimeout(() => {
-        if (pressedNotes.length > 0) {
-          console.log('sending notes');
-          const song: ISong = {
-            roomID: parseInt(roomId),
-            user: user.name ?? 'Guest',
-            sheet: notes,
-          };
-          socket.emit('send_song', song);
-          setPressedNotes([]);
-          // setNotes([]);
-        }
+        setPressedNotes([]);
+        // setNotes([]);
         setPlayAlong(true);
-        console.log('playalong : ', playAlong);
-        console.log('isPlayerTurn : ', isPlayerTurn);
+        //console.log('playalong : ', playAlong);
+        //console.log('isPlayerTurn : ', isPlayerTurn);
       }, 10000);
+      const song: ISong = {
+        roomID: parseInt(roomId),
+        user: user.name ?? 'Guest',
+        sheet: notes,
+      };
+      console.log('sending song', song);
+      socket.emit('send_song', song);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -719,6 +719,7 @@ export default function GamePage() {
 
   useEffect(() => {
     socket.on('receive_song', (song: ISong) => {
+      console.log('recieved song:', song);
       setSong(song);
     });
 
@@ -774,7 +775,7 @@ export default function GamePage() {
       {playAlong ? (
         <div>
           {!isPlayerTurn ? (
-            <div>
+            <div className='bg-slate-700'>
               <p className='text-3xl text-white'>rainfall</p>
               <div
                 ref={trackContainerRef}
