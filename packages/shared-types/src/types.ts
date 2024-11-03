@@ -46,9 +46,9 @@ export interface INotes {
 }
 
 export interface ISong {
-  roomID: string | number;
+  roomId: string | number;
   user: string;
-  sheet: { [key:string]: INotes };
+  sheet: { [key: string]: INotes };
 }
 export interface KeyMapping {
   [key: string]: string;

@@ -24,6 +24,69 @@ type pressNote = {
   note: string;
 };
 
+const defaultNotes: { [key: string]: INotes } = {
+  C: {
+    color: '#3A2618',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  'C#': {
+    color: '#754043',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  D: {
+    color: '#9A8873',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  'D#': {
+    color: '#37423D',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  E: {
+    color: '#D6F8D6',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  F: {
+    color: '#5D737E',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  'F#': {
+    color: '#55505C',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  G: {
+    color: '#FAF33E',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  'G#': {
+    color: '#7FC6A4',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  A: {
+    color: '#82A0BC',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  'A#': {
+    color: '#304D6D',
+    nextNoteInd: 0,
+    notes: [],
+  },
+  B: {
+    color: '#A7CCED',
+    nextNoteInd: 0,
+    notes: [],
+  },
+};
+
 export default function GamePage() {
   const { data: session, status } = useSession({
     required: false,
@@ -34,68 +97,7 @@ export default function GamePage() {
 
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const { roomId } = useParams<{ roomId: string }>();
-  const [notes, setNotes] = useState<{ [key: string]: INotes }>({
-    C: {
-      color: '#3A2618',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    'C#': {
-      color: '#754043',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    D: {
-      color: '#9A8873',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    'D#': {
-      color: '#37423D',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    E: {
-      color: '#D6F8D6',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    F: {
-      color: '#5D737E',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    'F#': {
-      color: '#55505C',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    G: {
-      color: '#FAF33E',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    'G#': {
-      color: '#7FC6A4',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    A: {
-      color: '#82A0BC',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    'A#': {
-      color: '#304D6D',
-      nextNoteInd: 0,
-      notes: [],
-    },
-    B: {
-      color: '#A7CCED',
-      nextNoteInd: 0,
-      notes: [],
-    },
-  });
+  const [notes, setNotes] = useState<{ [key: string]: INotes }>(defaultNotes);
 
   const updateNotesForKey = (key: string, newNote: INote) => {
     console.log('updating notes for key:', key);
@@ -110,7 +112,7 @@ export default function GamePage() {
   };
 
   const [song, setSong] = useState<ISong>({
-    roomID: roomId,
+    roomId: roomId,
     user: 'dummy',
     sheet: {
       C: {
@@ -569,36 +571,44 @@ export default function GamePage() {
   useEffect(() => {
     if (playAlong === false) {
       setTimeout(() => {
-        setPressedNotes([]);
-        // setNotes([]);
-        setPlayAlong(true);
         //console.log('playalong : ', playAlong);
         //console.log('isPlayerTurn : ', isPlayerTurn);
+        setPlayAlong(true);
+        setPressedNotes([]);
       }, 10000);
-      const song: ISong = {
-        roomID: parseInt(roomId),
-        user: user.name ?? 'Guest',
-        sheet: notes,
-      };
-      console.log('sending song', song);
-      socket.emit('send_song', song);
+      // socket.emit('send_song', song);
+      // console.log('sending song', song);
     }
     if (playAlong === true) {
       setTimeout(() => {
-        if (pressedNotes.length > 0) {
-          //console.log('sending notes');
-          //sendNoteToPlayer(notes);
-          playSong();
-        }
-        turncount.current += 1;
-        setPlayAlong(false);
+        setPressedNotes([]);
         setIsPlayerTurn((prev) => !prev);
         console.log('playalong : ', playAlong);
         console.log('isPlayerTurn : ', isPlayerTurn);
-        setPressedNotes([]);
-        // setNotes([]);
-        console.log('playalong : ', playAlong);
+
+        if (pressedNotes.length > 0) {
+          //console.log('sending notes');
+          //sendNoteToPlayer(notes);
+        }
+        turncount.current += 1;
+        setPlayAlong(false);
+        setNotes(defaultNotes);
       }, 20000);
+      const newSong: ISong = {
+        roomId: roomId,
+        user: user.name ?? 'Guest',
+        sheet: notes,
+      };
+      setSong(newSong);
+      socket.emit('send_song', newSong);
+      console.log('sending song', newSong, 'notes', notes);
+      setPressedNotes([]);
+      // setNotes([]);
+      socket.on('receive_song', (newISong: ISong) => {
+        console.log('recieved song:', newISong);
+        setSong(newISong);
+        playSong();
+      });
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
@@ -718,9 +728,9 @@ export default function GamePage() {
   };
 
   useEffect(() => {
-    socket.on('receive_song', (song: ISong) => {
-      console.log('recieved song:', song);
-      setSong(song);
+    socket.on('receive_song', (newSong: ISong) => {
+      console.log('recieved song:', newSong);
+      setSong(newSong);
     });
 
     return () => {
