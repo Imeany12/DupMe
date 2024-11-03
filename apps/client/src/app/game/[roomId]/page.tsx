@@ -116,62 +116,62 @@ export default function GamePage() {
     user: 'dummy',
     sheet: {
       C: {
-        color: '#3A2618',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       'C#': {
-        color: '#754043',
+        color: 'linear-gradient(135deg, var(--note2), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       D: {
-        color: '#9A8873',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       'D#': {
-        color: '#37423D',
+        color: 'linear-gradient(135deg, var(--note2), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       E: {
-        color: '#D6F8D6',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       F: {
-        color: '#5D737E',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       'F#': {
-        color: '#55505C',
+        color: 'linear-gradient(135deg, var(--note2), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       G: {
-        color: '#FAF33E',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       'G#': {
-        color: '#7FC6A4',
+        color: 'linear-gradient(135deg, var(--note2), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       A: {
-        color: '#82A0BC',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       'A#': {
-        color: '#304D6D',
+        color: 'linear-gradient(135deg, var(--note2), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
       B: {
-        color: '#A7CCED',
+        color: 'linear-gradient(135deg, var(--note1), var(--note))',
         nextNoteInd: 0,
         notes: [],
       },
@@ -633,6 +633,7 @@ export default function GamePage() {
         noteElement.classList.add(style.moveDown);
         noteElement.classList.add('note--' + key);
         noteElement.style.backgroundColor = value.color;
+
         // Set dynamic properties for duration and delay using CSS variables
         noteElement.style.setProperty(
           '--duration',
