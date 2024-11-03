@@ -178,9 +178,9 @@ export default function GamePage() {
     },
   });
 
-  const resetNextNoteInd = () => {
+  const resetNextNoteInd = (song0: ISong) => {
     // Create a new object for the updated sheet
-    const updatedSheet = Object.entries(song.sheet).reduce(
+    const updatedSheet = Object.entries(song0.sheet).reduce(
       (acc, [key, value]) => {
         acc[key] = {
           ...value, // Keep other properties
@@ -607,13 +607,13 @@ export default function GamePage() {
       socket.on('receive_song', (newISong: ISong) => {
         console.log('recieved song:', newISong);
         setSong(newISong);
-        playSong();
+        playSong(newISong);
       });
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
 
-  const initializedSong = function (): void {
+  const initializedSong = function (song0: ISong): void {
     const trackContainer = trackContainerRef.current;
 
     // Clear all child nodes in the trackContainer
@@ -622,7 +622,7 @@ export default function GamePage() {
     }
 
     // Iterate through song's notes and create the track elements
-    Object.entries(song.sheet).forEach(([key, value]) => {
+    Object.entries(song0.sheet).forEach(([key, value]) => {
       const trackElement = document.createElement('div');
       trackElement.classList.add('track');
       trackElement.classList.add(style.track);
@@ -684,11 +684,13 @@ export default function GamePage() {
     }
   };
 
-  const playSong = () => {
+  const playSong = (song1: ISong) => {
+    setSong(song1);
+    console.log('playing song', song1);
     setIsPlaying(false);
     setIsPlaying(true);
-    resetNextNoteInd();
-    initializedSong();
+    resetNextNoteInd(song1);
+    initializedSong(song1);
     document.querySelectorAll('.note').forEach(function (note) {
       (note as HTMLDivElement).style.animationPlayState = 'running';
     });
