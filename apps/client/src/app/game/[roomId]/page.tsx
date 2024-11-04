@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
+import { Button } from '@/components/ui/button';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -178,9 +179,9 @@ export default function GamePage() {
     },
   });
 
-  const resetNextNoteInd = (song0: ISong) => {
+  const resetNextNoteInd = () => {
     // Create a new object for the updated sheet
-    const updatedSheet = Object.entries(song0.sheet).reduce(
+    const updatedSheet = Object.entries(song.sheet).reduce(
       (acc, [key, value]) => {
         acc[key] = {
           ...value, // Keep other properties
@@ -581,7 +582,6 @@ export default function GamePage() {
     }
     if (playAlong === true) {
       setTimeout(() => {
-        setPressedNotes([]);
         setIsPlayerTurn((prev) => !prev);
         console.log('playalong : ', playAlong);
         console.log('isPlayerTurn : ', isPlayerTurn);
@@ -593,6 +593,7 @@ export default function GamePage() {
         turncount.current += 1;
         setPlayAlong(false);
         setNotes(defaultNotes);
+        setPressedNotes([]);
       }, 20000);
       const newSong: ISong = {
         roomId: roomId,
@@ -601,19 +602,21 @@ export default function GamePage() {
       };
       setSong(newSong);
       socket.emit('send_song', newSong);
-      console.log('sending song', newSong, 'notes', notes);
-      setPressedNotes([]);
-      // setNotes([]);
-      socket.on('receive_song', (newISong: ISong) => {
-        console.log('recieved song:', newISong);
-        setSong(newISong);
-        playSong(newISong);
-      });
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
 
-  const initializedSong = function (song0: ISong): void {
+  useEffect(() => {
+    console.log('sending song + ', 'notes', notes);
+    setPressedNotes([]);
+    // setNotes([]);
+    socket.on('receive_song', (newISong: ISong) => {
+      console.log('recieved song:', newISong);
+      setSong(newISong);
+    });
+  }, [song, socket]);
+
+  const initializedSong = function (): void {
     const trackContainer = trackContainerRef.current;
 
     // Clear all child nodes in the trackContainer
@@ -622,7 +625,7 @@ export default function GamePage() {
     }
 
     // Iterate through song's notes and create the track elements
-    Object.entries(song0.sheet).forEach(([key, value]) => {
+    Object.entries(song.sheet).forEach(([key, value]) => {
       const trackElement = document.createElement('div');
       trackElement.classList.add('track');
       trackElement.classList.add(style.track);
@@ -684,13 +687,12 @@ export default function GamePage() {
     }
   };
 
-  const playSong = (song1: ISong) => {
-    setSong(song1);
-    console.log('playing song', song1);
+  const playSong = () => {
+    console.log('playing song', song);
     setIsPlaying(false);
     setIsPlaying(true);
-    resetNextNoteInd(song1);
-    initializedSong(song1);
+    resetNextNoteInd();
+    initializedSong();
     document.querySelectorAll('.note').forEach(function (note) {
       (note as HTMLDivElement).style.animationPlayState = 'running';
     });
@@ -729,17 +731,6 @@ export default function GamePage() {
     const startTime = Date.now();
     setPressStartTime(startTime);
   };
-
-  useEffect(() => {
-    socket.on('receive_song', (newSong: ISong) => {
-      console.log('recieved song:', newSong);
-      setSong(newSong);
-    });
-
-    return () => {
-      socket.off('receive_song');
-    };
-  }, [socket]);
 
   useEffect(() => {
     if (!audioContext) {
@@ -801,6 +792,14 @@ export default function GamePage() {
                     onNoteReleased={handleNoteRelease}
                   />
                 </div>
+                <Button
+                  onClick={() => {
+                    playSong();
+                    console.log('play song ', song);
+                  }}
+                >
+                  Play
+                </Button>
               </div>
             </div>
           ) : (
