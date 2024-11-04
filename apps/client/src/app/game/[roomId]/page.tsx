@@ -3,11 +3,12 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Countdown from '@/components/CountDown';
 import Piano from '@/components/Piano';
+import { ResultContext } from '@/components/Result';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -31,6 +32,9 @@ export default function GamePage() {
   const host: boolean = searchParams.get('host') === 'true';
 
   const user = session?.user ?? ({ name: 'Guest' } as User);
+
+  const { open, setOpen, result, setResult, score, setScore } =
+    useContext(ResultContext);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
