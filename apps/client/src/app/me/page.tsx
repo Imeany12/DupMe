@@ -2,14 +2,16 @@
 
 // Remember you must use an AuthProvider for
 // client components to useSession
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 
 import EditUserProfile from '@/components/EditUserProfile';
 import { Button } from '@/components/ui/button';
 import UserProfile from '@/components/UserProfile';
+import { SERVER_URL } from '@/env';
 
 export default function AccountPage(): React.JSX.Element {
   const { data: session } = useSession({
@@ -18,15 +20,35 @@ export default function AccountPage(): React.JSX.Element {
       redirect('/api/auth/signin?callbackUrl=/me');
     },
   });
-  const user = session?.user;
-  const [edit, setEdit] = React.useState(false);
+  const [user, setUser] = useState(session?.user);
+  const [edit, setEdit] = useState(false);
+  4;
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (user) {
+        const newUser = await fetch(`${SERVER_URL}/user/${user.username}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await newUser.json();
+        setUser(data.user);
+        console.log('newUser', data.user);
+        console.log('user', data.user);
+      }
+    };
+    fetchUser();
+  }, [user]);
 
   return (
     <div>
       <nav className='bg-note2 flex w-svw justify-between px-10'>
-        <Button className=''>
-          <FiHome />
-        </Button>
+        <Link href={'/'}>
+          <Button className=''>
+            <FiHome />
+          </Button>
+        </Link>
         {edit ? (
           <Button onClick={() => setEdit(false)}>Cancel</Button>
         ) : (
