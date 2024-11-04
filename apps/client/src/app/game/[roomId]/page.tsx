@@ -27,62 +27,62 @@ type pressNote = {
 
 const defaultNotes: { [key: string]: INotes } = {
   C: {
-    color: '#3A2618',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   'C#': {
-    color: '#754043',
+    color: 'linear-gradient(135deg, var(--note2), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   D: {
-    color: '#9A8873',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   'D#': {
-    color: '#37423D',
+    color: 'linear-gradient(135deg, var(--note2), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   E: {
-    color: '#D6F8D6',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   F: {
-    color: '#5D737E',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   'F#': {
-    color: '#55505C',
+    color: 'linear-gradient(135deg, var(--note2), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   G: {
-    color: '#FAF33E',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   'G#': {
-    color: '#7FC6A4',
+    color: 'linear-gradient(135deg, var(--note2), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   A: {
-    color: '#82A0BC',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   'A#': {
-    color: '#304D6D',
+    color: 'linear-gradient(135deg, var(--note2), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
   B: {
-    color: '#A7CCED',
+    color: 'linear-gradient(135deg, var(--note1), var(--note))',
     nextNoteInd: 0,
     notes: [],
   },
@@ -115,68 +115,7 @@ export default function GamePage() {
   const [song, setSong] = useState<ISong>({
     roomId: roomId,
     user: 'dummy',
-    sheet: {
-      C: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      'C#': {
-        color: 'linear-gradient(135deg, var(--note2), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      D: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      'D#': {
-        color: 'linear-gradient(135deg, var(--note2), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      E: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      F: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      'F#': {
-        color: 'linear-gradient(135deg, var(--note2), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      G: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      'G#': {
-        color: 'linear-gradient(135deg, var(--note2), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      A: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      'A#': {
-        color: 'linear-gradient(135deg, var(--note2), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-      B: {
-        color: 'linear-gradient(135deg, var(--note1), var(--note))',
-        nextNoteInd: 0,
-        notes: [],
-      },
-    },
+    sheet: defaultNotes,
   });
 
   const resetNextNoteInd = () => {
@@ -510,9 +449,6 @@ export default function GamePage() {
     const releasedKey = event.key.toLowerCase();
     const tracks = document.querySelectorAll('.track');
     const keyIndex = getKeyIndex(releasedKey);
-    const note = Object.keys(keyMappings).find(
-      (note) => keyMappings[note] === releasedKey
-    );
 
     // Check if Released key is in Piano key
     if (keyIndex == pressingNoteTime[0]) {
