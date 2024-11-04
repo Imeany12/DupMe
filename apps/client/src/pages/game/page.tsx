@@ -8,6 +8,7 @@ import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
 import ProfileInGame from '@/components/ProfileInGame';
+import { SERVER_URL } from '@/env';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -52,7 +53,7 @@ export default function Game({
     pressing: false,
     note: '',
   });
-  const keyMappings: KeyMapping = user.keybindings ?? {
+  const [keyMappings, setKeyMappings] = useState<KeyMapping>({
     C: 's',
     'C#': 'e',
     D: 'd',
@@ -65,7 +66,36 @@ export default function Game({
     A: 'j',
     'A#': 'i',
     B: 'k',
-  };
+  });
+
+  useEffect(() => {
+    const getKeyBind = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user?.name}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      console.log('keybindings:', data.user.keybindings);
+      setKeyMappings(data.user.keybindings);
+    };
+    getKeyBind();
+  }, [user]);
+  // const keyMappings: KeyMapping = user.keybindings ?? {
+  //   C: 's',
+  //   'C#': 'e',
+  //   D: 'd',
+  //   'D#': 'r',
+  //   E: 'f',
+  //   F: 'g',
+  //   'F#': 'y',
+  //   G: 'h',
+  //   'G#': 'u',
+  //   A: 'j',
+  //   'A#': 'i',
+  //   B: 'k',
+  // };
   //need to get keybindings from the server
   const router = useRouter();
   const turncount = useRef(1);
@@ -243,17 +273,17 @@ export default function Game({
 
   useEffect(() => {
     if (playAlong === false) {
-      // setTimeout(() => {
-      //   if (pressedNotes.length > 0) {
-      //     //console.log('sending notes');
-      //     //sendNoteToPlayer(notes);
-      //     setPressedNotes([]);
-      //     setNotes([]);
-      //   }
-      //   setPlayAlong(true);
-      //   console.log('playalong : ', playAlong);
-      //   console.log('isPlayerTurn : ', isPlayerTurn);
-      // }, 15000);
+      setTimeout(() => {
+        if (pressedNotes.length > 0) {
+          //console.log('sending notes');
+          //sendNoteToPlayer(notes);
+          setPressedNotes([]);
+          setNotes([]);
+        }
+        setPlayAlong(true);
+        console.log('playalong : ', playAlong);
+        console.log('isPlayerTurn : ', isPlayerTurn);
+      }, 15000);
     }
     if (playAlong === true) {
       setTimeout(() => {
