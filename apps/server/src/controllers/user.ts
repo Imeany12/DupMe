@@ -206,7 +206,7 @@ export const editUserProfile = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(200).json({ error: 'User not found' });
     }
 
     const changes: Record<string, any> = {};
