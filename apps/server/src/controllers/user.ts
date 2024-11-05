@@ -192,40 +192,76 @@ export const getUserProfile = async (req: Request, res: Response) => {
 export const editUserProfile = async (req: Request, res: Response) => {
   try {
     const { username } = req.params;
-    const { email, image, bio, gender, country, dob } = req.body;
+    const {
+      email,
+      image,
+      bio,
+      gender,
+      country,
+      dob,
+      currentPassword,
+      newPassword,
+      keybindings,
+    } = req.body;
 
     const user = await User.findOne({ username });
-
     if (!user) {
-      return res.status(200).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    if (email) user.email = email;
-    if (image) user.image = image;
-    if (bio) user.bio = bio;
-    if (dob) user.dob = dob;
-    if (gender) user.gender = gender;
-    if (country) user.country = country;
+    const changes: Record<string, any> = {};
 
-    await user.save();
+    if (email) {
+      user.email = email;
+      changes.email = email;
+    }
+    if (image) {
+      user.image = image;
+      changes.image = image;
+    }
+    if (bio) {
+      user.bio = bio;
+      changes.bio = bio;
+    }
+    if (dob) {
+      user.dob = dob;
+      changes.dob = dob;
+    }
+    if (gender) {
+      user.gender = gender;
+      changes.gender = gender;
+    }
+    if (country) {
+      user.country = country;
+      changes.country = country;
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ message: 'User password is not set' });
+    }
+
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res
+          .status(400)
+          .json({ message: 'Current password is incorrect' });
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      changes.password = 'Password updated';
+    }
+
+    if (keybindings) {
+      user.keybindings = keybindings;
+      changes.keybindings = keybindings;
+    }
+
+    await user.save({ validateModifiedOnly: true });
 
     return res.status(200).json({
       message: 'Profile updated successfully',
-      user: {
-        username: user.username,
-        email: user.email,
-        image: user.image,
-        bio: user.bio,
-        dob: user.dob,
-        gender: user.gender,
-        country: user.country,
-        createdAt: user.createdAt,
-        total_score: user.total_score,
-        games_won: user.games_won,
-        games_lost: user.games_lost,
-        games_draw: user.games_draw,
-        matchHistory: user.matchHistory,
-      },
+      changes: changes,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -233,53 +269,5 @@ export const editUserProfile = async (req: Request, res: Response) => {
     } else {
       return res.status(500).json({ message: 'An unknown error occurred' });
     }
-  }
-};
-
-export const changePassword = async (req: Request, res: Response) => {
-  const { username } = req.params;
-  const { currentPassword, newPassword } = req.body;
-
-  try {
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    if (!user.password) {
-      return res.status(500).json({ message: 'User password is not set' });
-    }
-
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
-    }
-
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedNewPassword;
-    await user.save();
-
-    return res.status(200).json({ message: 'Password changed successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error changing password' });
-  }
-};
-
-export const saveKeybindings = async (req: Request, res: Response) => {
-  try {
-    const { username } = req.params;
-    const keybindings = req.body;
-
-    const user = await User.findOne({ username });
-    if (!user) {
-      return res.status(200).json({ error: 'User not found' });
-    }
-
-    user.keybindings = keybindings;
-
-    await user.save();
-
-    return res.status(200).json({ message: 'Keybinds updated successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error saving keybindings' });
   }
 };
