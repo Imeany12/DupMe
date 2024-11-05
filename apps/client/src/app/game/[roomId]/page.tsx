@@ -165,7 +165,7 @@ export default function GamePage() {
   });
   //need to get keybindings from the server
 
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
@@ -386,7 +386,7 @@ export default function GamePage() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (isPlaying) {
+    if (playAlong) {
       handleKeyDownIsPlaying(event);
     } else {
       handleKeyDownIsNotPlaying(event);
@@ -441,7 +441,7 @@ export default function GamePage() {
   };
 
   const handleKeyRelease = (event: KeyboardEvent) => {
-    if (isPlaying) handleKeyReleaseIsPlaying(event);
+    if (playAlong) handleKeyReleaseIsPlaying(event);
     else handleKeyReleaseIsNotPlaying(event);
   };
 
@@ -522,35 +522,43 @@ export default function GamePage() {
         console.log('playalong : ', playAlong);
         console.log('isPlayerTurn : ', isPlayerTurn);
 
-        if (pressedNotes.length > 0) {
-          //console.log('sending notes');
-          //sendNoteToPlayer(notes);
-        }
+        // if (pressedNotes.length > 0) {
+        //console.log('sending notes');
+        //sendNoteToPlayer(notes);
+        // }
+
         turncount.current += 1;
         setPlayAlong(false);
+        setIsFirstNote(true);
         setNotes(defaultNotes);
         setPressedNotes([]);
+        //setNotes(defaultNotes)
       }, 20000);
       const newSong: ISong = {
         roomId: roomId,
         user: user.name ?? 'Guest',
         sheet: notes,
       };
-      setSong(newSong);
+      // setSong(newSong);
+      console.log('sending song');
       socket.emit('send_song', newSong);
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
 
   useEffect(() => {
-    console.log('sending song + ', 'notes', notes);
     setPressedNotes([]);
     // setNotes([]);
     socket.on('receive_song', (newISong: ISong) => {
-      console.log('recieved song:', newISong);
       setSong(newISong);
+      console.log('receive song');
+      // setNotes(defaultNotes);
     });
-  }, [song, socket]);
+
+    return () => {
+      socket.off('receive_song');
+    };
+  }, [playAlong, song]);
 
   const initializedSong = function (): void {
     const trackContainer = trackContainerRef.current;
@@ -625,8 +633,8 @@ export default function GamePage() {
 
   const playSong = () => {
     console.log('playing song', song);
-    setIsPlaying(false);
-    setIsPlaying(true);
+    // setIsPlaying(false);
+    // setIsPlaying(true);
     resetNextNoteInd();
     initializedSong();
     document.querySelectorAll('.note').forEach(function (note) {
@@ -686,7 +694,7 @@ export default function GamePage() {
     initialStartTime,
     pressStartTime,
     pressingNoteTime,
-    isPlaying,
+    playAlong,
     startTime,
     song,
     audioContext,
@@ -697,9 +705,9 @@ export default function GamePage() {
   // useEffect(() => {
   //   console.log(notes);
   // }, [notes]);
-  // useEffect(() => {
-  //   console.log(song);
-  // }, [song]);
+  useEffect(() => {
+    console.log(song);
+  }, [song]);
   // useEffect(() => {
   //   console.log(startTime);
   // }, [startTime]);
