@@ -80,7 +80,7 @@ export default function SettingsPage(): React.JSX.Element {
   ];
 
   return (
-    <div>
+    <div className='h-svh w-svw px-8'>
       <div className='ml-4 pt-4'>
         <Link href='/' className='items-start text-3xl text-white'>
           <FiHome />

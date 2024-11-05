@@ -100,33 +100,36 @@ export default function Lobby({
     // router.push(`/game/${roomId}`);
   };
   return (
-    <div className='flex min-h-screen flex-col bg-gray-800 text-white'>
+    <div className='bg-note1 flex min-h-screen flex-col text-white'>
       {/* Header: Player Info */}
-      <header className='flex items-center justify-between bg-gray-900 p-4'>
+      <header className='bg-note2 flex items-center justify-between p-4'>
         <ProfileAvatar session={session} />
       </header>
 
       {/* Main Lobby Content */}
       <div className='grid grid-cols-3 gap-4 p-6'>
         {/* Player List */}
-        <div className='col-span-2 rounded-lg bg-gray-900 p-4'>
+        <div className='bg-note2 col-span-2 rounded-lg p-4'>
           <h2 className='mb-4 text-lg font-semibold'>
             Current Players : ({players.length})
           </h2>
           <ul className='space-y-2'>
             {/* All player in the room */}
             {players.map((user: string, index: number) => (
-              <li key={index} className='flex items-center justify-between'>
+              <li
+                key={index}
+                className='bg-note1 mx-2 flex items-center justify-between rounded-xl border-2 px-3'
+              >
                 <div className='flex items-center gap-4'>
                   <Image
-                    className='mx-auto mb-2 mt-2 flex rounded-full border-2 border-black shadow-black drop-shadow-xl dark:border-slate-500'
+                    className='mx-auto mb-2 mt-2 flex rounded-full border-2 border-black shadow-black drop-shadow-lg dark:border-slate-500'
                     src={user[1] ?? '/images/default-profile.png'}
                     width={50}
                     height={50}
                     alt={session?.user?.name ?? 'Profile Pic'}
                     priority={true}
                   />
-                  <span className='font-semibold text-pink-500'>{user[0]}</span>
+                  <span className='text-note2 font-semibold'>{user[0]}</span>
                 </div>
                 <div>
                   {/* for some indicator player playing ex. locked icon */}
@@ -134,7 +137,7 @@ export default function Lobby({
               </li>
             ))}
           </ul>
-          <div className='flex w-full items-center justify-between gap-10 px-12 pt-2'>
+          <div className='flex w-full items-center justify-between gap-10 px-[10%] pt-4'>
             <Link
               href='/'
               className='w-full rounded bg-yellow-600 px-4 py-2 hover:bg-yellow-500'
@@ -192,7 +195,7 @@ export default function Lobby({
         </div>
 
         {/* Game Settings */}
-        <div className='col-span-1 rounded-lg bg-gray-900 p-4'>
+        <div className='bg-note2 col-span-1 rounded-lg p-4'>
           <h2 className='text-lg font-semibold'>Game Settings</h2>
           <div className='mt-4'>
             <p className='text-gray-400'>Lobby Name:</p>
@@ -209,7 +212,7 @@ export default function Lobby({
       </div>
 
       {/* chat room*/}
-      <footer className='flex w-full flex-grow items-center justify-center space-x-4 bg-gray-700 p-4'>
+      <footer className='flex w-full flex-grow items-center justify-center space-x-4 bg-zinc-600 p-4'>
         <ChatPage
           socket={socket}
           username={user?.name ?? 'Guest'}

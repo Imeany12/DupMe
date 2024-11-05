@@ -66,17 +66,11 @@ const ChatPage = ({
 
   return (
     <div className='flex w-full flex-col items-center justify-center px-4'>
-      <div className='mx-auto flex w-full flex-col gap-4 rounded-lg border-2 border-gray-100 p-8 pt-1'>
-        <div className='flex flex-col items-center'>
-          <h1 className='text-3xl font-semibold text-white'>Chat</h1>
-          <p>
-            Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
-          </p>
-          <p>
-            Online Players: <b>{onlinePlayers}</b>
-          </p>
-        </div>
-        <div className='flex h-32 max-h-44 flex-col-reverse gap-1 overflow-y-auto rounded-xl border border-gray-400 bg-black px-4 py-2'>
+      <div className='mx-auto flex w-full flex-col gap-4 rounded-lg border-2 border-gray-100 px-8 py-3'>
+        <h1 className='w-full text-center text-3xl font-semibold text-white'>
+          Chat
+        </h1>
+        <div className='flex h-32 max-h-44 flex-col-reverse gap-1 overflow-y-auto rounded-xl border border-gray-400 bg-black px-4'>
           {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
