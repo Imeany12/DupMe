@@ -35,9 +35,10 @@ export default function Lobby({
   }, []);
 
   const router = useRouter();
-  const { data: session, status } = useSession({
-    required: false,
-  });
+  const { data: session, status } =
+    useSession({
+      required: false,
+    }) || {};
   const Host = host === 'true';
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);

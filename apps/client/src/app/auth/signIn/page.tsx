@@ -4,13 +4,17 @@ import './signin.css';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 
-export default function SignInPage(): React.JSX.Element {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+export default function SignInPage({
+  searchParams,
+}: {
+  searchParams: {
+    callbackUrl: string;
+  };
+}): React.JSX.Element {
+  const callbackUrl = searchParams.callbackUrl || '/';
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
