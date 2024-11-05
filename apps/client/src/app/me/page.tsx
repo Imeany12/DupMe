@@ -14,24 +14,33 @@ import UserProfile from '@/components/UserProfile';
 import { SERVER_URL } from '@/env';
 
 export default function AccountPage(): React.JSX.Element {
-  const { data: session } = useSession({
+  const { data: session, status } = useSession({
     required: true,
     onUnauthenticated() {
       redirect('/api/auth/signin?callbackUrl=/me');
     },
   });
-  const [user, setUser] = useState(session?.user);
+  const user1 = session?.user;
+  const [user, setUser] = useState(user1);
+  useEffect(() => {
+    if (status !== 'loading') {
+      setUser(user1);
+    }
+  }, [status]);
   const [edit, setEdit] = useState(false);
-  4;
   useEffect(() => {
     const fetchUser = async () => {
       if (user) {
-        const newUser = await fetch(`${SERVER_URL}/user/${user.username}/`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        console.log('user', user);
+        const newUser = await fetch(
+          `${SERVER_URL}/user/${user.username ?? user.name}/`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
         const data = await newUser.json();
         setUser(data.user);
         console.log('newUser', data.user);
@@ -56,7 +65,7 @@ export default function AccountPage(): React.JSX.Element {
         )}
       </nav>
       {edit ? (
-        <>{user ? <EditUserProfile user={user} /> : <></>}</>
+        <>{user ? <EditUserProfile user={user} setEdit={setEdit} /> : <></>}</>
       ) : (
         <div>{user ? <UserProfile user={user} /> : <></>}</div>
       )}

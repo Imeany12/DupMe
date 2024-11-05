@@ -63,6 +63,7 @@ export const createUser = async (req: Request, res: Response) => {
       dob: req.body.dob || '',
       gender: req.body.gender || '',
       bio: req.body.bio || '',
+      image: req.body.image || '',
     });
 
     await newUser.save();

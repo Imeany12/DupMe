@@ -23,18 +23,18 @@ export default function SignInPage(): React.JSX.Element {
       redirect: false,
       username: username,
       password: password,
-      callbackUrl: callbackUrl,
+      callbackUrl: '/',
     });
     if (res?.error) {
       setError('Login failed. Incorrect username or password.');
     } else {
-      window.location.href = '/';
+      window.location.href = callbackUrl ?? '/';
     }
   };
 
   return (
-    <>
-      <div className='card'>
+    <div className='h-screen w-svw'>
+      <div className=''>
         <div className='page'>
           <div className='signin'>
             <div className='flex flex-col items-center rounded-lg border bg-white px-10 py-2 pb-12 pt-4'>
@@ -99,7 +99,7 @@ export default function SignInPage(): React.JSX.Element {
                 <button
                   type='submit'
                   name='googleButton'
-                  onClick={() => signIn('google', { callbackUrl: callbackUrl })}
+                  onClick={() => signIn('google', { callbackUrl: '/' })}
                   style={
                     {
                       '--provider-bg': '#fff',
@@ -185,6 +185,6 @@ export default function SignInPage(): React.JSX.Element {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
