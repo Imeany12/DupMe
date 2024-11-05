@@ -75,7 +75,7 @@ export default function UserProfile({ user }: { user: IUser }) {
               />
             </div>
           </div>
-          <div className='flex flex-col items-center pr-24'>
+          <div className='flex flex-col items-center'>
             <h2 className='text-xl font-semibold'>Gender : </h2>
             <p>{user?.gender}</p>
             <IoMdMale className='text-2xl text-gray-400' />

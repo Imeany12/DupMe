@@ -1,6 +1,5 @@
 import { IUser } from '@repo/shared-types';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import { SERVER_URL } from '@/env';
@@ -14,12 +13,17 @@ function getCountryCodeByName(countryName: string): CountryCode | undefined {
   ) as CountryCode | undefined;
 }
 
-export default function ProfileAvatar({ user }: { user: IUser }) {
-  const router = useRouter();
+export default function ProfileAvatar({
+  user,
+  setEdit,
+}: {
+  user: IUser;
+  setEdit: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [userInfo, setUserInfo] = useState<IUser>({
     username: user.username,
     password: '',
-    image: '',
+    image: user.image,
     email: '',
     createdAt: new Date(),
     dob: new Date(),
@@ -78,7 +82,7 @@ export default function ProfileAvatar({ user }: { user: IUser }) {
       );
       if (res.ok) {
         console.log('User profile updated');
-        window.location.href = '/';
+        setEdit(false);
       } else {
         console.error('Failed to update user profile');
       }
