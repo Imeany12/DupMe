@@ -27,62 +27,62 @@ type pressNote = {
 
 const defaultNotes: { [key: string]: INotes } = {
   C: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   'C#': {
-    color: 'linear-gradient(135deg, var(--note2), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   D: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   'D#': {
-    color: 'linear-gradient(135deg, var(--note2), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   E: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   F: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   'F#': {
-    color: 'linear-gradient(135deg, var(--note2), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   G: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   'G#': {
-    color: 'linear-gradient(135deg, var(--note2), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   A: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   'A#': {
-    color: 'linear-gradient(135deg, var(--note2), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
   B: {
-    color: 'linear-gradient(135deg, var(--note1), var(--note))',
+    color: '#ffffff',
     nextNoteInd: 0,
     notes: [],
   },
