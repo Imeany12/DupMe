@@ -1,4 +1,5 @@
 'use client';
+
 import { KeyMapping } from '@repo/shared-types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { User } from 'next-auth';
@@ -34,9 +35,10 @@ export default function Game({
   const players = searchParams.get('players') ?? '1';
   const countPlayer = parseInt(players, 10);
   //I cant put this in params
-  const { data: session, status } = useSession({
-    required: false,
-  });
+  const { data: session, status } =
+    useSession({
+      required: false,
+    }) || {};
   // const Host = host === 'true';
   const Host = host === 'true';
   const turn = parseInt(searchParams.get('turn') ?? '1', 10);
