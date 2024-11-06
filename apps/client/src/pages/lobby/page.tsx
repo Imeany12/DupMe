@@ -11,6 +11,7 @@ import { MdOutlineMale } from 'react-icons/md';
 
 import { CountryCode, countryNameRecord } from '@/components/countryCode';
 import ProfileAvatar from '@/components/ProfileAvatar';
+import { CopyToClipboardButton } from '@/components/ui/button';
 import { socket } from '@/socket';
 
 import ChatPage from '../chat/page';
@@ -216,8 +217,11 @@ export default function Lobby({
             <p className='text-lg font-bold'>Lobby of {user?.name}</p>
           </div>
           <div className='mt-4'>
-            <p className='text-gray-400'>Room Id::</p>
-            <p className='text-2xl font-bold'>{roomId}</p>
+            <p className='text-gray-400'>Room Id:</p>
+            <div className='flex flex-row justify-between'>
+              <p className='text-2xl font-bold'>{roomId}</p>
+              <CopyToClipboardButton textToCopy={roomId} />
+            </div>
           </div>
           <button className='mt-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
             Change Modes
