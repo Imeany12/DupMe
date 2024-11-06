@@ -27,62 +27,74 @@ type pressNote = {
 
 const defaultNotes: { [key: string]: INotes } = {
   C: {
-    color: '#ffffff',
+    color: 'var(--note,0.85)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'C#': {
-    color: '#ffffff',
+    color: 'var(--note2)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   D: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'D#': {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   E: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   F: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'F#': {
-    color: '#ffffff',
+    color: 'var(--note2)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   G: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'G#': {
-    color: '#ffffff',
+    color: 'var(--note2)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   A: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'A#': {
-    color: '#ffffff',
+    color: 'var(--note2)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   B: {
-    color: '#ffffff',
+    color: 'var(--note)',
+    color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
@@ -114,7 +126,7 @@ export default function GamePage() {
 
   const [song, setSong] = useState<ISong>({
     roomId: roomId,
-    user: 'dummy',
+    user: user.name ?? 'Guest',
     sheet: defaultNotes,
   });
 
@@ -508,11 +520,16 @@ export default function GamePage() {
   useEffect(() => {
     if (playAlong === false) {
       setTimeout(() => {
+        trackContainerRef.current?.removeEventListener(
+          'animationend',
+          handleNoteMiss
+        );
         //console.log('playalong : ', playAlong);
         //console.log('isPlayerTurn : ', isPlayerTurn);
         setPlayAlong(true);
         setPressedNotes([]);
       }, 10000);
+
       // socket.emit('send_song', song);
       // console.log('sending song', song);
     }
@@ -542,6 +559,14 @@ export default function GamePage() {
       // setSong(newSong);
       console.log('sending song');
       socket.emit('send_song', newSong);
+      socket.on('play_song', (roomId: string) => {
+        console.log('revieve play song');
+        setSong(newSong);
+        playSong();
+      });
+      return () => {
+        socket.off('play_song');
+      };
     }
     //sendNote after 0.5 minute
   }, [playAlong]);
@@ -579,7 +604,7 @@ export default function GamePage() {
         noteElement.classList.add(style.note);
         noteElement.classList.add(style.moveDown);
         noteElement.classList.add('note--' + key);
-        noteElement.style.backgroundColor = value.color;
+        noteElement.style.background = `linear-gradient(${value.color}, ${value.color2})`;
 
         // Set dynamic properties for duration and delay using CSS variables
         noteElement.style.setProperty(
@@ -700,6 +725,11 @@ export default function GamePage() {
     audioContext,
     isPlayerTurn,
   ]);
+  useEffect(() => {
+    return () => {
+      socket.off('play_song');
+    };
+  }, [socket]);
 
   // Debugging Section
   // useEffect(() => {
@@ -725,10 +755,12 @@ export default function GamePage() {
           {!isPlayerTurn ? (
             <div className='bg-slate-700'>
               <p className='text-3xl text-white'>rainfall</p>
-              <div
-                ref={trackContainerRef}
-                className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
-              ></div>
+              <div className='flex justify-center'>
+                <div
+                  ref={trackContainerRef}
+                  className='flex min-h-[220px] w-[118%] justify-center gap-1'
+                ></div>
+              </div>
               <div className='flex w-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
                 <div>
                   <Piano
@@ -740,6 +772,7 @@ export default function GamePage() {
                   onClick={() => {
                     playSong();
                     console.log('play song ', song);
+                    socket.emit('play_song', roomId);
                   }}
                 >
                   Play
@@ -769,7 +802,7 @@ export default function GamePage() {
           )}
         </div>
       ) : (
-        <div>
+        <div className='max-h-svh'>
           {isPlayerTurn ? (
             <div>
               <div className='flex w-full items-start justify-start'>
@@ -788,8 +821,8 @@ export default function GamePage() {
                   />
                 </button>
               </div>
-              <div className='flex h-full flex-col justify-end'>
-                <div className='max-w-screen-svh mx-16 flex max-h-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+              <div className='flex max-h-full flex-col justify-end'>
+                <div className='max-w-screen-svh mx-16 flex h-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
                   <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
                   <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
                     {pressedNotes.map((note, index) => (
@@ -813,7 +846,7 @@ export default function GamePage() {
             </div>
           ) : (
             <div>
-              <div className='flex h-screen w-screen flex-col items-center justify-end pb-12'>
+              <div className='flex h-screen max-h-screen w-screen flex-col items-center justify-end pb-12'>
                 <div className='flex w-full items-start justify-start'>
                   <button
                     className='size-20 px-8 pt-6 text-white'

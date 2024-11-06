@@ -41,6 +41,7 @@ export interface INote {
 
 export interface INotes {
   color: string;
+  color2: string;
   nextNoteInd: number;
   notes: INote[];
 }

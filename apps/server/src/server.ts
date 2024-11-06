@@ -140,6 +140,10 @@ io.on('connection', (socket) => {
     socket.to(roomId.toString()).emit('playNote', note);
   });
 
+  socket.on('play_song', (roomId: number) => {
+    socket.to(roomId.toString()).emit('play_song');
+  });
+
   socket.on('countReady', (readyPlayers: number, roomId) => {
     console.log('countReady', readyPlayers);
     socket.to(roomId).emit('setReady', readyPlayers);
