@@ -34,67 +34,67 @@ const defaultNotes: { [key: string]: INotes } = {
     notes: [],
   },
   'C#': {
-    color: 'var(--note2)',
+    color: 'var(--note2,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   D: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'D#': {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   E: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   F: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'F#': {
-    color: 'var(--note2)',
+    color: 'var(--note2,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   G: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'G#': {
-    color: 'var(--note2)',
+    color: 'var(--note2,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   A: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   'A#': {
-    color: 'var(--note2)',
+    color: 'var(--note2,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
   },
   B: {
-    color: 'var(--note)',
+    color: 'var(--note,0.85)',
     color2: 'var(--note1)',
     nextNoteInd: 0,
     notes: [],
@@ -194,7 +194,7 @@ export default function GamePage() {
   // const [isPlaying, setIsPlaying] = useState(false);
   const [scoreComboResult, setScoreComboResult] = useState<
     [number, number, string]
-  >([0, 0, 'bad']);
+  >([0, 0, '']);
   const [speed, setSpeed] = useState(1);
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
@@ -207,29 +207,30 @@ export default function GamePage() {
   const trackContainerRef = useRef<HTMLDivElement>(null);
 
   const getKeyIndex = function (key: string): number {
-    if (key === 's') {
+    console.log('key:', key);
+    if (key === 'C') {
       return 0;
-    } else if (key === 'e') {
+    } else if (key === 'C#') {
       return 1;
-    } else if (key === 'd') {
+    } else if (key === 'D') {
       return 2;
-    } else if (key === 'r') {
+    } else if (key === 'D#') {
       return 3;
-    } else if (key === 'f') {
+    } else if (key === 'E') {
       return 4;
-    } else if (key === 'g') {
+    } else if (key === 'F') {
       return 5;
-    } else if (key === 'y') {
+    } else if (key === 'F#') {
       return 6;
-    } else if (key === 'h') {
+    } else if (key === 'G') {
       return 7;
-    } else if (key === 'u') {
+    } else if (key === 'G#') {
       return 8;
-    } else if (key === 'j') {
+    } else if (key === 'A') {
       return 9;
-    } else if (key === 'i') {
+    } else if (key === 'A#') {
       return 10;
-    } else if (key === 'k') {
+    } else if (key === 'B') {
       return 11;
     } else return 12;
   };
@@ -365,7 +366,7 @@ export default function GamePage() {
   };
 
   const judge = function (index: number, tracks: NodeListOf<ChildNode>) {
-    const perfectTimeOffset = -0.7; // manual calibration for perfect note
+    const perfectTimeOffset = -0.9; // manual calibration for perfect note
     const timeInSecond = (Date.now() - startTime) / 1000;
     // console.log(timeInSecond);
     const nextNoteIndex = song.sheet[getKeyString(index)].nextNoteInd;
@@ -477,11 +478,16 @@ export default function GamePage() {
   };
 
   const handleKeyDownIsPlaying = (event: KeyboardEvent) => {
-    const pressedKey = event.key.toLowerCase();
+    const releasedKey = event.key.toLowerCase();
+    const note = Object.keys(keyMappings).find(
+      (note) => keyMappings[note] === releasedKey
+    );
     const tracks = document.querySelectorAll('.track');
-    const keyIndex = getKeyIndex(pressedKey);
-    if (tracks[keyIndex] && tracks[keyIndex].firstChild) {
-      judge(keyIndex, tracks);
+    if (note) {
+      const keyIndex = getKeyIndex(note);
+      if (tracks[keyIndex] && tracks[keyIndex].firstChild) {
+        judge(keyIndex, tracks);
+      }
     }
   };
 
@@ -506,28 +512,33 @@ export default function GamePage() {
 
   const handleKeyReleaseIsPlaying = (event: KeyboardEvent) => {
     const releasedKey = event.key.toLowerCase();
+    const note = Object.keys(keyMappings).find(
+      (note) => keyMappings[note] === releasedKey
+    );
     const tracks = document.querySelectorAll('.track');
-    const keyIndex = getKeyIndex(releasedKey);
+    if (note) {
+      const keyIndex = getKeyIndex(note);
 
-    // Check if Released key is in Piano key
-    if (keyIndex == pressingNoteTime[0]) {
-      const duration = Date.now() - pressingNoteTime[1];
-      const nextNoteIndex = song.sheet[getKeyString(keyIndex)].nextNoteInd;
-      if (nextNoteIndex < song.sheet[getKeyString(keyIndex)].notes.length) {
-        const nextNote =
-          song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex];
-        // console.log(pressingNoteTime[0], duration, song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex].longNoteDuration);
-        const perfectDuartion = nextNote.longNoteDuration * 0.771; // manual calibration
-        const accuracy = Math.abs(duration - perfectDuartion);
-        // console.log(perfectDuartion, accuracy);
-        // console.log(`perfect duration: ${perfectDuartion}, pressed duration: ${duration}, accuracy : ${accuracy}`);
+      // Check if Released key is in Piano key
+      if (keyIndex == pressingNoteTime[0]) {
+        const duration = Date.now() - pressingNoteTime[1];
+        const nextNoteIndex = song.sheet[getKeyString(keyIndex)].nextNoteInd;
+        if (nextNoteIndex < song.sheet[getKeyString(keyIndex)].notes.length) {
+          const nextNote =
+            song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex];
+          // console.log(pressingNoteTime[0], duration, song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex].longNoteDuration);
+          const perfectDuartion = nextNote.longNoteDuration * 0.771; // manual calibration
+          const accuracy = Math.abs(duration - perfectDuartion);
+          // console.log(perfectDuartion, accuracy);
+          // console.log(`perfect duration: ${perfectDuartion}, pressed duration: ${duration}, accuracy : ${accuracy}`);
 
-        const hitJudgement = getHitJudgement(accuracy / 1500);
-        console.log(hitJudgement);
-        removeNoteFromTrack(tracks[keyIndex], tracks[keyIndex].firstChild);
-        updateNext(getKeyString(keyIndex));
+          const hitJudgement = getHitJudgement(accuracy / 1500);
+          console.log(hitJudgement);
+          removeNoteFromTrack(tracks[keyIndex], tracks[keyIndex].firstChild);
+          updateNext(getKeyString(keyIndex));
+        }
+        setPressingNoteTime([-1, Date.now()]);
       }
-      setPressingNoteTime([-1, Date.now()]);
     }
   };
 
@@ -595,7 +606,7 @@ export default function GamePage() {
         setPlayAlong(false);
         setIsFirstNote(true);
         setNotes(defaultNotes);
-        setScoreComboResult(([score, combo, state]) => [score, 0, 'bad']);
+        setScoreComboResult(([score, combo, state]) => [score, 0, '']);
         setPressedNotes([]);
         //setNotes(defaultNotes)
       }, 20000);
@@ -769,6 +780,32 @@ export default function GamePage() {
     });
   };
 
+  const handleNoteReleaseIsPlaying = (note: string) => {
+    const tracks = document.querySelectorAll('.track');
+    const keyIndex = getKeyIndex(note);
+
+    // Check if Released key is in Piano key
+    if (keyIndex == pressingNoteTime[0]) {
+      const duration = Date.now() - pressingNoteTime[1];
+      const nextNoteIndex = song.sheet[getKeyString(keyIndex)].nextNoteInd;
+      if (nextNoteIndex < song.sheet[getKeyString(keyIndex)].notes.length) {
+        const nextNote =
+          song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex];
+        // console.log(pressingNoteTime[0], duration, song.sheet[getKeyString(keyIndex)].notes[nextNoteIndex].longNoteDuration);
+        const perfectDuartion = nextNote.longNoteDuration * 0.771; // manual calibration
+        const accuracy = Math.abs(duration - perfectDuartion);
+        // console.log(perfectDuartion, accuracy);
+        // console.log(`perfect duration: ${perfectDuartion}, pressed duration: ${duration}, accuracy : ${accuracy}`);
+
+        const hitJudgement = getHitJudgement(accuracy / 1500);
+        console.log(hitJudgement);
+        removeNoteFromTrack(tracks[keyIndex], tracks[keyIndex].firstChild);
+        updateNext(getKeyString(keyIndex));
+      }
+      setPressingNoteTime([-1, Date.now()]);
+    }
+  };
+
   const handleNoteRelease = (note: string) => {
     stopSound(note);
     if (pressStartTime !== null) {
@@ -788,6 +825,14 @@ export default function GamePage() {
       );
       updateNotesForKey(pressedNotes[pressedNotes.length - 1], newNote);
       setPressStartTime(null);
+    }
+  };
+
+  const handleNoteClickIsPlaying = (note: string) => {
+    const tracks = document.querySelectorAll('.track');
+    const keyIndex = getKeyIndex(note);
+    if (tracks[keyIndex] && tracks[keyIndex].firstChild) {
+      judge(keyIndex, tracks);
     }
   };
 
@@ -862,12 +907,14 @@ export default function GamePage() {
                 </div>
                 <div>
                   <Piano
-                    onNoteClick={handleNoteClick}
-                    onNoteReleased={handleNoteRelease}
+                    onNoteClick={handleNoteClickIsPlaying}
+                    onNoteReleased={handleNoteReleaseIsPlaying}
                   />
                 </div>
                 <div className='flex w-full justify-center gap-8 pt-8'>
                   <h1>Combo : {scoreComboResult[1]}</h1>
+                  <h1>Score : {scoreComboResult[0]}</h1>
+                  <h1 className='text-note2 text-xl'>{scoreComboResult[2]}</h1>
                   <Button
                     onClick={() => {
                       playSong();
