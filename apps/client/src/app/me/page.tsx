@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React from 'react';
+
 import UserProfile from '@/components/UserProfile';
 
 // import UserProfile from '@/components/UserProfile';

@@ -143,7 +143,20 @@ export default function GamePage() {
       },
       {} as { [key: string]: INotes }
     );
+  };
 
+  const resetNextNoteInd2 = () => {
+    // Create a new object for the updated sheet
+    const updatedSheet = Object.entries(notes).reduce(
+      (acc, [key, value]) => {
+        acc[key] = {
+          ...value, // Keep other properties
+          nextNoteInd: 0, // Set nextNoteInd to 0
+        };
+        return acc;
+      },
+      {} as { [key: string]: INotes }
+    );
     // Update the song state
     setSong((prevSong) => ({
       ...prevSong,
@@ -595,9 +608,8 @@ export default function GamePage() {
       console.log('sending song');
       socket.emit('send_song', newSong);
       socket.on('play_song', (roomId: string) => {
-        console.log('revieve play song');
-        setSong(newSong);
-        playSong();
+        console.log('revieve play song', notes);
+        playSong2();
       });
       return () => {
         socket.off('play_song');
@@ -630,6 +642,48 @@ export default function GamePage() {
 
     // Iterate through song's notes and create the track elements
     Object.entries(song.sheet).forEach(([key, value]) => {
+      const trackElement = document.createElement('div');
+      trackElement.classList.add('track');
+      trackElement.classList.add(style.track);
+
+      value.notes.forEach(function (note: INote) {
+        const noteElement = document.createElement('div');
+        noteElement.classList.add(style.note);
+        noteElement.classList.add(style.moveDown);
+        noteElement.classList.add('note--' + key);
+        noteElement.style.background = `linear-gradient(${value.color}, ${value.color2})`;
+
+        // Set dynamic properties for duration and delay using CSS variables
+        noteElement.style.setProperty(
+          '--duration',
+          note.fallDuration + (note.longNoteDuration * 0.1) / 110 + 's'
+        );
+        noteElement.style.setProperty(
+          '--delay',
+          note.delay / 1000 + speed + 's'
+        );
+        noteElement.style.setProperty('--bottomHeight', `${250}px`);
+        // noteElement.style.animationPlayState = 'paused';
+        noteElement.style.width = '44px'; // Set width
+        noteElement.style.height = `${note.longNoteDuration * 0.1}px`; // Set height
+        noteElement.style.top = `-${note.longNoteDuration * 0.1}px`;
+        trackElement.appendChild(noteElement);
+      });
+      if (trackContainer) trackContainer.appendChild(trackElement);
+      // Query all elements with the 'track' class after each update
+      const tracks = document.querySelectorAll('.track');
+    });
+  };
+  const initializedSong2 = function (): void {
+    const trackContainer = trackContainerRef.current;
+
+    // Clear all child nodes in the trackContainer
+    while (trackContainer && trackContainer.hasChildNodes()) {
+      trackContainer.removeChild(trackContainer.lastChild as ChildNode);
+    }
+
+    // Iterate through song's notes and create the track elements
+    Object.entries(notes).forEach(([key, value]) => {
       const trackElement = document.createElement('div');
       trackElement.classList.add('track');
       trackElement.classList.add(style.track);
@@ -704,6 +758,16 @@ export default function GamePage() {
     setupNoteMiss();
     setStartTime(Date.now());
   };
+  const playSong2 = () => {
+    // setIsPlaying(false);
+    // setIsPlaying(true);
+    console.log('playing song', notes);
+    resetNextNoteInd2();
+    initializedSong2();
+    document.querySelectorAll('.note').forEach(function (note) {
+      (note as HTMLDivElement).style.animationPlayState = 'running';
+    });
+  };
 
   const handleNoteRelease = (note: string) => {
     stopSound(note);
@@ -761,19 +825,14 @@ export default function GamePage() {
     audioContext,
     isPlayerTurn,
   ]);
-  useEffect(() => {
-    return () => {
-      socket.off('play_song');
-    };
-  }, [socket]);
 
   // Debugging Section
   // useEffect(() => {
   //   console.log(notes);
   // }, [notes]);
-  useEffect(() => {
-    console.log(song);
-  }, [song]);
+  // useEffect(() => {
+  //   console.log(song);
+  // }, [song]);
   // useEffect(() => {
   //   console.log(startTime);
   // }, [startTime]);
