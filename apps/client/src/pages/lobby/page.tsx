@@ -38,7 +38,7 @@ export default function Lobby({
     useSession({
       required: false,
     }) || {};
-  const Host = host === 'true';
+  const [Host, setHost] = useState(host === 'true');
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   const [readyPlayers, setReadyPlayers] = useState(1);
@@ -48,16 +48,18 @@ export default function Lobby({
   const [amReady, setAmReady] = useState(false);
   const hasJoined = useRef(false);
   const searchParams = useSearchParams();
-  const limit = searchParams.get('multi') === 'true';
+  const limit = searchParams.get('multi') === 'false';
   //same for this need to use searchParams
 
   useEffect(() => {
-    console.log('multiplayer', limit);
     socket.on('setReady', (readyPlayers: number) => {
       console.log('setReady', readyPlayers);
       setReadyPlayers(readyPlayers);
     });
     if (!user || !socket || !roomId || status === 'loading') return;
+    if (players.length === 1) {
+      setHost(true);
+    }
     if (!hasJoined.current) {
       socket.emit('join_lobby', {
         username: user.name,
@@ -74,6 +76,15 @@ export default function Lobby({
     socket.on('update_players', (playerList: string[]) => {
       console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
+      console.log('room is full', playerList.length, limit);
+      if (limit && playerList.length > 2) {
+        socket.emit('leave_lobby', { roomId, username: playerList[2] });
+        if (playerList[2][0] === user.name) {
+          router.push('/');
+        } else {
+          setPlayers(playerList.slice(0, 2));
+        }
+      }
     });
     socket.on('start_game', (username: string[]) => {
       hasJoined.current = false;
@@ -156,7 +167,9 @@ export default function Lobby({
               className='w-full rounded bg-yellow-600 px-4 py-2 hover:bg-yellow-500'
             >
               <button
-                onClick={() => socket.emit('leave_lobby', { roomId })}
+                onClick={() =>
+                  socket.emit('leave_lobby', { roomId, username: user.name })
+                }
                 className='w-full text-center text-white'
               >
                 Leave Match
