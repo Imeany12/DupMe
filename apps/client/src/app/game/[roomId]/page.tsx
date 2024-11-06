@@ -581,6 +581,7 @@ export default function GamePage() {
         setPlayAlong(false);
         setIsFirstNote(true);
         setNotes(defaultNotes);
+        setScoreComboResult(([score, combo, state]) => [score, 0, 'bad']);
         setPressedNotes([]);
         //setNotes(defaultNotes)
       }, 20000);
@@ -805,6 +806,7 @@ export default function GamePage() {
                     onNoteReleased={handleNoteRelease}
                   />
                 </div>
+                <h1>Combo : {scoreComboResult[1]}</h1>
                 <Button
                   onClick={() => {
                     playSong();
