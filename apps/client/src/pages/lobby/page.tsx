@@ -43,6 +43,7 @@ export default function Lobby({
   const user = session?.user ?? ({ name: 'Guest' } as User);
   const [ready, setReady] = useState(false);
   const [readyPlayers, setReadyPlayers] = useState(1);
+  const [isStarting, setIsStarting] = useState(false);
   //test map
   const [players, setPlayers] = useState<string[]>([]);
   const [amReady, setAmReady] = useState(false);
@@ -82,9 +83,12 @@ export default function Lobby({
         if (username[i][0].toString() === user.name?.toString()) {
           console.log(username[i][0] + 'vs' + user.name);
           const start: boolean = i === 0;
-          router.push(
-            `/game/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
-          );
+          router.push('/welcome');
+          setTimeout(() => {
+            router.push(
+              `/game/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
+            );
+          }, 5000);
         }
       }
     });
@@ -102,7 +106,14 @@ export default function Lobby({
     socket.emit('start_game', roomId);
     // router.push(`/game/${roomId}`);
   };
-  return (
+  return isStarting ? (
+    <div className='flex min-h-screen text-white'>
+      <div className='flex flex-col items-center justify-center'>
+        <div>Game is starting...</div>
+        <div>Welcome to Dupme</div>
+      </div>
+    </div>
+  ) : (
     <div className='bg-note1 flex min-h-screen flex-col text-white'>
       {/* Header: Player Info */}
       <header className='bg-note2 flex items-center justify-between p-4'>
