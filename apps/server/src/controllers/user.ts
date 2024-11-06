@@ -183,6 +183,9 @@ export const getUserProfile = async (req: Request, res: Response) => {
       games_lost: user.games_lost,
       games_draw: user.games_draw,
       matchHistory: user.matchHistory,
+      keybindings: user.keybindings,
+      max_score: user.max_score,
+      max_combo: user.max_combo,
     });
   } catch (error) {
     return res.status(500).json({ message: 'Error fetching user profile' });
@@ -202,6 +205,8 @@ export const editUserProfile = async (req: Request, res: Response) => {
       currentPassword,
       newPassword,
       keybindings,
+      max_score,
+      max_combo,
     } = req.body;
 
     const user = await User.findOne({ username });
@@ -209,7 +214,7 @@ export const editUserProfile = async (req: Request, res: Response) => {
       return res.status(200).json({ error: 'User not found' });
     }
 
-    const changes: Record<string, any> = {};
+    const changes: Record<string, unknown> = {};
 
     if (email) {
       user.email = email;
@@ -234,6 +239,14 @@ export const editUserProfile = async (req: Request, res: Response) => {
     if (country) {
       user.country = country;
       changes.country = country;
+    }
+    if (max_score) {
+      user.max_score = max_score;
+      changes.max_score = max_score;
+    }
+    if (max_combo) {
+      user.max_combo = max_combo;
+      changes.max_combo = max_combo;
     }
 
     if (!user.password) {
