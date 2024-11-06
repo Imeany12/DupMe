@@ -178,6 +178,9 @@ export default function GamePage() {
   //need to get keybindings from the server
 
   // const [isPlaying, setIsPlaying] = useState(false);
+  const [scoreComboResult, setScoreComboResult] = useState<
+    [number, number, string]
+  >([0, 0, 'bad']);
   const [speed, setSpeed] = useState(1);
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
   const [pressStartTime, setPressStartTime] = useState<number | null>(null);
@@ -365,7 +368,8 @@ export default function GamePage() {
         }
 
         const hitJudgement = getHitJudgement(accuracy);
-        console.log(hitJudgement);
+        handleScoreCalculation(hitJudgement);
+        // console.log(hitJudgement);
         removeNoteFromTrack(tracks[index], tracks[index].firstChild);
         updateNext(getKeyString(index));
       } else {
@@ -385,6 +389,35 @@ export default function GamePage() {
       return 'bad';
     } else {
       return 'miss';
+    }
+  };
+
+  const handleScoreCalculation = function (state: string) {
+    if (state !== 'miss') {
+      setScoreComboResult(([score, combo, status]) => [
+        score,
+        combo + 1,
+        state,
+      ]);
+    } else setScoreComboResult(([score, combo, status]) => [score, 0, state]);
+    if (state === 'perfect') {
+      setScoreComboResult(([score, combo, status]) => [
+        score + 300,
+        combo,
+        state,
+      ]);
+    } else if (state === 'good') {
+      setScoreComboResult(([score, combo, status]) => [
+        score + 200,
+        combo,
+        state,
+      ]);
+    } else if (state === 'bad') {
+      setScoreComboResult(([score, combo, status]) => [
+        score + 100,
+        combo,
+        state,
+      ]);
     }
   };
 
@@ -636,6 +669,7 @@ export default function GamePage() {
       event.target.classList.item(1)
     ) {
       const indexString = event.target.classList.item(2)?.split('--')[1];
+      handleScoreCalculation('miss');
       removeNoteFromTrack(event.target.parentNode, event.target);
       updateNext(indexString);
     }
@@ -747,6 +781,9 @@ export default function GamePage() {
   // useEffect(() => {
   //   console.log(pressStartTime);
   // }, [pressStartTime]);
+  useEffect(() => {
+    console.log(scoreComboResult);
+  }, [scoreComboResult]);
 
   return (
     <div className='flex h-screen w-screen flex-col items-center'>
