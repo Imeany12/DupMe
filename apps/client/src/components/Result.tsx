@@ -23,7 +23,7 @@ export const ResultContext = createContext<ResultContextProps>({
 });
 
 export function ResultProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [result, setResult] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
 

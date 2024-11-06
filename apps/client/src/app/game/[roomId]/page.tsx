@@ -4,13 +4,12 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Countdown from '@/components/CountDown';
 import Piano from '@/components/Piano';
 import { Button } from '@/components/ui/button';
-import { ResultContext } from '@/components/Result';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -106,7 +105,7 @@ export default function GamePage() {
   const { data: session, status } = useSession({
     required: false,
   });
-
+  //const reultContext = useContext(ResultContext);
   const searchParams = useSearchParams();
   const host: boolean = searchParams.get('host') === 'true';
 
@@ -154,9 +153,6 @@ export default function GamePage() {
 
   const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
   const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
-
-  const { open, setOpen, result, setResult, score, setScore } =
-    useContext(ResultContext);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
@@ -558,10 +554,10 @@ export default function GamePage() {
   useEffect(() => {
     if (playAlong === false) {
       setTimeout(() => {
-        trackContainerRef.current?.removeEventListener(
-          'animationend',
-          handleNoteMiss
-        );
+        // trackContainerRef.current?.removeEventListener(
+        //   'animationend',
+        //   handleNoteMiss
+        // );
         //console.log('playalong : ', playAlong);
         //console.log('isPlayerTurn : ', isPlayerTurn);
         setPlayAlong(true);
@@ -794,44 +790,47 @@ export default function GamePage() {
   return (
     <div className='flex h-screen w-screen flex-col items-center'>
       {playAlong ? (
-        <div>
+        <div className='max-h-screen pt-8'>
           {!isPlayerTurn ? (
-            <div className='bg-slate-700'>
-              <p className='text-3xl text-white'>rainfall</p>
-              <div className='flex justify-center'>
-                <div
-                  ref={trackContainerRef}
-                  className='flex min-h-[220px] w-[118%] justify-center gap-1'
-                ></div>
-              </div>
-              <div className='flex w-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+            <div>
+              <Countdown duration={20} />
+              <div className='flex w-full flex-col items-center justify-end rounded-2xl bg-slate-300 px-12 py-8'>
+                <div className='flex w-full justify-center'>
+                  <div
+                    ref={trackContainerRef}
+                    className='flex min-h-[220px] w-[118%] justify-center gap-1'
+                  ></div>
+                </div>
                 <div>
                   <Piano
                     onNoteClick={handleNoteClick}
                     onNoteReleased={handleNoteRelease}
                   />
                 </div>
-                <h1>Combo : {scoreComboResult[1]}</h1>
-                <Button
-                  onClick={() => {
-                    playSong();
-                    console.log('play song ', song);
-                    socket.emit('play_song', roomId);
-                  }}
-                >
-                  Play
-                </Button>
+                <div className='flex w-full justify-center gap-8 pt-8'>
+                  <h1>Combo : {scoreComboResult[1]}</h1>
+                  <Button
+                    onClick={() => {
+                      playSong();
+                      console.log('play song ', song);
+                      socket.emit('play_song', roomId);
+                    }}
+                  >
+                    Play
+                  </Button>
+                </div>
               </div>
             </div>
           ) : (
             <div>
-              <Countdown duration={60} />
-              <p className='text-3xl text-white'>watch other rainfall</p>
-              <div
-                ref={trackContainerRef}
-                className='flex min-h-[220px] w-[940px] justify-center gap-1 px-32'
-              ></div>
-              <div className='flex w-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+              {/* <Countdown duration={60} /> */}
+              <div className='flex w-full flex-col items-center justify-end rounded-2xl bg-slate-300 px-12 py-8'>
+                <div className='flex w-full justify-center'>
+                  <div
+                    ref={trackContainerRef}
+                    className='flex min-h-[220px] w-[118%] justify-center gap-1'
+                  ></div>
+                </div>
                 <div>
                   <Piano
                     onNoteClick={() => {
@@ -851,7 +850,6 @@ export default function GamePage() {
           {isPlayerTurn ? (
             <div>
               <div className='flex w-full items-start justify-start'>
-                <Countdown duration={30} />
                 <button
                   className='size-20 px-8 pt-6 text-white'
                   onClick={() => {
@@ -867,8 +865,9 @@ export default function GamePage() {
                   />
                 </button>
               </div>
-              <div className='flex max-h-full flex-col justify-end'>
-                <div className='max-w-screen-svh mx-16 flex h-full flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
+              <Countdown duration={10} />
+              <div className='flex max-h-[800px] flex-col justify-end'>
+                <div className='mx-16 flex h-full max-w-[800px] flex-col items-center justify-end gap-8 rounded-2xl bg-slate-300 px-12 pb-8'>
                   <p className='pt-6 text-3xl text-white'>Play Your notes:</p>
                   <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
                     {pressedNotes.map((note, index) => (
