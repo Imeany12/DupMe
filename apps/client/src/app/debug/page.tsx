@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import JoinRoomPage from '@/pages/joinRoom/page';
 
 import { socket } from '../../socket';
-
-export default function DebugPage(): React.JSX.Element {
+export default function DebugPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState('N/A');
 

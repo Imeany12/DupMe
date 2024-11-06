@@ -4,11 +4,13 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
+import Countdown from '@/components/CountDown';
 import Piano from '@/components/Piano';
 import { Button } from '@/components/ui/button';
+import { ResultContext } from '@/components/Result';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -152,6 +154,9 @@ export default function GamePage() {
 
   const [initialStartTime, setInitialStartTime] = useState<number>(Date.now());
   const [isFirstNote, setIsFirstNote] = useState<boolean>(true);
+
+  const { open, setOpen, result, setResult, score, setScore } =
+    useContext(ResultContext);
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
@@ -820,6 +825,7 @@ export default function GamePage() {
             </div>
           ) : (
             <div>
+              <Countdown duration={60} />
               <p className='text-3xl text-white'>watch other rainfall</p>
               <div
                 ref={trackContainerRef}
@@ -845,6 +851,7 @@ export default function GamePage() {
           {isPlayerTurn ? (
             <div>
               <div className='flex w-full items-start justify-start'>
+                <Countdown duration={30} />
                 <button
                   className='size-20 px-8 pt-6 text-white'
                   onClick={() => {
