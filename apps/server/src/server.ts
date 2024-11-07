@@ -1,4 +1,4 @@
-import { IMsgDataTypes } from '@repo/shared-types/src/types';
+import { IMsgDataTypes, ISong } from '@repo/shared-types/src/types';
 import cors from 'cors';
 import express from 'express';
 import { createServer } from 'http';
@@ -129,9 +129,19 @@ io.on('connection', (socket) => {
     io.emit('connectedUsersCount', connectedUsersCount);
   });
 
+  socket.on('send_song', (data: ISong) => {
+    // This will send a song to a specific room ID
+    console.log(data);
+    socket.to(data.roomId.toString()).emit('receive_song', data);
+  });
+
   socket.on('getNote', (roomId: number, note: string) => {
     console.log('getNote', note);
     socket.to(roomId.toString()).emit('playNote', note);
+  });
+
+  socket.on('play_song', (roomId: number) => {
+    socket.to(roomId.toString()).emit('play_song');
   });
 
   socket.on('countReady', (readyPlayers: number, roomId) => {

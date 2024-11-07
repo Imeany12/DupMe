@@ -32,6 +32,25 @@ export interface IMsgDataTypes {
   time: string;
 }
 
+export interface INote {
+  fallDuration: number;
+  longNoteDuration: number;
+  isLongNote: boolean;
+  delay: number;
+}
+
+export interface INotes {
+  color: string;
+  color2: string;
+  nextNoteInd: number;
+  notes: INote[];
+}
+
+export interface ISong {
+  roomId: string | number;
+  user: string;
+  sheet: { [key: string]: INotes };
+}
 export interface KeyMapping {
   [key: string]: string;
 }

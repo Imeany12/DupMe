@@ -13,6 +13,7 @@ import {
   CLIENT_GOOGLE_SECRET,
   CLIENT_TWITTER_ID,
   CLIENT_TWITTER_SECRET,
+  SERVER_URL,
 } from '@/env';
 import { GetUserResponse } from '@/interfaces/user/user';
 
@@ -38,7 +39,7 @@ export const options: NextAuthOptions = {
         //get info from database
         //Docs : https://next-auth.js.org/configuration/providers/credentials
         if (!credentials) return null;
-        const res = await fetch('http://localhost:5001/user/login', {
+        const res = await fetch(`${SERVER_URL}/user/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -27,14 +27,14 @@ export default function Piano({
             D
           </button>
           <button
-            className='h-52 w-20 flex-shrink-0 rounded-b-lg border bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7]'
+            className='h-52 w-[68px] flex-shrink-0 rounded-b-lg border bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7]'
             onMouseDown={() => onNoteClick('E')}
             onMouseUp={() => onNoteReleased('E')}
           >
             E
           </button>
           <button
-            className='h-52 w-20 flex-shrink-0 rounded-b-lg border bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7]'
+            className='h-52 w-[68px] flex-shrink-0 rounded-b-lg border bg-gradient-to-b from-[#DCDCDC] to-[#F7F7F7]'
             onMouseDown={() => onNoteClick('F')}
             onMouseUp={() => onNoteReleased('F')}
           >
@@ -80,21 +80,21 @@ export default function Piano({
             D#
           </button>
           <button
-            className='absolute ml-[574%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[530%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('F#')}
             onMouseUp={() => onNoteReleased('F#')}
           >
             F#
           </button>
           <button
-            className='absolute ml-[742%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[690%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('G#')}
             onMouseUp={() => onNoteReleased('G#')}
           >
             G#
           </button>
           <button
-            className='absolute ml-[906%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
+            className='absolute ml-[860%] h-44 w-12 transform rounded-b-lg border border-[#171717] bg-[#3B3B3B]'
             onMouseDown={() => onNoteClick('A#')}
             onMouseUp={() => onNoteReleased('A#')}
           >

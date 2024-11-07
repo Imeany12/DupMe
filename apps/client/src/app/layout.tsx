@@ -24,11 +24,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`background-image ${inter.className}`}>
         <AuthProvider>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='star'
-            enableSystem={true}
-          >
+          <ThemeProvider>
             <ThemeHandler />
             <main>{children}</main>
           </ThemeProvider>
