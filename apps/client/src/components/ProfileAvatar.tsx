@@ -32,7 +32,6 @@ export default function ProfileAvatar({ session }: { session: any }) {
           <div className='ml-4'>
             <h1 className='text-xl font-bold'>{user?.name}</h1>
             <p className='text-sm'>Game Won : {user.gameWon}</p>{' '}
-            <p className='text-sm'>Lv98</p> {/*IUser.level maybe */}
             <div className='flex flex-row gap-2'>
               <p className='flex gap-2 text-sm'>
                 country flag : {user?.country}
