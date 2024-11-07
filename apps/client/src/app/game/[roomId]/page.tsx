@@ -1,14 +1,20 @@
-'use client';
-
-import { useParams, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 import Game from '@/pages/game/page';
 
-export default function LobbyPage(): React.JSX.Element {
-  const searchParams = useSearchParams();
-  const host = searchParams.get('host') || 'false';
-  const { roomId } = useParams<{ roomId: string }>();
+export default function GamePage({
+  params,
+  searchParams,
+}: {
+  params: {
+    roomId: string;
+  };
+  searchParams: {
+    host: string;
+  };
+}): React.JSX.Element {
+  const host = searchParams.host || 'false';
+  const { roomId } = params;
 
   return <Game host={host} roomId={roomId} />;
 }

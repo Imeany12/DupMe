@@ -120,6 +120,7 @@ export default function Game({
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(Host); //playerTurn form randaomization backend
   const [pressedNotes, setPressedNotes] = useState<string[]>([]);
+  const [result, setResult] = useState('none');
   const [presNote, setPresNote] = useState<pressNote>({
     pressing: false,
     note: '',
@@ -499,6 +500,30 @@ export default function Game({
     });
   };
 
+  useEffect(() => {
+    const handleResult = ({
+      result,
+      winner,
+    }: {
+      result: string;
+      winner: string[];
+    }) => {
+      if (
+        session &&
+        session.user &&
+        session.user.name &&
+        winner.includes(session.user.name)
+      ) {
+        setResult(result);
+      } else setResult('lose');
+    };
+    socket.on('result', handleResult);
+
+    return () => {
+      socket.off('result', handleResult);
+    };
+  }, [socket]);
+
   const initializedSong = function (): void {
     const trackContainer = trackContainerRef.current;
 
@@ -747,15 +772,12 @@ export default function Game({
 
   useEffect(() => {
     console.log('keymapping:', keyMappings);
-    if (turncount.current > 2 * countPlayer) {
-      socket.emit('leave_lobby', { roomId, username: user?.name });
-      socket.emit('end_game', roomId);
-      router.push('/lobby/' + roomId + '?host=false&multi=true');
+    if (turncount.current == 2) {
+      socket.emit('end_game', roomId, scoreComboResult[0], user?.name);
+      setTimeout(() => {
+        router.push('/lobby/' + roomId + '?host=' + host);
+      }, 10000);
     }
-    socket.on('end_game', () => {
-      socket.emit('leave_lobby', { roomId, username: user?.name });
-      router.push('/lobby/' + roomId + '?host=false&multi=true');
-    });
   }, [turncount.current]);
 
   useEffect(() => {
@@ -777,7 +799,7 @@ export default function Game({
       setTimeout(() => {
         setPressedNotes([]);
         setPlayAlong(true);
-      }, 15000);
+      }, 3000);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -791,7 +813,7 @@ export default function Game({
         setIsFirstNote(true);
         setNotes(defaultNotes);
         setScoreComboResult(([score, combo, state]) => [score, 0, '']);
-      }, 30000);
+      }, 5000);
       const newSong: ISong = {
         roomId: roomId,
         user: user.name ?? 'Guest',
@@ -850,6 +872,15 @@ export default function Game({
     audioContext,
     isPlayerTurn,
   ]);
+
+  useEffect(() => {
+    if (result !== 'none') {
+      setTimeout(() => {
+        router.push('/result/' + roomId + '/' + result);
+      }, 2000);
+      socket.emit('leave_lobby', { roomId, username: user?.name });
+    }
+  }, [result]);
 
   return (
     <div className='flex h-screen w-screen flex-col items-center'>

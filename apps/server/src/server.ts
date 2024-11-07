@@ -116,6 +116,7 @@ io.on('connection', (socket) => {
   );
 
   socket.on('start_game', (roomId: number) => {
+    playerCount = rooms[roomId].length;
     const playerTurns = handlePlayerTurn(rooms, roomId);
     socket.to(roomId.toString()).emit('start_game', playerTurns);
     socket.emit('start_game', playerTurns);
@@ -130,6 +131,8 @@ io.on('connection', (socket) => {
       playerToScore[roomId][username] = 0;
     }
     playerToScore[roomId][username] = score;
+    console.log(playerToScore[roomId]);
+    console.log('playerCount:', playerCount);
     if (Object.keys(playerToScore[roomId]).length === playerCount) {
       const scoreArray = Object.values(playerToScore[roomId]);
       const maxScore = Math.max(...scoreArray);
@@ -139,7 +142,10 @@ io.on('connection', (socket) => {
 
       if (winners.length > 1) {
         // Handle draw scenario
-        io.to(roomId.toString()).emit('result', { result: 'draw', winners });
+        io.to(roomId.toString()).emit('result', {
+          result: 'draw',
+          winner: winners,
+        });
       } else {
         // Handle single winner scenario
         io.to(roomId.toString()).emit('result', {
