@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
         // Handle single winner scenario
         io.to(roomId.toString()).emit('result', {
           result: 'win',
-          winner: winners[0],
+          winner: [winners[0]],
         });
       }
       console.log('winner:', winners);
