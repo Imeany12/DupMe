@@ -1,16 +1,13 @@
+'use client';
+
+import { useParams, useSearchParams } from 'next/navigation';
+
 import Lobby from '@/pages/lobby/page';
 
-export default async function LobbyPage({
-  params,
-  searchParams,
-}: {
-  params: { roomId: string };
-  searchParams: {
-    host: string;
-  };
-}): Promise<React.JSX.Element> {
-  const host = searchParams.host;
-  const roomId = params.roomId;
+export default function LobbyPage(): React.JSX.Element {
+  const searchParams = useSearchParams();
+  const host = searchParams.get('host') || 'false';
+  const { roomId } = useParams<{ roomId: string }>();
 
   return <Lobby host={host} roomId={roomId} />;
 }

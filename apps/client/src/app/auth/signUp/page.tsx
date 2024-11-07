@@ -1,4 +1,5 @@
 'use client';
+
 import { IUser } from '@repo/shared-types';
 import { useRouter } from 'next/navigation';
 import React from 'react';

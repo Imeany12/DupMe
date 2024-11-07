@@ -1,31 +1,14 @@
 'use client';
 
+import { KeyMapping } from '@repo/shared-types';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 
 import { ToggleTheme } from '@/components/ui/toggle-theme';
+import { defaultKeyMappings } from '@/const/keymapping';
 import { SERVER_URL } from '@/env';
-import { useSearchParams } from 'next/navigation';
-
-interface KeyMapping {
-  [key: string]: string;
-}
-export const defaultKeyMappings: KeyMapping = {
-  C: 's',
-  'C#': 'e',
-  D: 'd',
-  'D#': 'r',
-  E: 'f',
-  F: 'g',
-  'F#': 'y',
-  G: 'h',
-  'G#': 'u',
-  A: 'j',
-  'A#': 'i',
-  B: 'k',
-};
 
 export default function SettingsPage(): React.JSX.Element {
   const { data: session } = useSession({

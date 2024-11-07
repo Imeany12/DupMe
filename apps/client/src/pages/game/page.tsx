@@ -11,12 +11,12 @@ import Countdown from '@/components/CountDown';
 import Piano from '@/components/Piano';
 import ProfileInGame from '@/components/ProfileInGame';
 import { Button } from '@/components/ui/button';
+import { defaultKeyMappings } from '@/const/keymapping';
+import { SERVER_URL } from '@/env';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
 import style from './page.module.css';
-import { SERVER_URL } from '@/env';
-import { defaultKeyMappings } from '@/app/set/page';
 
 type pressNote = {
   pressing: boolean;
