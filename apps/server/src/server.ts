@@ -38,6 +38,13 @@ const io = new Server(server, {
   },
 });
 const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room
+const playerToScore: {
+  [key: number]: {
+    // roomId
+    [key: string]: number; // username and socketId to score
+  };
+} = {}; // to keep track of player scores
+let playerCount = 0;
 
 function handlePlayerTurn(
   rooms: { [key: number]: string[][] },
@@ -115,7 +122,34 @@ io.on('connection', (socket) => {
     console.log('received start, starting player: ' + playerTurns);
   });
 
-  socket.on('end_game', (roomId: number) => {
+  socket.on('end_game', (roomId: number, score: number, username: string) => {
+    if (!playerToScore[roomId]) {
+      playerToScore[roomId] = {};
+    }
+    if (!playerToScore[roomId][username]) {
+      playerToScore[roomId][username] = 0;
+    }
+    playerToScore[roomId][username] = score;
+    console.log('end_game', rooms[roomId].length, playerToScore[roomId]);
+    console.log('playerCount:', playerCount);
+    if (Object.keys(playerToScore[roomId]).length === playerCount) {
+      const scoreArray = Object.values(playerToScore[roomId]);
+      const maxScore = Math.max(...scoreArray);
+      const winners = Object.keys(playerToScore[roomId]).filter(
+        (key) => playerToScore[roomId][key] === maxScore
+      );
+
+      if (winners.length > 1) {
+        // Handle draw scenario
+        io.to(roomId.toString()).emit('end_game', { result: 'draw', winners });
+      } else {
+        // Handle single winner scenario
+        io.to(roomId.toString()).emit('end_game', {
+          result: 'win',
+          winner: winners[0],
+        });
+      }
+    }
     socket.to(roomId.toString()).emit('end_game');
   });
 
@@ -131,6 +165,9 @@ io.on('connection', (socket) => {
       rooms[roomId] = rooms[roomId].filter((player) => player[2] !== socket.id);
       socket.to(roomId.toString()).emit('update_players', rooms[roomId]);
       socket.leave(roomId.toString());
+    }
+    for (const roomId in playerToScore) {
+      delete playerToScore[roomId][socket.id];
     }
 
     const connectedUsersCount = Object.values(rooms).reduce(
