@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { useEffect } from 'react';
-import { MdOutlineMale } from 'react-icons/md';
+import { MdOutlineFemale, MdOutlineMale } from 'react-icons/md';
 
 import { CountryCode, countryNameRecord } from './countryCode';
 
@@ -45,7 +45,11 @@ export default function ProfileAvatar({ session }: { session: any }) {
             </div>
             <p className='flex gap-4 text-sm'>
               Gender :
-              <MdOutlineMale width={12} height={12} className='mt-1' />
+              {user.gender === 'Male' ? (
+                <MdOutlineMale width={12} height={12} className='mt-1' />
+              ) : (
+                <MdOutlineFemale width={12} height={12} className='mt-1' />
+              )}
             </p>
           </div>
         </div>
