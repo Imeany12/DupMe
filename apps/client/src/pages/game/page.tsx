@@ -117,11 +117,11 @@ export default function Game({
     if (turncount.current > 2 * countPlayer) {
       socket.emit('leave_lobby', { roomId, username: user?.name });
       socket.emit('end_game', roomId);
-      router.push('/lobby/' + roomId + '?host=' + host);
+      router.push('/lobby/' + roomId + '?host=false&multi=true');
     }
     socket.on('end_game', () => {
       socket.emit('leave_lobby', { roomId, username: user?.name });
-      router.push('/lobby/' + roomId + '?host=' + host);
+      router.push('/lobby/' + roomId + '?host=false&multi=true');
     });
   }, [turncount.current]);
 

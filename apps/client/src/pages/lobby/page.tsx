@@ -49,6 +49,7 @@ export default function Lobby({
   const hasJoined = useRef(false);
   const searchParams = useSearchParams();
   const limit = searchParams.get('multi') === 'false';
+  const [mem, setMem] = useState(false);
   //same for this need to use searchParams
 
   useEffect(() => {
@@ -93,12 +94,21 @@ export default function Lobby({
         if (username[i][0].toString() === user.name?.toString()) {
           console.log(username[i][0] + 'vs' + user.name);
           const start: boolean = i === 0;
-          router.push('/welcome');
-          setTimeout(() => {
-            router.push(
-              `/game/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
-            );
-          }, 5000);
+          if (mem) {
+            router.push('/welcome');
+            setTimeout(() => {
+              router.push(
+                `/mem/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
+              );
+            }, 5000);
+          } else {
+            router.push('/welcome');
+            setTimeout(() => {
+              router.push(
+                `/game/${roomId}?host=${start}&players=${readyPlayers}&turn=${i + 1}`
+              );
+            }, 5000);
+          }
         }
       }
     });
@@ -109,7 +119,7 @@ export default function Lobby({
       socket.off('start_game');
       socket.off('setReady');
     };
-  }, [user, socket, roomId, readyPlayers, hasJoined, players]);
+  }, [user, socket, roomId, readyPlayers, hasJoined, players, mem]);
 
   const startGame = () => {
     hasJoined.current = false;
@@ -234,9 +244,21 @@ export default function Lobby({
               <CopyToClipboardButton textToCopy={roomId} />
             </div>
           </div>
-          <button className='mt-4 rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500'>
-            Change Modes
-          </button>
+          {mem ? (
+            <button
+              className='bg-note1 mt-4 rounded px-4 py-2 text-white hover:bg-green-500'
+              onClick={() => setMem(false)}
+            >
+              Memorize Mode
+            </button>
+          ) : (
+            <button
+              className='bg-note mt-4 rounded px-4 py-2 text-white hover:bg-green-500'
+              onClick={() => setMem(true)}
+            >
+              Rainfall mode
+            </button>
+          )}
         </div>
       </div>
 
