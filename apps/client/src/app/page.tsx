@@ -103,7 +103,7 @@ export default function Home() {
                   </Button>
                   <Link
                     className='shadow-[0_4px_4px_0px_rgba(0, 0, 0, 0.25)] hover:bg-note bg-note1 text-note2 w-full rounded-full border border-solid border-black py-2 text-center text-3xl shadow-lg'
-                    href={`/lobby/${roomId}?host=true&multi=${multi}`}
+                    href={`/lobby/${roomId}?host=false&multi=${multi}`}
                   >
                     Create Room
                   </Link>
