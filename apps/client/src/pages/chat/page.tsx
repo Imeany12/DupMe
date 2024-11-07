@@ -104,14 +104,11 @@ const ChatPage = ({
               className='flex rounded-lg bg-white px-2 py-1 text-neutral-800'
               type='text'
               value={currentMsg}
-              placeholder='Type your message..'
+              placeholder={`Chat as ${username}`}
               onChange={(e) => setCurrentMsg(e.target.value)}
             />
             <button className={style.chat_button}>Send</button>
           </form>
-          {/* <button className={style.chat_button} onClick={(e) => sendStart(e)}>
-            Start
-          </button> */}
         </div>
       </div>
     </div>

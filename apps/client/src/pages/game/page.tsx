@@ -15,6 +15,8 @@ import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
 import style from './page.module.css';
+import { SERVER_URL } from '@/env';
+import { defaultKeyMappings } from '@/app/set/page';
 
 type pressNote = {
   pressing: boolean;
@@ -122,38 +124,31 @@ export default function Game({
     pressing: false,
     note: '',
   });
-  const [keyMappings, setKeyMappings] = useState<KeyMapping>(
-    user.keybindings ?? {
-      C: 's',
-      'C#': 'e',
-      D: 'd',
-      'D#': 'r',
-      E: 'f',
-      F: 'g',
-      'F#': 'y',
-      G: 'h',
-      'G#': 'u',
-      A: 'j',
-      'A#': 'i',
-      B: 'k',
+  const [keyMappings, setKeyMappings] =
+    useState<KeyMapping>(defaultKeyMappings);
+  useEffect(() => {
+    const getKeybindings = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user?.name}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        return data.user.keybindings;
+      } else {
+        console.log('Keybindings not found');
+        return defaultKeyMappings;
+      }
+    };
+    if (session) {
+      getKeybindings().then((keybindings) => {
+        setKeyMappings(keybindings);
+        console.log('new Keybind', keybindings);
+      });
     }
-  );
-
-  // useEffect(() => {
-  //   const getKeyBind = async () => {
-  //     const res = await fetch(`${SERVER_URL}/user/${user?.name}/`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-  //     const data = await res.json();
-  //     console.log('keybindings:', data.user.keybindings);
-  //     setKeyMappings(data.user.keybindings);
-  //   };
-  //   getKeyBind();
-  // }, [user]);
-
+  }, [user]);
   const router = useRouter();
   const turncount = useRef(1);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
@@ -393,19 +388,19 @@ export default function Game({
     } else setScoreComboResult(([score, combo, status]) => [score, 0, state]);
     if (state === 'perfect') {
       setScoreComboResult(([score, combo, status]) => [
-        score + 300,
+        score + 300 * Math.floor(Math.E ** (combo * 0.3)),
         combo,
         state,
       ]);
     } else if (state === 'good') {
       setScoreComboResult(([score, combo, status]) => [
-        score + 200,
+        score + 100 * Math.floor(Math.E ** (combo * 0.3)),
         combo,
         state,
       ]);
     } else if (state === 'bad') {
       setScoreComboResult(([score, combo, status]) => [
-        score + 100,
+        score + 50 * Math.floor(Math.E ** (combo * 0.3)),
         combo,
         state,
       ]);
@@ -751,6 +746,7 @@ export default function Game({
   };
 
   useEffect(() => {
+    console.log('keymapping:', keyMappings);
     if (turncount.current > 2 * countPlayer) {
       socket.emit('leave_lobby', { roomId, username: user?.name });
       socket.emit('end_game', roomId);
@@ -863,7 +859,13 @@ export default function Game({
         </div>
         <div>
           <p className='justify-center px-3 text-xl text-white'>{user.name}</p>
-          <p className='mt-3 px-2 text-sm text-white'>Your Turn!</p>
+          {(!isPlayerTurn && playAlong) || (isPlayerTurn && !playAlong) ? (
+            <p className='mt-3 px-2 text-sm text-white'>Your Turn!</p>
+          ) : (
+            <p className='mt-3 px-2 text-sm text-white'>
+              Wait For other Player!
+            </p>
+          )}
           <div className='bg-note flesx-shrink-0 h-[16px] w-[400px] rounded-lg'></div>
         </div>
         <div className='flex w-full items-start justify-end'>
@@ -889,11 +891,33 @@ export default function Game({
       {playAlong ? (
         <div>
           {/* waiting for rainfall from mark */}
-          {!isPlayerTurn ? (
+          {isPlayerTurn ? (
             <div>
-              <Countdown duration={30} />
+              {/* <Countdown duration={60} /> */}
+              <div className='flex w-full flex-col items-center justify-center rounded-2xl bg-slate-300 px-12 py-8'>
+                <div className='flex justify-center'>
+                  <div
+                    ref={trackContainerRef}
+                    className='flex min-h-[220px] w-[118%] justify-center gap-1'
+                  ></div>
+                </div>
+                <div>
+                  <Piano
+                    onNoteClick={() => {
+                      return;
+                    }}
+                    onNoteReleased={() => {
+                      return;
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className='w-full'>
               <div className='flex w-full flex-col items-center justify-end rounded-2xl bg-slate-300 px-12 py-8'>
-                <div className='flex w-full justify-center'>
+                <Countdown duration={30} />
+                <div className='flex w-full justify-center pt-8'>
                   <div
                     ref={trackContainerRef}
                     className='flex min-h-[220px] w-[118%] justify-center gap-1'
@@ -918,28 +942,6 @@ export default function Game({
                   >
                     Play
                   </Button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div>
-              {/* <Countdown duration={60} /> */}
-              <div className='flex w-full flex-col items-center justify-end rounded-2xl bg-slate-300 px-12 py-8'>
-                <div className='flex w-full justify-center'>
-                  <div
-                    ref={trackContainerRef}
-                    className='flex min-h-[220px] w-[118%] justify-center gap-1'
-                  ></div>
-                </div>
-                <div>
-                  <Piano
-                    onNoteClick={() => {
-                      return;
-                    }}
-                    onNoteReleased={() => {
-                      return;
-                    }}
-                  />
                 </div>
               </div>
             </div>

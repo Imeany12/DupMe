@@ -347,7 +347,8 @@ export default function GamePage() {
         combo + 1,
         state,
       ]);
-    } else setScoreComboResult(([score, combo, status]) => [score, 0, state]);
+    } else
+      setScoreComboResult(([score, combo, status]) => [score - 50, 0, state]);
   };
 
   const handleNoteClick = (note: string) => {

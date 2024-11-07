@@ -21,7 +21,6 @@ export default function Home() {
   const { data: session } = useSession({
     required: false,
   });
-  console.log(session);
 
   const setUpGame = () => {
     setRoomId(Math.floor(Math.random() * 1000000));

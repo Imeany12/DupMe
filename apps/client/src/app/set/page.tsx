@@ -2,67 +2,86 @@
 
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { FiHome } from 'react-icons/fi';
 
 import { ToggleTheme } from '@/components/ui/toggle-theme';
 import { SERVER_URL } from '@/env';
+import { useSearchParams } from 'next/navigation';
 
 interface KeyMapping {
   [key: string]: string;
 }
+export const defaultKeyMappings: KeyMapping = {
+  C: 's',
+  'C#': 'e',
+  D: 'd',
+  'D#': 'r',
+  E: 'f',
+  F: 'g',
+  'F#': 'y',
+  G: 'h',
+  'G#': 'u',
+  A: 'j',
+  'A#': 'i',
+  B: 'k',
+};
 
 export default function SettingsPage(): React.JSX.Element {
   const { data: session } = useSession({
     required: false,
   });
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const user = session?.user;
-  const defaultKeyMappings = {
-    C: 's',
-    'C#': 'e',
-    D: 'd',
-    'D#': 'r',
-    E: 'f',
-    F: 'g',
-    'F#': 'y',
-    G: 'h',
-    'G#': 'u',
-    A: 'j',
-    'A#': 'i',
-    B: 'k',
-  };
-  const [keyMappings, setKeyMappings] = useState<KeyMapping>(() => {
-    const storedMappings =
-      typeof window !== 'undefined'
-        ? localStorage.getItem('keyMappings')
-        : null;
-    return storedMappings ? JSON.parse(storedMappings) : defaultKeyMappings;
-  });
+  const [keyMappings, setKeyMappings] =
+    useState<KeyMapping>(defaultKeyMappings);
+
+  useEffect(() => {
+    console.log('keymapping', keyMappings);
+    const getKeybindings = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user?.name}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        return data.user.keybindings;
+      } else {
+        console.log('Keybindings not found');
+        return defaultKeyMappings;
+      }
+    };
+    if (session) {
+      getKeybindings().then((keybindings) => {
+        setKeyMappings(keybindings);
+        console.log(keybindings);
+      });
+      setIsLoaded(true);
+    }
+  }, [user]);
   //change this local storage to server storage?
   useEffect(() => {
-    console.log('username: ', user?.name);
-    localStorage.setItem('keyMappings', JSON.stringify(keyMappings));
     const sendKeyMappings = async () => {
-      const res = await fetch(
-        `${SERVER_URL}/user/${user?.name}/profile/keybinds`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(keyMappings),
-        }
-      );
+      const res = await fetch(`${SERVER_URL}/user/${user?.name}/profile/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ keybindings: keyMappings }),
+      });
       if (res.status === 200) {
         console.log('Keybindings saved to ' + JSON.stringify(keyMappings));
       } else {
         console.log('Keybind cant be' + JSON.stringify(keyMappings));
       }
     };
-    if (session) {
+    if (session && isLoaded) {
       sendKeyMappings();
     }
-  }, [keyMappings, user]);
+  }, [keyMappings]);
 
   const notes = [
     'C',
@@ -105,10 +124,10 @@ export default function SettingsPage(): React.JSX.Element {
                         event.preventDefault();
                         const handleKeyPress = (e: KeyboardEvent) => {
                           window.removeEventListener('keydown', handleKeyPress);
-                          if (e.key === 'Escape') return;
+                          if (e.key === 'Escape' || !isLoaded) return;
                           setKeyMappings((prev) => ({
                             ...prev,
-                            [note]: e.key,
+                            [note]: e.key.toLowerCase(),
                           }));
                         };
                         window.addEventListener('keydown', handleKeyPress);
