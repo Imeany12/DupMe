@@ -1,5 +1,5 @@
 export interface IUser {
-  username?: string;
+  name?: string;
   password?: string;
   email?: string;
   image?: string;
@@ -14,6 +14,8 @@ export interface IUser {
   total_score: number;
   matchHistory: IMatch[];
   keybindings?: KeyMapping;
+  max_score?: number;
+  max_combo?: number;
 }
 
 export interface IMatch {

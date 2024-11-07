@@ -20,7 +20,7 @@ const keybindSchema = new Schema<KeyMapping>(
 
 const userSchema = new Schema<IUser>(
   {
-    username: { type: String, required: true },
+    name: { type: String, required: true },
     password: {
       type: String,
       required: true,
@@ -56,6 +56,14 @@ const userSchema = new Schema<IUser>(
     },
     matchHistory: [matchSchema],
     keybindings: keybindSchema,
+    max_combo: {
+      type: Number,
+      default: 0,
+    },
+    max_score: {
+      type: Number,
+      default: 0,
+    },
   },
   { versionKey: false }
 );
