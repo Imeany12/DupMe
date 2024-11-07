@@ -50,6 +50,7 @@ export default function Lobby({
   const searchParams = useSearchParams();
   const limit = searchParams.get('multi') === 'false';
   const [mem, setMem] = useState(false);
+  const [lobbyName, setLobbyName] = useState('');
   //same for this need to use searchParams
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function Lobby({
     socket.on('update_players', (playerList: string[]) => {
       console.log('this is playerlist:' + playerList);
       setPlayers(playerList);
+      setLobbyName(playerList[0][0]);
       console.log('room is full', playerList.length, limit);
       if (limit && playerList.length > 2) {
         socket.emit('leave_lobby', { roomId, username: playerList[2] });
@@ -235,7 +237,7 @@ export default function Lobby({
           <h2 className='text-lg font-semibold'>Game Settings</h2>
           <div className='mt-4'>
             <p className='text-gray-400'>Lobby Name:</p>
-            <p className='text-lg font-bold'>Lobby of {user?.name}</p>
+            <p className='text-lg font-bold'>Lobby of {lobbyName}</p>
           </div>
           <div className='mt-4'>
             <p className='text-gray-400'>Room Id:</p>
