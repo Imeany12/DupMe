@@ -141,14 +141,15 @@ io.on('connection', (socket) => {
 
       if (winners.length > 1) {
         // Handle draw scenario
-        io.to(roomId.toString()).emit('end_game', { result: 'draw', winners });
+        io.to(roomId.toString()).emit('result', { result: 'draw', winners });
       } else {
         // Handle single winner scenario
-        io.to(roomId.toString()).emit('end_game', {
+        io.to(roomId.toString()).emit('result', {
           result: 'win',
           winner: winners[0],
         });
       }
+      console.log('winner:', winners);
     }
     socket.to(roomId.toString()).emit('end_game');
   });
