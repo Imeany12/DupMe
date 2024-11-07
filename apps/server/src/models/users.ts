@@ -1,4 +1,4 @@
-import { IMatch, KeyMapping, name } from '@repo/shared-types';
+import { IMatch, IUser, KeyMapping } from '@repo/shared-types';
 import { model, Schema } from 'mongoose';
 
 const matchSchema = new Schema<IMatch>(
@@ -18,9 +18,9 @@ const keybindSchema = new Schema<KeyMapping>(
   { strict: false, versionKey: false }
 );
 
-const userSchema = new Schema<name>(
+const userSchema = new Schema<IUser>(
   {
-    username: { type: String, required: true },
+    name: { type: String, required: true },
     password: {
       type: String,
       required: true,
@@ -68,6 +68,6 @@ const userSchema = new Schema<name>(
   { versionKey: false }
 );
 
-const User = model<name>('User', userSchema);
+const User = model<IUser>('User', userSchema);
 
 export default User;

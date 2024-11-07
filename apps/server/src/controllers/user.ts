@@ -100,7 +100,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { username: user.username },
+      { username: user.name },
       process.env.JWT_SECRET || 'default_secret',
       { expiresIn: '24h' }
     );
@@ -170,7 +170,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({
-      username: user.username,
+      username: user.name,
       email: user.email,
       image: user.image,
       bio: user.bio,
