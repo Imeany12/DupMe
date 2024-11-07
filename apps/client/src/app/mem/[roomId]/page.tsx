@@ -84,7 +84,7 @@ export default function GamePage() {
     if (turncount.current > 2 * countPlayer) {
       socket.emit('leave_lobby', {
         roomId,
-        username: user?.name ?? user.username,
+        username: user?.name,
       });
       socket.emit('end_game', roomId);
       router.push('/lobby/' + roomId + '?host=false');
@@ -409,7 +409,7 @@ export default function GamePage() {
       {playAlong ? (
         <div>
           {!isPlayerTurn ? (
-            <div className='flex flex-col items-center gap-2 rounded-lg bg-slate-500 px-12 py-24'>
+            <div className='mx-12 my-24 flex flex-col items-center gap-2 rounded-lg bg-slate-500 px-20 py-8'>
               <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
                 {pressedNotes.map((note, index) => (
                   <span
@@ -433,7 +433,7 @@ export default function GamePage() {
               </div>
             </div>
           ) : (
-            <div className='flex flex-col items-center gap-2 rounded-lg bg-slate-500 px-12 py-24'>
+            <div className='mx-12 my-24 flex flex-col items-center gap-2 rounded-lg bg-slate-500 px-20 py-8'>
               <div className='drop max-w-screen flex min-h-[220px] flex-wrap gap-4'>
                 {pressedNotes.map((note, index) => (
                   <span

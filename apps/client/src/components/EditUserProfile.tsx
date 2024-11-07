@@ -21,7 +21,7 @@ export default function ProfileAvatar({
   setEdit: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [userInfo, setUserInfo] = useState<IUser>({
-    username: user.username,
+    name: user.name,
     password: '',
     image: user.image,
     email: '',
@@ -64,22 +64,20 @@ export default function ProfileAvatar({
   const handleSunmit = async () => {
     console.log('submit', userInfo);
     if (user) {
-      const res = await fetch(
-        `${SERVER_URL}/user/${user.username}/profile/edit`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            //email: userInfo.email,
-            //dob: userInfo.dob,
-            bio: userInfo.bio,
-            gender: userInfo.gender,
-            country: userInfo.country,
-          }),
-        }
-      );
+      const res = await fetch(`${SERVER_URL}/user/${user.name}/profile/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          //email: userInfo.email,
+          //dob: userInfo.dob,
+          bio: userInfo.bio,
+          gender: userInfo.gender,
+          country: userInfo.country,
+          dob: userInfo.dob,
+        }),
+      });
       if (res.ok) {
         console.log('User profile updated');
         setEdit(false);
@@ -112,7 +110,7 @@ export default function ProfileAvatar({
                     type='text'
                     placeholder='Username'
                     onChange={handleInput}
-                    value={userInfo.username}
+                    value={userInfo.name}
                   />
                 </div>
                 <div>
@@ -150,9 +148,6 @@ export default function ProfileAvatar({
                     <option>Gender</option>
                     <option value='Male'>Male</option>
                     <option value='Female'>Female</option>
-                    <option value='MTF'>MTF</option>
-                    <option value='FTM'>FTM</option>
-                    <option value='Non'>Non-Binary</option>
                     <option value=''>Prefer not to say</option>
                   </select>
                 </div>

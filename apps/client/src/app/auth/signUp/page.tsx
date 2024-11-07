@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState } from 'react';
 
+import CountrySelector from '@/components/CountrySelector';
 import { SERVER_URL } from '@/env';
 
 export default function SignUpPage(): React.JSX.Element {
@@ -11,7 +12,7 @@ export default function SignUpPage(): React.JSX.Element {
   const [password_confirm, setPassword_confirm] = useState('');
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<IUser>({
-    username: '',
+    name: '',
     password: '',
     image: '',
     email: '',
@@ -63,7 +64,7 @@ export default function SignUpPage(): React.JSX.Element {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: userInfo.username,
+          name: userInfo.name,
           password: userInfo.password,
           email: userInfo.email,
           dob: userInfo.dob,
@@ -80,10 +81,7 @@ export default function SignUpPage(): React.JSX.Element {
         alert('User created successfully');
         console.log('User creation result:', result);
         router.push(
-          'signIn?username=' +
-            userInfo.username +
-            '&password=' +
-            userInfo.password
+          'signIn?username=' + userInfo.name + '&password=' + userInfo.password
         );
       } else {
         alert('Error creating user');
@@ -110,10 +108,10 @@ export default function SignUpPage(): React.JSX.Element {
             <label className='text-3xl font-semibold'>Username</label>
             <input
               className='mb-3 mt-4 w-3/5 rounded border px-2 py-2 text-lg leading-tight focus:outline-indigo-300'
-              id='username'
-              name='username'
+              id='name'
+              name='name'
               type='text'
-              value={userInfo.username}
+              value={userInfo.name}
               placeholder='IGN (In-Game Name)'
               onChange={handleInput}
             />
@@ -198,6 +196,9 @@ export default function SignUpPage(): React.JSX.Element {
               <option value='Female'>Female</option>
               <option value=''>Prefer not to say</option>
             </select>
+          </div>
+          <div className='flex flex-col'>
+            <CountrySelector onChange={handleInput} />
           </div>
         </fieldset>
         <fieldset className='flex flex-col gap-2 border px-4 py-2'>

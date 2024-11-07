@@ -1,8 +1,5 @@
-// 'use client';
-// 'use client';
+'use client';
 
-// Remember you must use an AuthProvider for
-// client components to useSession
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -33,15 +30,12 @@ export default function AccountPage(): React.JSX.Element {
     const fetchUser = async () => {
       if (user) {
         console.log('user', user);
-        const newUser = await fetch(
-          `${SERVER_URL}/user/${user.username ?? user.name}/`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
+        const newUser = await fetch(`${SERVER_URL}/user/${user.name}/`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         const data = await newUser.json();
         setUser(data.user);
         console.log('newUser', data.user);

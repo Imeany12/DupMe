@@ -1,4 +1,5 @@
 export const countryNameRecord = {
+  TH: 'Thailand',
   AF: 'Afghanistan',
   AL: 'Albania',
   DZ: 'Algeria',
@@ -213,7 +214,6 @@ export const countryNameRecord = {
   SY: 'Syria',
   TJ: 'Tajikistan',
   TZ: 'Tanzania',
-  TH: 'Thailand',
   CD: 'The Democratic Republic of Congo',
   TL: 'Timor-Leste',
   TG: 'Togo',

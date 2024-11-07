@@ -1,5 +1,6 @@
 import { IUser } from '@repo/shared-types';
 import Image from 'next/image';
+import { FaSkull } from 'react-icons/fa';
 import { IoMdFemale, IoMdMale } from 'react-icons/io';
 
 import getFormattedDate from '@/lib/getFormattedDate';
@@ -13,7 +14,7 @@ function getCountryCodeByName(countryName: string): CountryCode | undefined {
 }
 
 export default function UserProfile({ user }: { user: IUser }) {
-  // const user0 = await fetch(`http://localhost:5001/user/${user.username}`, {
+  // const user0 = await fetch(`http://localhost:5001/user/${user.name}`, {
   //   method: 'GET',
   //   headers: {
   //     'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export default function UserProfile({ user }: { user: IUser }) {
       src={user?.image}
       width={200}
       height={200}
-      alt={user?.username ?? 'Profile Pic'}
+      alt={user?.name ?? 'Profile Pic'}
       priority={true}
     />
   ) : (
@@ -47,7 +48,7 @@ export default function UserProfile({ user }: { user: IUser }) {
         <div className='flex flex-col items-center'>
           {userImage}
           <div className='ml-6 flex flex-col gap-2'>
-            <h1 className='text-3xl font-bold'>{user?.username}</h1>
+            <h1 className='text-3xl font-bold'>{user?.name}</h1>
           </div>
         </div>
 
@@ -76,8 +77,10 @@ export default function UserProfile({ user }: { user: IUser }) {
             <p>{user?.gender}</p>
             {user?.gender === 'Female' ? (
               <IoMdFemale className='text-2xl text-gray-400' />
-            ) : (
+            ) : user?.gender === 'Male' ? (
               <IoMdMale className='text-2xl text-gray-400' />
+            ) : (
+              <FaSkull className='text-2xl text-gray-400' />
             )}
           </div>
         </div>
