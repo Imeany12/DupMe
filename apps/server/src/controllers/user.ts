@@ -20,7 +20,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
+    const user = await User.findOne({ name: req.params.name });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -36,8 +36,8 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
-    const existingUser = await User.findOne({ username });
+    const { name, email, password } = req.body;
+    const existingUser = await User.findOne({ name });
     const existingEmail = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: 'Username already exists' });
@@ -57,12 +57,13 @@ export const createUser = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      username: req.body.username,
+      name: req.body.name,
       password: hashedPassword,
       email: email || '',
       dob: req.body.dob || '',
       gender: req.body.gender || '',
       bio: req.body.bio || '',
+      image: req.body.image || '',
     });
 
     await newUser.save();
@@ -82,7 +83,7 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ name: req.body.name });
     if (!user) {
       return res.status(200).json({ error: 'Username not found' });
     }
@@ -100,7 +101,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { username: user.name },
+      { name: user.name },
       process.env.JWT_SECRET || 'default_secret',
       { expiresIn: '24h' }
     );
@@ -113,7 +114,7 @@ export const loginUser = async (req: Request, res: Response) => {
 export const removeUser = async (req: Request, res: Response) => {
   try {
     const username = await User.findOneAndDelete({
-      username: req.params.username,
+      name: req.params.name,
     });
 
     if (!username) {
@@ -129,7 +130,7 @@ export const removeUser = async (req: Request, res: Response) => {
 };
 
 export const uploadImage = async (req: Request, res: Response) => {
-  const { username } = req.params;
+  const { name } = req.params;
   const image = req.file?.filename;
 
   if (!image) {
@@ -144,7 +145,7 @@ export const uploadImage = async (req: Request, res: Response) => {
   }
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ name });
     if (!user) {
       return res.status(200).json({ message: 'User not found' });
     }
@@ -154,7 +155,7 @@ export const uploadImage = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .json({ message: 'Image uploaded successfully', user: username });
+      .json({ message: 'Image uploaded successfully', user: name });
   } catch (error) {
     return res.status(500).json({ message: 'Error updating image', error });
   }
@@ -162,15 +163,15 @@ export const uploadImage = async (req: Request, res: Response) => {
 
 export const getUserProfile = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
-    const user = await User.findOne({ username });
+    const { name } = req.params;
+    const user = await User.findOne({ name });
 
     if (!user) {
       return res.status(200).json({ error: 'User not found' });
     }
 
     return res.status(200).json({
-      username: user.name,
+      name: user.name,
       email: user.email,
       image: user.image,
       bio: user.bio,
@@ -194,7 +195,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
 
 export const editUserProfile = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
+    const { name } = req.params;
     const {
       email,
       image,
@@ -209,7 +210,7 @@ export const editUserProfile = async (req: Request, res: Response) => {
       max_combo,
     } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ name });
     if (!user) {
       return res.status(200).json({ error: 'User not found' });
     }

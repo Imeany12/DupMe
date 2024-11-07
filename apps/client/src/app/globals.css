@@ -17,7 +17,7 @@
 }
 
 body {
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 @layer utilities {
@@ -84,9 +84,9 @@ body {
 /* In your globals.css or a similar file */
 .star-bg {
   background-image: url('/images/starBg.png');
-  background-size: cover;
+  background-size: fill;
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   position: responsive;
   --note: #82c5ffd9;
   --note1: #5f89ff;
@@ -95,7 +95,7 @@ body {
 
 .snow-bg {
   background-image: url('/images/snowBg.png');
-  background-size: cover;
+  background-size: fill;
   background-position: top;
   background-repeat: repeat;
   position: responsive;
@@ -116,9 +116,9 @@ body {
 }
 .forest-bg {
   background-image: url('/images/forestBg.png');
-  background-size: cover;
+  background-size: fill;
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   position: responsive;
   --note: #5fffef;
   --note1: #8aff82;
@@ -126,9 +126,9 @@ body {
 }
 .haunt-bg {
   background-image: url('/images/hauntBg.png');
-  background-size: cover;
+  background-size: fill;
   background-position: top;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   position: responsive;
   --note: #f2ad8c;
   --note1: #f24545;

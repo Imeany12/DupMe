@@ -19,13 +19,13 @@ export function ToggleTheme() {
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
-          className='rounded-lg px-20 text-center text-3xl'
+          className='bg-note2 rounded-lg px-20 text-center text-3xl'
         >
           Theme
           <span className='sr-only'>Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-36 bg-white'>
+      <DropdownMenuContent align='end' className='bg-note2 text-note w-36'>
         <DropdownMenuItem onClick={() => setTheme('star')} className='text-xl'>
           Star
         </DropdownMenuItem>

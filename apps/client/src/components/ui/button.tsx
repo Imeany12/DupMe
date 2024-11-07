@@ -1,6 +1,8 @@
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { useState } from 'react';
+import { GoCopy } from 'react-icons/go';
 
 import { cn } from '@/lib/utils';
 
@@ -53,4 +55,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-export { Button, buttonVariants };
+const CopyToClipboardButton = ({ textToCopy }: { textToCopy: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 10000);
+    });
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className='bg-primary rounded-md px-4 py-2 text-white transition hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-400'
+    >
+      <GoCopy />
+    </button>
+  );
+};
+
+export { Button, buttonVariants, CopyToClipboardButton };

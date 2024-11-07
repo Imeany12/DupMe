@@ -14,7 +14,7 @@ const ChatPage = ({
   socket: Socket;
   username: string;
   roomId: number;
-}) => {
+}): React.JSX.Element => {
   const [currentMsg, setCurrentMsg] = useState('');
   const [chat, setChat] = useState<IMsgDataTypes[]>([]);
   const [onlinePlayers, setOnlinePlayers] = useState(-999);
@@ -32,19 +32,19 @@ const ChatPage = ({
           new Date(Date.now()).getMinutes(),
       };
       socket.emit('send_msg', msgData);
-      setChat((pre) => [...pre, msgData]);
+      setChat((pre) => [msgData, ...pre]);
       setCurrentMsg('');
     }
   };
 
-  const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    socket.emit('start_game', roomId);
-  };
+  // const sendStart = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   socket.emit('start_game', roomId);
+  // };
 
   useEffect(() => {
     socket.on('receive_msg', (data: IMsgDataTypes) => {
-      setChat((pre) => [...pre, data]);
+      setChat((pre) => [data, ...pre]);
     });
 
     socket.on('connectedUsersCount', (usersCount: number) => {
@@ -65,17 +65,12 @@ const ChatPage = ({
   }, [socket]);
 
   return (
-    <div className={style.chat_div}>
-      <div className={style.chat_border}>
-        <div style={{ marginBottom: '1rem' }}>
-          <p>
-            Name: <b>{username}</b> and Room Id: <b>{roomId}</b>
-          </p>
-          <p>
-            Online Players: <b>{onlinePlayers}</b>
-          </p>
-        </div>
-        <div>
+    <div className='flex w-full flex-col items-center justify-center px-4'>
+      <div className='mx-auto flex w-full flex-col gap-4 rounded-lg border-2 border-gray-100 px-8 py-3'>
+        <h1 className='w-full text-center text-3xl font-semibold text-white'>
+          Chat
+        </h1>
+        <div className='flex h-32 max-h-44 flex-col-reverse gap-1 overflow-y-auto rounded-xl border border-gray-400 bg-black px-4'>
           {chat.map(({ roomId, user, msg, time }, key) => (
             <div
               key={key}
@@ -91,26 +86,29 @@ const ChatPage = ({
               >
                 {user.charAt(0)}
               </span>
-              <h3 style={{ textAlign: user == username ? 'right' : 'left' }}>
+              <h3
+                style={{ textAlign: user == username ? 'right' : 'left' }}
+                className='rounded-lg border border-gray-900 bg-gray-800 px-4 py-1 text-zinc-50'
+              >
                 {msg}
               </h3>
             </div>
           ))}
         </div>
         <div>
-          <form onSubmit={(e) => sendData(e)}>
+          <form
+            onSubmit={(e) => sendData(e)}
+            className='flex w-full items-center justify-center gap-2'
+          >
             <input
-              className={style.chat_input}
+              className='flex rounded-lg bg-white px-2 py-1 text-neutral-800'
               type='text'
               value={currentMsg}
-              placeholder='Type your message..'
+              placeholder={`Chat as ${username}`}
               onChange={(e) => setCurrentMsg(e.target.value)}
             />
             <button className={style.chat_button}>Send</button>
           </form>
-          <button className={style.chat_button} onClick={(e) => sendStart(e)}>
-            Start
-          </button>
         </div>
       </div>
     </div>

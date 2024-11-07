@@ -1,0 +1,40 @@
+.track_container {
+  display: flex;
+  flex: 1 0 auto;
+}
+
+.track {
+  position: relative;
+  flex: 0 0 calc(84% / 12);
+}
+
+.track:not(:last-child) {
+  border-right: 1px solid grey;
+}
+
+.note {
+  position: absolute;
+  height: 1.5rem;
+  z-index: 99;
+  opacity: 0;
+  border-radius: 16.112px 0px 16.112px 16.112px;
+  box-shadow: 0px 10.741px 40.281px 0px rgba(0, 0, 0, 0.3);
+}
+
+.moveDown {
+  animation-name: moveDown; /* Reference the keyframes */
+  animation-timing-function: linear;
+  animation-duration: var(--duration); /* Set duration dynamically if needed */
+  animation-delay: var(--delay); /* Set delay dynamically if needed */
+  animation-play-state: running; /* When running */
+}
+
+@keyframes moveDown {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    top: var(--bottomHeight);
+    opacity: 1;
+  }
+}
