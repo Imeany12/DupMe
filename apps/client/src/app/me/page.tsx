@@ -53,7 +53,7 @@ export default function AccountPage(): React.JSX.Element {
 
   return (
     <div>
-      <nav className='bg-note2 flex w-svw justify-between px-10'>
+      <nav className='bg-note2 flex w-svw justify-between bg-gray-400 px-10'>
         <Link href={'/'}>
           <Button className=''>
             <FiHome />

@@ -1,7 +1,6 @@
 import { IUser } from '@repo/shared-types';
 import Image from 'next/image';
-
-import { IoMdMale } from 'react-icons/io';
+import { IoMdFemale, IoMdMale } from 'react-icons/io';
 
 import getFormattedDate from '@/lib/getFormattedDate';
 
@@ -49,24 +48,21 @@ export default function UserProfile({ user }: { user: IUser }) {
           {userImage}
           <div className='ml-6 flex flex-col gap-2'>
             <h1 className='text-3xl font-bold'>{user?.username}</h1>
-            <div>
-              <p className='text-sm text-gray-400'>Thailand</p>
-            </div>
           </div>
         </div>
 
         {/* Ranking and Stats */}
-        <div className='mt-8 grid grid-cols-2 items-center justify-between gap-4'>
-          <div className='flex flex-col items-center pl-24'>
+        <div className='mx-8 mt-8 grid grid-cols-3 items-center justify-between gap-4 rounded-xl bg-neutral-600 py-4'>
+          <div className='flex flex-col items-center'>
             <h2 className='text-xl font-semibold'>Joined Since:</h2>
-            <p>
+            <p className='text-lg font-semibold'>
               {getFormattedDate(user?.createdAt?.toString() || '01/01/2000')}
             </p>
           </div>
-          <div className='flex flex-col items-center pr-24'>
+          <div className='flex w-full flex-col items-center'>
             <h2 className='text-xl font-semibold'>Country : </h2>
             <div className='flex flex-row gap-3'>
-              <p>{user?.country}</p>
+              <p className='text-xl text-white'>{user?.country}</p>
               <Image
                 alt={countryCode ?? 'unknown'}
                 src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode}.svg`}
@@ -75,19 +71,23 @@ export default function UserProfile({ user }: { user: IUser }) {
               />
             </div>
           </div>
-          <div className='flex flex-col items-center'>
+          <div className='flex w-full items-center justify-center gap-2'>
             <h2 className='text-xl font-semibold'>Gender : </h2>
             <p>{user?.gender}</p>
-            <IoMdMale className='text-2xl text-gray-400' />
+            {user?.gender === 'Female' ? (
+              <IoMdFemale className='text-2xl text-gray-400' />
+            ) : (
+              <IoMdMale className='text-2xl text-gray-400' />
+            )}
           </div>
-          <div className='flex flex-col items-center pr-24'>
-            <h2 className='text-xl font-semibold'>About me : </h2>
-            <p>{user?.bio}</p>
-          </div>
+        </div>
+        <div className='mt-8 flex flex-col items-center text-wrap'>
+          <h2 className='text-xl font-semibold'>About me : </h2>
+          <p>{user?.bio}</p>
         </div>
 
         {/* Score & Stats */}
-        <div className='m-8 mx-32 flex flex-col items-center justify-center bg-gray-800'>
+        <div className='m-8 mx-10 flex flex-col items-center justify-center rounded-xl bg-gray-800 px-12'>
           <h3 className='mt-4 text-2xl font-semibold underline'>Statistics</h3>
           <div className='my-6 grid grid-cols-2 gap-32'>
             <div className='flex w-full flex-col items-center gap-4'>

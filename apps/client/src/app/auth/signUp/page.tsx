@@ -196,9 +196,6 @@ export default function SignUpPage(): React.JSX.Element {
               <option>Gender</option>
               <option value='Male'>Male</option>
               <option value='Female'>Female</option>
-              <option value='MTF'>MTF</option>
-              <option value='FTM'>FTM</option>
-              <option value='Non'>Non-Binary</option>
               <option value=''>Prefer not to say</option>
             </select>
           </div>
