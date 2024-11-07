@@ -772,7 +772,7 @@ export default function Game({
 
   useEffect(() => {
     console.log('keymapping:', keyMappings);
-    if (turncount.current == 2) {
+    if (turncount.current > 2 * countPlayer) {
       socket.emit('end_game', roomId, scoreComboResult[0], user?.name);
       setTimeout(() => {
         router.push('/lobby/' + roomId + '?host=' + host);
@@ -799,7 +799,7 @@ export default function Game({
       setTimeout(() => {
         setPressedNotes([]);
         setPlayAlong(true);
-      }, 3000);
+      }, 30000);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -813,7 +813,7 @@ export default function Game({
         setIsFirstNote(true);
         setNotes(defaultNotes);
         setScoreComboResult(([score, combo, state]) => [score, 0, '']);
-      }, 5000);
+      }, 15000);
       const newSong: ISong = {
         roomId: roomId,
         user: user.name ?? 'Guest',
