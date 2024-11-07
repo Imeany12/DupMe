@@ -30,11 +30,9 @@ export default function ResultPage() {
         setResult(result);
       }
     };
-    console.log('this is useEffect');
-    socket.on('result', handleResult);
-    return () => {
-      socket.off('result');
-    };
+    socket.on('result', () => {
+      console.log('test result');
+    });
   }, [socket]);
 
   return (

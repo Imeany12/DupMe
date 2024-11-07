@@ -130,8 +130,6 @@ io.on('connection', (socket) => {
       playerToScore[roomId][username] = 0;
     }
     playerToScore[roomId][username] = score;
-    console.log('end_game', rooms[roomId].length, playerToScore[roomId]);
-    console.log('playerCount:', playerCount);
     if (Object.keys(playerToScore[roomId]).length === playerCount) {
       const scoreArray = Object.values(playerToScore[roomId]);
       const maxScore = Math.max(...scoreArray);
@@ -180,12 +178,10 @@ io.on('connection', (socket) => {
 
   socket.on('send_song', (data: ISong) => {
     // This will send a song to a specific room ID
-    console.log(data);
     socket.to(data.roomId.toString()).emit('receive_song', data);
   });
 
   socket.on('getNote', (roomId: number, note: string) => {
-    console.log('getNote', note);
     socket.to(roomId.toString()).emit('playNote', note);
   });
 

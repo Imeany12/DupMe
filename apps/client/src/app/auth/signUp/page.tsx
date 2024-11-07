@@ -49,7 +49,6 @@ export default function SignUpPage(): React.JSX.Element {
       ...userInfo,
       [name]: value,
     });
-    console.log(userInfo);
   };
   const handleSubmit = async (e: {
     preventDefault: () => void;

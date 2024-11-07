@@ -34,7 +34,6 @@ export default function Home() {
     } else {
       setJoinId(0);
     }
-    console.log(roomId);
   };
 
   return (
