@@ -62,6 +62,7 @@ export const createUser = async (req: Request, res: Response) => {
       email: email || '',
       dob: req.body.dob || '',
       gender: req.body.gender || '',
+      country: req.body.country || '',
       bio: req.body.bio || '',
       image: req.body.image || '',
     });
@@ -176,7 +177,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
       image: user.image,
       bio: user.bio,
       dob: user.dob,
-      gender: user.gender,
+      gender: user.gender ?? '',
       country: user.country,
       createdAt: user.createdAt,
       total_score: user.total_score,

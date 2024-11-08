@@ -30,6 +30,7 @@ const userSchema = new Schema<IUser>(
     image: { type: String, required: false },
     bio: { type: String, required: false },
     country: { type: String, required: false },
+    gender: { type: String, required: false },
     dob: { type: Date, required: false },
     createdAt: {
       type: Date,

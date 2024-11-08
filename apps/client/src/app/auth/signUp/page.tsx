@@ -15,7 +15,7 @@ export default function SignUpPage(): React.JSX.Element {
   const [userInfo, setUserInfo] = useState<IUser>({
     name: '',
     password: '',
-    image: '',
+    image: 'images/default-profile.png',
     email: '',
     createdAt: new Date(),
     dob: new Date(),
