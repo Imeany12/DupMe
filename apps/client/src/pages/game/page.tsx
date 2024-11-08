@@ -799,7 +799,7 @@ export default function Game({
       setTimeout(() => {
         setPressedNotes([]);
         setPlayAlong(true);
-      }, 30000);
+      }, 15000);
     }
     if (playAlong === true) {
       setTimeout(() => {
@@ -813,7 +813,7 @@ export default function Game({
         setIsFirstNote(true);
         setNotes(defaultNotes);
         setScoreComboResult(([score, combo, state]) => [score, 0, '']);
-      }, 15000);
+      }, 30000);
       const newSong: ISong = {
         roomId: roomId,
         user: user.name ?? 'Guest',
