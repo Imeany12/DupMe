@@ -15,6 +15,9 @@ type User =
 
 export default function NavBar({ session }: { session: Session | null }) {
   const user: User = session?.user;
+  if (user?.image === '') {
+    user.image = '/images/default-profile.png';
+  }
 
   return (
     <nav className='w-screen'>
@@ -53,7 +56,7 @@ export default function NavBar({ session }: { session: Session | null }) {
                     className='rounded-full border border-white shadow-black drop-shadow-xl'
                     width={45}
                     height={45}
-                    src={user.image ?? '/images/default-profile.png'}
+                    src={user?.image ?? '/images/default-profile.png'}
                     alt='Profile Pic'
                   />
                 </Avatar>
