@@ -787,6 +787,15 @@ export default function Game({
     const startTime = Date.now();
     setPressStartTime(startTime);
   };
+  useEffect(() => {
+    socket.on('reset', () => {
+      socket.emit('leave_lobby', { username: user?.name, roomId });
+      router.push('/lobby/' + roomId + '?host=false&multi=true');
+    });
+    return () => {
+      socket.off('reset');
+    };
+  }, [socket]);
 
   useEffect(() => {
     console.log('keymapping:', keyMappings);

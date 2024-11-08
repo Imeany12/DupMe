@@ -21,6 +21,8 @@ app.get('/', (req, res, next) => {
   next();
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(cors());
 
 app.use('/user', userRoutes);
@@ -76,6 +78,11 @@ io.on('connection', (socket) => {
   );
   io.emit('total connected:', io.engine.clientsCount);
 
+  socket.on('reset', () => {
+    console.log('reset');
+    io.emit('reset');
+  });
+
   socket.on(
     'join_lobby',
     ({
@@ -100,6 +107,7 @@ io.on('connection', (socket) => {
         (total, roomArray) => total + roomArray.length,
         0
       );
+      // socket.emit('clientCount', connectedUsersCount);
       console.log('connectedUsersCount', connectedUsersCount);
       io.emit('connectedUsersCount', connectedUsersCount);
     }
