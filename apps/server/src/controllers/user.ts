@@ -242,12 +242,16 @@ export const editUserProfile = async (req: Request, res: Response) => {
       changes.country = country;
     }
     if (max_score) {
-      user.max_score = max_score;
-      changes.max_score = max_score;
+      if (max_score > (user.max_score ?? 0)) {
+        user.max_score = max_score;
+        changes.max_score = max_score;
+      }
     }
     if (max_combo) {
-      user.max_combo = max_combo;
-      changes.max_combo = max_combo;
+      if (max_combo > (user.max_combo ?? 0)) {
+        user.max_combo = max_combo;
+        changes.max_combo = max_combo;
+      }
     }
 
     if (!user.password) {

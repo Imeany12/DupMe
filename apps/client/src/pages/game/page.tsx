@@ -501,6 +501,23 @@ export default function Game({
   };
 
   useEffect(() => {
+    const sendMaxScore = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user.name}/profile/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          max_combo: scoreComboResult[1],
+          max_score: scoreComboResult[0],
+        }),
+      });
+      if (res.status === 200) {
+        console.log('Max score saved');
+      } else {
+        console.log('Max score cant be saved');
+      }
+    };
     const handleResult = ({
       result,
       winner,
@@ -508,6 +525,7 @@ export default function Game({
       result: string;
       winner: string[];
     }) => {
+      sendMaxScore();
       if (
         session &&
         session.user &&
@@ -769,13 +787,22 @@ export default function Game({
     const startTime = Date.now();
     setPressStartTime(startTime);
   };
+  useEffect(() => {
+    socket.on('reset', () => {
+      socket.emit('leave_lobby', { username: user?.name, roomId });
+      router.push('/lobby/' + roomId + '?host=false&multi=true');
+    });
+    return () => {
+      socket.off('reset');
+    };
+  }, [socket]);
 
   useEffect(() => {
     console.log('keymapping:', keyMappings);
     if (turncount.current > 2 * countPlayer) {
       socket.emit('end_game', roomId, scoreComboResult[0], user?.name);
       setTimeout(() => {
-        router.push('/lobby/' + roomId + '?host=' + host);
+        router.push('/lobby/' + roomId + '?host=false');
       }, 10000);
     }
   }, [turncount.current]);
@@ -909,7 +936,7 @@ export default function Game({
                 username: user?.name,
                 roomId,
               });
-              router.push('/lobby/' + roomId + '?host=true&multi=true');
+              router.push('/lobby/' + roomId + '?host=false&multi=true');
             }}
           >
             <FaFontAwesomeFlag
@@ -926,7 +953,7 @@ export default function Game({
             <div>
               {/* <Countdown duration={60} /> */}
               <div className='flex w-full flex-col items-center justify-center rounded-2xl bg-slate-300 px-12 py-8'>
-                <div className='flex justify-center'>
+                <div className='flex w-full justify-center pt-8'>
                   <div
                     ref={trackContainerRef}
                     className='flex min-h-[220px] w-[118%] justify-center gap-1'

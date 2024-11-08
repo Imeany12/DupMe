@@ -248,14 +248,14 @@ export default function Lobby({
           </div>
           {mem ? (
             <button
-              className='bg-note1 mt-4 rounded px-4 py-2 text-white hover:bg-green-500'
+              className='bg-note1 text-note2 mt-4 rounded px-4 py-2 hover:bg-green-500'
               onClick={() => setMem(false)}
             >
               Memorize Mode
             </button>
           ) : (
             <button
-              className='bg-note mt-4 rounded px-4 py-2 text-white hover:bg-green-500'
+              className='bg-note text-note2 mt-4 rounded px-4 py-2 hover:bg-green-500'
               onClick={() => setMem(true)}
             >
               Rainfall mode
