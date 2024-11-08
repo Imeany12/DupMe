@@ -944,7 +944,7 @@ export default function Game({
             <div>
               {/* <Countdown duration={60} /> */}
               <div className='flex w-full flex-col items-center justify-center rounded-2xl bg-slate-300 px-12 py-8'>
-                <div className='flex justify-center'>
+                <div className='flex w-full justify-center pt-8'>
                   <div
                     ref={trackContainerRef}
                     className='flex min-h-[220px] w-[118%] justify-center gap-1'
