@@ -25,6 +25,7 @@ export default function Home() {
   const setUpGame = () => {
     setRoomId(Math.floor(Math.random() * 1000000));
     setMode(true);
+    console.log(session?.user);
   };
 
   const handleChangeRoomId = (e: { target: { value: string } }) => {

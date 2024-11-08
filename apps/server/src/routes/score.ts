@@ -10,10 +10,10 @@ import {
 
 const router: Router = Router();
 
-router.post('/:username/add-score-and-match', addScoreAndMatch);
-router.post('/:username/add-score', addScore);
-router.post('/:username/add-match', addMatch);
-router.post('/:username/set-score', setScore);
-router.post('/:username/reset', resetScore);
+router.post('/:name/add-score-and-match', addScoreAndMatch);
+router.post('/:name/add-score', addScore);
+router.post('/:name/add-match', addMatch);
+router.post('/:name/set-score', setScore);
+router.post('/:name/reset', resetScore);
 
 export default router;

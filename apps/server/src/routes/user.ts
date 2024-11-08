@@ -29,10 +29,10 @@ const upload = multer({ storage });
 router.get('/list', getUsers);
 router.post('/signup', createUser);
 router.post('/login', loginUser);
-router.post('/:username/deleteAccount', removeUser);
-router.post('/:username/upload', upload.single('image'), uploadImage);
-router.get('/:username', getUser);
-router.get('/:username/profile', getUserProfile);
-router.post('/:username/profile/edit', editUserProfile);
+router.post('/:name/deleteAccount', removeUser);
+router.post('/:name/upload', upload.single('image'), uploadImage);
+router.get('/:name', getUser);
+router.get('/:name/profile', getUserProfile);
+router.post('/:name/profile/edit', editUserProfile);
 
 export default router;
