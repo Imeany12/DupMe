@@ -501,6 +501,23 @@ export default function Game({
   };
 
   useEffect(() => {
+    const sendMaxScore = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user.name}/profile/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          max_combo: scoreComboResult[1],
+          max_score: scoreComboResult[0],
+        }),
+      });
+      if (res.status === 200) {
+        console.log('Max score saved');
+      } else {
+        console.log('Max score cant be saved');
+      }
+    };
     const handleResult = ({
       result,
       winner,
@@ -508,6 +525,7 @@ export default function Game({
       result: string;
       winner: string[];
     }) => {
+      sendMaxScore();
       if (
         session &&
         session.user &&
@@ -775,7 +793,7 @@ export default function Game({
     if (turncount.current > 2 * countPlayer) {
       socket.emit('end_game', roomId, scoreComboResult[0], user?.name);
       setTimeout(() => {
-        router.push('/lobby/' + roomId + '?host=' + host);
+        router.push('/lobby/' + roomId + '?host=false');
       }, 10000);
     }
   }, [turncount.current]);
@@ -909,7 +927,7 @@ export default function Game({
                 username: user?.name,
                 roomId,
               });
-              router.push('/lobby/' + roomId + '?host=true&multi=true');
+              router.push('/lobby/' + roomId + '?host=false&multi=true');
             }}
           >
             <FaFontAwesomeFlag

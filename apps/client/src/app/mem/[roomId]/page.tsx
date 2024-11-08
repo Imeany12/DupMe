@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaFontAwesomeFlag } from 'react-icons/fa';
 
 import Piano from '@/components/Piano';
+import { SERVER_URL } from '@/env';
 import getNoteFrequency from '@/lib/getNoteFrequency';
 import { socket } from '@/socket';
 
@@ -37,6 +38,7 @@ export default function GamePage() {
 
   const [playAlong, setPlayAlong] = useState<boolean>(false);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(host);
+  const [result, setResult] = useState<string>('none');
   //playerTurn form randaomization backend
   //const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(true);
   const { roomId } = useParams<{ roomId: string }>();
@@ -86,8 +88,10 @@ export default function GamePage() {
         roomId,
         username: user?.name,
       });
-      socket.emit('end_game', roomId);
-      router.push('/lobby/' + roomId + '?host=false');
+      socket.emit('end_game', roomId, scoreComboResult[0], user?.name);
+      setTimeout(() => {
+        router.push('/lobby/' + roomId + '?host=false');
+      }, 10000);
     }
     socket.on('end_game', () => {
       router.push('/lobby/' + roomId + '?host=false');
@@ -387,6 +391,58 @@ export default function GamePage() {
     pressedNotes,
     playNote,
   ]);
+
+  useEffect(() => {
+    const sendMaxScore = async () => {
+      const res = await fetch(`${SERVER_URL}/user/${user.name}/profile/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          max_combo: scoreComboResult[1],
+          max_score: scoreComboResult[0],
+        }),
+      });
+      if (res.status === 200) {
+        console.log('Max score saved');
+      } else {
+        console.log('Max score cant be saved');
+      }
+    };
+    const handleResult = ({
+      result,
+      winner,
+    }: {
+      result: string;
+      winner: string[];
+    }) => {
+      sendMaxScore();
+      console.log(winner, result);
+      if (
+        session &&
+        session.user &&
+        session.user.name &&
+        winner.includes(session.user.name)
+      ) {
+        setResult(result);
+        console.log('win');
+      } else setResult('lose');
+    };
+    socket.on('result', handleResult);
+
+    return () => {
+      socket.off('result', handleResult);
+    };
+  }, [socket]);
+  useEffect(() => {
+    if (result !== 'none') {
+      setTimeout(() => {
+        router.push('/result/' + roomId + '/' + result);
+      }, 2000);
+      socket.emit('leave_lobby', { roomId, username: user?.name });
+    }
+  }, [result]);
 
   // Debugging Section
   // useEffect(() => {
