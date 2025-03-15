@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - server
+    networks:
+      - dupme-network
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+    networks:
+      - dupme-network
+
+networks:
+  dupme-network:
+    driver: bridge
+
+volumes:
+  pnpm-store:
+    name: pnpm-store
