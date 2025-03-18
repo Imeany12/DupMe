@@ -37,6 +37,7 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
+    exposedHeaders: ['set-cookie'],
   },
 });
 const rooms: { [key: number]: string[][] } = {}; // to keep track of players in each room

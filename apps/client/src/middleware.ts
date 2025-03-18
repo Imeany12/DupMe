@@ -1,5 +1,17 @@
 // Without a defined matcher, this one line applies next-auth
 // to the entire project
+import { NextRequest } from 'next/server';
+
+export function middleware(req: NextRequest) {
+  const nextAuthUrl = process.env.NEXTAUTH_URL;
+  if (!nextAuthUrl) {
+    throw new Error(
+      'NEXTAUTH_URL is not defined in the environment variables.'
+    );
+  }
+  req.nextUrl.hostname = new URL(nextAuthUrl).hostname;
+}
+
 export { default } from 'next-auth/middleware';
 
 // Applies next-auth only to matching routes - can be regex
