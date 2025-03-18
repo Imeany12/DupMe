@@ -124,6 +124,7 @@ export const options: NextAuthOptions = {
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET || 'default-secret-key',
   pages: {
     signIn: '/auth/signIn',
     newUser: '/auth/signUp',
