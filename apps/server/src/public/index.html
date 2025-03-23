@@ -26,16 +26,24 @@
     <div class="client-count">
       Connected Clients: <span id="clientCount">0</span>
     </div> -->
+    <h1>Real-Time Client Count</h1>
+    <div class="client-count">
+      Connected Clients: <span id="clientCount">0</span>
+    </div>
 
     <h2>Reset Server</h2>
     <button id="resetButton">Reset the Server</button>
-
     <!-- Include Socket.IO client library -->
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
       // Connect to the Socket.IO server
       const socket = io();
+
+      socket.on('connectedUsersCount', (count) => {
+        // Update the client count displayed on the page
+        document.getElementById('clientCount').innerText = count - 1;
+      });
 
       document.getElementById('resetButton').addEventListener('click', () => {
         console.log('Resetting the server...');

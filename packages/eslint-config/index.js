@@ -1,6 +1,15 @@
 module.exports = {
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'turbo', 'prettier'],
-  plugins: ['prettier', 'simple-import-sort', '@typescript-eslint', 'unused-imports'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
+  plugins: [
+    'prettier',
+    'simple-import-sort',
+    '@typescript-eslint',
+    'unused-imports',
+  ],
   parser: '@typescript-eslint/parser',
   rules: {
     'prettier/prettier': [

@@ -1,5 +1,6 @@
 'use client';
 
+import { IUser } from '@repo/shared-types';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -19,10 +20,13 @@ export default function AccountPage(): React.JSX.Element {
     },
   });
   const user1 = session?.user;
-  const [user, setUser] = useState(user1);
+  const [user, setUser] = useState<IUser>(user1 || ({} as IUser));
+  const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     if (status !== 'loading') {
-      setUser(user1);
+      if (user1) {
+        setUser(user1);
+      }
     }
   }, [status]);
   const [edit, setEdit] = useState(false);
@@ -30,7 +34,7 @@ export default function AccountPage(): React.JSX.Element {
     const fetchUser = async () => {
       if (user) {
         console.log('user', user);
-        const newUser = await fetch(`${SERVER_URL}/user/${user.name}/`, {
+        const newUser = await fetch(`${SERVER_URL}/user/${user.name}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -38,11 +42,12 @@ export default function AccountPage(): React.JSX.Element {
         });
         const data = await newUser.json();
         setUser(data.user);
+        setIsLoaded(true);
         console.log('newUser', data.user);
         console.log('user', data.user);
       }
     };
-    fetchUser();
+    if (!isLoaded) fetchUser();
   }, [user]);
 
   return (

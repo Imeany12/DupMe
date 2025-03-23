@@ -6,6 +6,13 @@ export const SOCKET_URL =
 export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5001';
 
+export const PORT = process.env.PORT || (5001 as number);
+
+export const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET as string;
+export const NEXTAUTH_URL = process.env.NEXTAUTH_URL as string;
+export const NEXT_PUBLIC_SOCKET_URL = process.env
+  .NEXT_PUBLIC_SOCKET_URL as string;
+
 export const CLIENT_GOOGLE_ID = process.env.GOOGLE_ID as string;
 export const CLIENT_GOOGLE_SECRET = process.env.GOOGLE_SECRET as string;
 

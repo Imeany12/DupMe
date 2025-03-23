@@ -22,7 +22,7 @@ export default function SignIn({
     // Call NextAuth's signIn function with credentials
     const res = await signIn('credentials', {
       redirect: false,
-      username: username,
+      name: username,
       password: password,
       callbackUrl: '/',
     });

@@ -24,7 +24,7 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: {
+        name: {
           label: 'Username : ',
           type: 'text',
           placeholder: 'your-username',
@@ -50,10 +50,9 @@ export const options: NextAuthOptions = {
         if (res.status === 200) {
           return {
             id: user.id,
-            name: credentials.username,
-            username: user.name,
+            name: credentials.name ?? user.name,
             email: user.email,
-            image: user.image,
+            image: user.image ?? '/images/default-profile.png',
             createdAt: user.createdAt,
             country: user.country,
             bio: user.bio,
@@ -95,8 +94,10 @@ export const options: NextAuthOptions = {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: user.name || user.email, // Adjust based on available fields
+          name: user.name || user.email, // Adjust based on available fields
           password: 'sessionUser',
+          email: user.email,
+          image: user.image,
         }),
       });
 
@@ -123,6 +124,7 @@ export const options: NextAuthOptions = {
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET || 'default-secret-key',
   pages: {
     signIn: '/auth/signIn',
     newUser: '/auth/signUp',
