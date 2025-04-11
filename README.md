@@ -34,7 +34,7 @@ pnpm dev
 This will start both the server and the client (depending on your script setup). Make sure to run the client on at least two separate machines or terminals to test multiplayer features.
 
 ## 🖥️ Architecture Overview
-Server: Maintains a list of connected clients, tracks scores, handles turn logic, and provides reset functionality.
+Server: Maintains a list of connected clients, tracks scores, handles turn logic, and provides reset functionality.  
 Client: Connects to the server, allows nickname entry, displays countdowns, and lets players input or follow button patterns.
 
 ## 📦 Requirements
