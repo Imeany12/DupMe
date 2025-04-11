@@ -1,81 +1,42 @@
-# Turborepo starter
+## DupMe Battleship Game
+DupMe is a simple, interactive socket programming-based client-server battleship game designed for local or networked multiplayer gameplay. The game challenges players to follow and recreate piano patterns under time pressure. It showcases the implementation of real-time communication between multiple clients via a centralized server.
 
-This is an official starter Turborepo.
+## 🕹️ Game Features
+- Multiplayer gameplay between two or more computers, with authentication through third-party services.
+- Real-time pattern creation and replication under time constraints.
+- Server-client architecture using socket programming.
+- Player nickname entry and score tracking.
+- Game ends after 2 rounds (4 turns) with a winner announcement.
+- Server GUI displays the number of online players and offers a reset function.
 
-## Using this example
+## 🧩 Gameplay Rules
+- The server randomizes who plays first.
+- The first player has 10 seconds to create a button pattern.
+- The second player has 20 seconds to replicate it.
+- Correct replication scores points based on right steps in correct order.
+- The game alternates turns and ends after 4 total turns.
+- The player with the highest score is announced the winner.
 
-Run the following command:
+## ⚙️ Installation
+Make sure you have pnpm installed. If not, install it from pnpm.io.
 
-```sh
-npx create-turbo@latest
+Clone the repo:
+```bash
+git clone https://github.com/Imeany12/DupMe.git
 ```
 
-## What's inside?
+Then run:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
+```bash
+pnpm install
 pnpm dev
 ```
+This will start both the server and the client (depending on your script setup). Make sure to run the client on at least two separate machines or terminals to test multiplayer features.
 
-### Remote Caching
+## 🖥️ Architecture Overview
+Server: Maintains a list of connected clients, tracks scores, handles turn logic, and provides reset functionality.  
+Client: Connects to the server, allows nickname entry, displays countdowns, and lets players input or follow button patterns.
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+## 📦 Requirements
+Server IP and port are hardcoded in the client source code. Players do not need to enter IP addresses manually.
+Ensure both clients and the server are on the same network (or use services like Hamachi for remote connection).
