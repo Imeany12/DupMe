@@ -20,13 +20,16 @@ DupMe is a simple, interactive socket programming-based client-server battleship
 ## ⚙️ Installation
 Make sure you have pnpm installed. If not, install it from pnpm.io.
 
+Clone the repo:
+```bash
+git clone https://github.com/Imeany12/DupMe.git
+```
+
 Then run:
 
 ```bash
-Copy
-Edit
 pnpm install
-pnpm run
+pnpm dev
 ```
 This will start both the server and the client (depending on your script setup). Make sure to run the client on at least two separate machines or terminals to test multiplayer features.
 
